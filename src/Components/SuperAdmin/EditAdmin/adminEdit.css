@@ -1,0 +1,27 @@
+/* for editadmin page  */
+.editAdmin{
+    background-color:#F5FFD7;
+    padding: 30px 0 10px 0; 
+}
+
+.editAdmin-content{
+    width: 90%;
+    margin: 0 auto;
+    
+}
+
+.editAdmin-title{
+    letter-spacing:2px;
+    font-weight: 900;
+  }
+
+.editAdmin-form{
+    width: 80%;
+   margin: 0 auto;
+    background-color:#fff;
+}
+
+.editAdmin-button button{
+    width:100px;
+    margin:5px;
+}

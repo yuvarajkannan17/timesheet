@@ -1,0 +1,66 @@
+/* Create Admin User form */
+.adminUser{
+    background-color:#F5FFD7;
+    padding-bottom: 10px;
+}
+.createAdmin{
+    width: 90%;
+    margin: 0 auto;
+   
+}
+
+
+
+
+.createAdmin-title{
+  letter-spacing:2px;
+  font-weight: 900;
+}
+
+.createAdmin-body{
+    background-color: #fff;
+    
+}
+
+.createAdmin-form{
+    width: 80%;
+    margin: 20px auto;
+}
+
+/* buttons */
+
+.createAdmin-button button{
+    width: 100px;
+    margin: 5px;
+    
+}
+/* checkboxes */
+.checkbox-create:checked{
+   background-color: green;
+}
+
+.checkbox-delete:checked{
+    background-color:red;
+ }
+
+ /* form error */
+
+ .input-error{
+    border: 2px solid rgba(228, 66, 66, 0.826) !important;
+ }
+
+ .error-message{
+    color:rgba(228, 14, 14, 0.826) ;
+ }
+/* modal */
+ /* customize the modal overall width */
+
+ .custom-modal {
+    width: 100%;
+    max-width: 300px; 
+    
+  } 
+
+ .modal-success img{
+    width: 50px;
+ }

@@ -1,0 +1,32 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.approvelHeader{
+    background-color: #1C2FBA;
+    
+}
+
+.signInSymbol{
+    border: 2px solid white;
+    border-radius: 50%;
+    padding: 5px 10px;
+    display: inline-block;
+    margin-left: 5px;
+
+    
+}
+
+/*for  approvel body */
+
+/* background color */
+.approvel-body{
+ background-color:#F5FFD7 ;
+ padding-bottom: 100px;
+}
+
+.approvel-title{
+    font-weight: bold;
+}

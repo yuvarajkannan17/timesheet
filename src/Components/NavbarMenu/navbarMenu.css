@@ -1,0 +1,42 @@
+/* for navbar  */
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.approvelHeader{
+    background-color: #1C2FBA;
+    
+}
+
+.signInSymbol{
+    border: 2px solid white;
+    border-radius: 50%;
+    padding: 5px 10px;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.superadmin-navigation{
+    background-color:#F5FFD7;
+}
+
+.superadmin-navigation-link{
+    background-color: #fff;
+    color: black !important;
+    border:2px solid black;
+    margin:5px 10px;
+    border-radius: 5px;
+}
+
+.superadmin-navigation-link:hover{
+    box-shadow: 5px 5px 0 gray;
+}
+
+.superadmin-navigation .active{
+    background-color: #1C2FBA;
+    color:#fff !important;
+
+}

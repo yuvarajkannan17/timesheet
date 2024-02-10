@@ -1,0 +1,61 @@
+.searchAdminPanel-bg {
+    
+    background-color: #F5FFD7;
+}
+
+.searchAdminPanel {
+    width: 90%;
+    margin: 0 auto;
+    padding: 10px 0;
+
+    }
+
+
+
+.no-focus-outline input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.no-focus-outline input {
+    border-bottom: 1px solid black !important;
+    border-radius: 0 !important;
+}
+
+.table-header th{
+    background-color: #1C2FBA !important;
+    color: #fff !important;
+}
+
+.admin-details{
+    background-color:#fff;
+    padding: 20px 40px;
+}
+
+p small{
+    font-weight: 100;
+}
+
+.adminList-column:hover {
+    background-color:#E5E5E5;
+   
+}
+
+
+.adminList-column:hover td {
+    background-color: transparent; 
+    cursor: pointer;
+    
+} 
+
+.address{
+    overflow: auto;
+    
+}
+
+
+
+
+
+
+
