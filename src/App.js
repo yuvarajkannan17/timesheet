@@ -10,11 +10,12 @@ function App() {
   return (
     <>
        {/* supervisor approvel page launch */}
-          <Approvel/>
+
+          {/* <Approvel/> */}
 
           {/* superadmin page launch  */}
 
-          {/* <Timesheet/> */}
+          <Timesheet/>
        
       
     </>

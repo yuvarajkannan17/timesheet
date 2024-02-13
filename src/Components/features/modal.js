@@ -5,7 +5,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialModalState = {
     showSuccessModal: false,
     failureModal: false,
-    editSuccessModalValue:false
+    editSuccessModalValue:false,
+    deleteSuccessModalValue:false
 };
 export const modalSlice =createSlice({
     name: 'modal',
@@ -23,10 +24,14 @@ export const modalSlice =createSlice({
          // edit admin success
         editSuccessModal: (state, action) => {
             state.value.editSuccessModalValue = action.payload;
+        },
+         // edit admin success
+         deleteSuccessModal: (state, action) => {
+            state.value.deleteSuccessModalValue = action.payload;
         }
     }
 });
 
-export const {successModal,failureModal,editSuccessModal}=modalSlice.actions;
+export const {successModal,failureModal,editSuccessModal,deleteSuccessModal}=modalSlice.actions;
 
 export default  modalSlice.reducer;

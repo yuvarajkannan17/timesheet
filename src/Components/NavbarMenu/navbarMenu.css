@@ -6,19 +6,37 @@
     box-sizing: border-box;
 }
 
-.approvelHeader{
+/* for header */
+.navbar-bg{
     background-color: #1C2FBA;
+}
+
+.navbar-header{
+    width: 90%;
+    margin: 0 auto;
+    padding: 5px;
+}
+
+.navbar-header .first-half{
+    width: 50%;
+}
+
+.navbar-header .seconds-half{
+    width: 50%;
+}
+.time{
+    margin-right: 50px;
+}
+
+.sign-in{
+    border: 2px solid white;
+    margin-top: 4px;
+    padding:0 5px;
+    border-radius: 30px;
     
 }
 
-.signInSymbol{
-    border: 2px solid white;
-    border-radius: 50%;
-    padding: 5px 10px;
-    display: inline-block;
-    margin-left: 5px;
-}
-
+/* super admin navigation */
 .superadmin-navigation{
     background-color:#F5FFD7;
 }

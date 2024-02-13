@@ -28,7 +28,7 @@ function ApprovelBody() {
     
     getTimesheet();
   }, [])
-  console.log(timesheetDatas)
+  
   useEffect(() => {
     // Check if at least one checkbox is checked
     const isChecked = timesheetDatas.some((sheet) => sheet.checked);
@@ -87,7 +87,7 @@ function ApprovelBody() {
   async function approveSaveConfirmation() {
     setAskConfirmationForApprove(false);
     const approvedSheets = timesheetDatas.filter((sheet) => sheet.checked === true);
-    console.log("Approved sheets", approvedSheets);
+    
   
     try {
         // Update the status of approved sheets and track their IDs
@@ -131,7 +131,7 @@ function ApprovelBody() {
  async function rejectSaveConfirmation() {
     setAskConfirmationForReject(false);
     const rejectSheets = timesheetDatas.filter((sheet) => sheet.checked === true);
-    console.log("reject sheets", rejectSheets);
+    
   
     try {
         // Update the status of approved sheets and track their IDs
@@ -183,8 +183,8 @@ function ApprovelBody() {
           </div>}
           <div className="table-responsive">
             <table className="table table-bordered   table-hover border border-1 border-black">
-              <thead>
-                <tr className="text-center ">
+              <thead className="table-header" >
+                <tr className="text-center " style={{backgroundColor:"blue"}}>
                   <th>Select</th>
                   <th>Emp Id</th>
                   <th>Emp Name</th>
@@ -237,7 +237,7 @@ function ApprovelBody() {
           <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForApprove}  >
             <div className="d-flex flex-column modal-success p-4 align-items-center ">
               <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
-              <p className="mb-4 text-center">Timesheets are approved</p>
+              <p className="mb-4 text-center">Timesheets have been approved.</p>
               <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForApprove(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
             </div>
           </Modal>
@@ -249,7 +249,7 @@ function ApprovelBody() {
               <Button variant="secondary" onClick={rejectCancelConfirmation}>
                 Cancel
               </Button>
-              <Button variant="primary" onClick={rejectSaveConfirmation}>
+              <Button variant="danger" onClick={rejectSaveConfirmation}>
                 Reject
               </Button>
             </Modal.Footer>
@@ -257,7 +257,7 @@ function ApprovelBody() {
           <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForReject}  >
             <div className="d-flex flex-column modal-success p-4 align-items-center ">
               <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
-              <p className="mb-4 text-center">Timesheets are rejected</p>
+              <p className="mb-4 text-center">Timesheets have been rejected.</p>
               <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForReject(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
             </div>
           </Modal>

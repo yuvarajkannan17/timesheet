@@ -1,6 +1,9 @@
+
+/* search admin details */
 .searchAdminPanel-bg {
     
     background-color: #F5FFD7;
+    min-height: 100vh;
 }
 
 .searchAdminPanel {
@@ -9,8 +12,6 @@
     padding: 10px 0;
 
     }
-
-
 
 .no-focus-outline input:focus {
     outline: none !important;
@@ -26,33 +27,31 @@
     background-color: #1C2FBA !important;
     color: #fff !important;
 }
+/* view admin details */
+.viewAdmin{
+    padding-top: 10px;
+    background-color: #F5FFD7;
+    min-height: 100vh;
+}
 
-.admin-details{
+
+ .admin-details{
+    width: 80%;
+    margin: 0 auto;
     background-color:#fff;
     padding: 20px 40px;
-}
-
-p small{
-    font-weight: 100;
-}
-
-.adminList-column:hover {
-    background-color:#E5E5E5;
-   
+    border-radius: 10px;
+     box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.1),
+    -5px -5px 0 rgba(0, 0, 0, 0.1),
+    5px -5px 0 rgba(0, 0, 0, 0.1),
+    -5px 5px 0 rgba(0, 0, 0, 0.1);
+    
 }
 
 
-.adminList-column:hover td {
-    background-color: transparent; 
+.admin-list :hover{
     cursor: pointer;
-    
-} 
-
-.address{
-    overflow: auto;
-    
 }
-
 
 
 

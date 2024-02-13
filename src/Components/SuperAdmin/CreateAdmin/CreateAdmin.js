@@ -7,10 +7,11 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import url from '../../Api/data'
 import { useSelector } from 'react-redux';
-import { successModal, failureModal } from '../../features/modal';
+import { successModal, failureModal, deleteSuccessModal } from '../../features/modal';
 import { useDispatch } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 import failedCheck from '../../Image/failed.png'
+import successCheck from '../../Image/checked.png'
 function CreateAdmin() {
 
     // for navigation 
@@ -21,6 +22,7 @@ function CreateAdmin() {
     // redux state 
     const modal = useSelector(state => state.modal.value)
     const showFailureModal = modal.failureModal;
+    const deleteSuccessModalValue = modal.deleteSuccessModalValue;
     const dispatch = useDispatch();
     useEffect(() => {
         const fetchDataFromApi = async () => {
@@ -102,6 +104,7 @@ function CreateAdmin() {
     };
 
 
+
     return (
         <>
             <div className="adminUser">
@@ -138,7 +141,7 @@ function CreateAdmin() {
                                     </div>
                                     <div className="mb-3">
                                         <label htmlFor="phone" className="form-label">Phone Number</label>
-                                        <input type="text"  maxLength={10} className={`form-control  ${errors.phone && touched.phone ? "input-error" : ""}`} name="phone" id="phone" onChange={handleChange} onBlur={handleBlur} value={values.phone} ></input>
+                                        <input type="text" maxLength={10} className={`form-control  ${errors.phone && touched.phone ? "input-error" : ""}`} name="phone" id="phone" onChange={handleChange} onBlur={handleBlur} value={values.phone} ></input>
                                         {errors.phone && touched.phone && <p className="error-message small mt-1">{errors.phone}</p>}
                                     </div>
                                 </div>
@@ -150,12 +153,12 @@ function CreateAdmin() {
                                 <div className="col-md-5" >
                                     <div className="mb-3">
                                         <label htmlFor="aadharNumber" className="form-label">Aadhar Number</label>
-                                        <input type="text"  maxLength={12} className={`form-control  ${errors.aadhar && touched.aadhar ? "input-error" : ""}`} name="aadhar" id="aadharNumber" onChange={handleChange} onBlur={handleBlur} value={values.aadhar} ></input>
+                                        <input type="text" maxLength={12} className={`form-control  ${errors.aadhar && touched.aadhar ? "input-error" : ""}`} name="aadhar" id="aadharNumber" onChange={handleChange} onBlur={handleBlur} value={values.aadhar} ></input>
                                         {errors.aadhar && touched.aadhar && <p className="error-message small mt-1">{errors.aadhar}</p>}
                                     </div>
                                     <div className="mb-3">
                                         <label htmlFor="panNumber" className="form-label">Pan Number</label>
-                                        <input type="text"   maxLength={10} className={`form-control  ${errors.pan && touched.pan ? "input-error" : ""}`} name="pan" id="panNumber" onChange={handleChange} onBlur={handleBlur} value={values.pan} ></input>
+                                        <input type="text" maxLength={10} className={`form-control  ${errors.pan && touched.pan ? "input-error" : ""}`} name="pan" id="panNumber" onChange={handleChange} onBlur={handleBlur} value={values.pan} ></input>
                                         {errors.pan && touched.pan && <p className="error-message small mt-1">{errors.pan}</p>}
                                     </div>
                                     {/* checkboxes */}
@@ -209,12 +212,20 @@ function CreateAdmin() {
                     </form>
 
                 </div>
-                 {/* modal for form submission failed */}
+                {/* modal for form submission failed */}
                 <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={showFailureModal}  >
                     <div className="d-flex flex-column modal-success p-4 align-items-center ">
                         <img src={failedCheck} className="img-fluid mb-4" alt="failedCheck" />
                         <p className="mb-4 text-center">{createAdminError}</p>
                         <button className="btn  w-100 text-white" onClick={() => { dispatch(failureModal(false)) }} style={{ backgroundColor: '#F44336' }}>Close</button>
+                    </div>
+                </Modal>
+
+                {/* admin delete success modal */}
+                <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={deleteSuccessModalValue}  >
+                    <div className="d-flex flex-column modal-success p-4 align-items-center ">
+                        <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />                         <p className="mb-4 text-center">Admin User Profile Deleted Successfully</p>
+                        <button className="btn  w-100 text-white" onClick={() => { dispatch(deleteSuccessModal(false)) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
                     </div>
                 </Modal>
             </div>

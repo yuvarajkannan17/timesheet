@@ -133,7 +133,7 @@ function AdminEdit() {
 
                 dispatch(adminDetailsEdit(true));
                 dispatch(editSuccessModal(true));
-                navigate('/searchAdmin/' + id)
+                navigate('/searchAdmin/adminDetailsView/')
              }
 
 
@@ -145,7 +145,7 @@ function AdminEdit() {
 // reset the form
     const handleCancel = () => {
         resetForm();
-        navigate('/searchAdmin')
+        navigate('/searchAdmin/adminDetailsView/'+id)
     };
 
     return (
@@ -153,30 +153,38 @@ function AdminEdit() {
 
             {/* navbar header */}
             <header>
-                < Navbar className="approvelHeader d-block">
-                    <Container className='d-flex justify-content-between align-items-center'>
+            <div className='navbar-bg'>
+                <div className='navbar-header d-flex text-white'>
 
-                        <Navbar.Brand href="#home">
-                            <img
-                                src={chiselonLogo}
-                                width="35"
-                                height="35"
-                                className="d-inline-block align-top"
-                                alt="chiselon logo"
-                            />
+                    <div className='first-half d-flex justify-content-between align-items-center '>
+                        <div>
+                            <Navbar.Brand href="#home">
+                                <img
+                                    src={chiselonLogo}
+                                    width="35"
+                                    height="35"
+                                    className="d-inline-block align-top"
+                                    alt="chiselon logo" />
 
-                        </Navbar.Brand>
-                        <div className=''>
-                            <h3 className='text-white mx-auto '>Timesheet</h3>
+                            </Navbar.Brand>
                         </div>
-                        <div className='text-white  signInSymbol ' >
-                            <p className="mb-0">Y</p>
+                        <div className='h2'>
+                            Timesheet
                         </div>
-                    </Container>
-                    <Container className=' d-flex justify-content-end mt-2 small  text-warning' >
-                        <p className='text-end'>{formattedDateTime}</p>
-                    </Container>
-                </Navbar>
+
+                    </div>
+                    <div className='seconds-half d-flex justify-content-end align-items-center '>
+                        <div className='time text-warning'>
+                            {formattedDateTime}
+                        </div>
+                        <div className='h3 sign-in'>
+                            <a href='#' className='nav-link'>Y</a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
             </header>
             <section>
                 <div className='editAdmin'>
@@ -285,7 +293,7 @@ function AdminEdit() {
                                     </div>
                                 </div>
                                 {/* buttons for save & reset form */}
-                                <div className="editAdmin-button d-flex flex-wrap justify-content-end my-3 mx-5">
+                                <div className="editAdmin-button d-flex flex-wrap justify-content-end my-2 mx-5">
                                     <button type="submit"  className="btn btn-success ">Save</button>
                                     <button type="button" className="btn btn-info" onClick={handleCancel}>Cancel</button>
                                 </div>
