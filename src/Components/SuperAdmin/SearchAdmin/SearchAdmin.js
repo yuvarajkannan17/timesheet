@@ -47,7 +47,7 @@ function SearchAdmin() {
 
     function handleAdminClick(admin) {
         setActiveRow(admin.id);
-        navigate('/searchadmin/admindetailsview/' + admin.id)
+        navigate('/superadmin/searchadmin/admindetailsview/' + admin.id)
     }
 
 

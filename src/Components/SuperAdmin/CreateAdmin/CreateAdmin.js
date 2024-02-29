@@ -83,7 +83,7 @@ function CreateAdmin() {
                 // If the API call is successful, proceed with the following actions
                 dispatch(successModal(true));
                 actions.resetForm();
-                navigate('/searchadmin');
+                navigate('/superadmin/searchadmin');
             }
 
 

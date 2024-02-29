@@ -1,12 +1,14 @@
 import Navbar from './NavbarMenu'
 // for conditional rendering navbar
+import ApprovelHead from './Header';
 function Layout({children,hideNavbar}){
 
 
     return(
         <>
-        {!hideNavbar&& <Navbar/>}
+        {hideNavbar ? <ApprovelHead/> : <Navbar/>}
         {children}
+
         </>
     )
 }

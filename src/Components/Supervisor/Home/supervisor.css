@@ -1,0 +1,75 @@
+
+/* bg color */
+.addTimesheet{
+    background-color:#F5FFD7 ;
+    min-height: 100vh;
+}
+
+/* align the container center */
+.addTimesheet-container{
+    width: 80%;
+    margin: 0 auto;
+    padding-top: 20px;
+}
+
+/* notification */
+.add-timesheet-notification .col{
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+/* content title */
+.add-timesheet-content .col .title{
+    background-color: #A5D28D;
+    border-radius: 10px;
+    margin: 0;
+}
+
+/* content body */
+.add-timesheet-content .col .body {
+    background-color: #fff;
+    margin: 0;
+    border-radius: 10px;
+   
+}
+
+/* btn for select */
+.add-timesheet-content .select-btn{
+    width: 100%;
+    max-width: 200px;
+    background-color: #1C2FBA;
+    color:#fff;
+    border: none;
+    border-radius: 5px ;
+    box-shadow: 0 5px 3px gray;
+}
+
+/* timesheet status */
+.status{
+    background-color: #C6CAED;
+    border-radius: 5px;
+}
+
+/* btn for status */
+.status .view-btn,.status-btn{
+    width: 100%;
+    max-width: 100px;
+    border: none;
+    
+}
+
+
+
+
+
+/* view btn */
+.status .view-btn{
+    background-color: #1C2FBA;
+    color: #fff;
+}
+
+/* status btn */
+.status .status-btn{
+    background-color: green;
+    color: #fff;
+}

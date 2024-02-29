@@ -46,7 +46,7 @@ function AdminDetailsView() {
 
     //  navigate to edit page
     function updateAdmin(id) {
-        navigate('/editAdmin/' + id);
+        navigate('/superadmin/searchadmin/admindetailsview/editadmin/' + id);
 
     }
 
@@ -74,7 +74,7 @@ function AdminDetailsView() {
             archiveData(deletedAdmin);
             await axios.delete(`${url}/${removeAdminId}`);
             dispatch(deleteSuccessModal(true));
-            navigate('/')
+            navigate('/superadmin/createadmin')
         } catch (error) {
             console.error('Error deleting admin:', error);
         }

@@ -1,12 +1,12 @@
 
 import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 import chiselonLogo from '../Image/logochiselon.png'
-import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
 
-import './navbarMenu.css'
-function NavbarMenu() {
+import React, { useState, useEffect } from 'react';
+function Header() {
 
     const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
@@ -24,9 +24,8 @@ function NavbarMenu() {
 
     return (
         <>
-{/* super admin header */}
-
-            <div className='navbar-bg'>
+           
+           <div className='navbar-bg'>
                 <div className='navbar-header d-flex text-white'>
 
                     <div className='first-half d-flex justify-content-between align-items-center '>
@@ -58,29 +57,9 @@ function NavbarMenu() {
                 </div>
 
             </div>
-            {/*  superadmin navigation to create admin and search admin */}
-            <div className="superadmin-navigation">
-                <Container >
-                    <div>
-                        <ul className='nav d-flex justify-content-end'>
-                            <li className='nav-item'>
-                                <NavLink to={'/superadmin/createadmin'} className='nav-link superadmin-navigation-link' activeclassname='active'>Create Admin User</NavLink>
-                            </li>
-                            <li className='nav-item'>
-                                <NavLink to={'/superadmin/searchadmin'} className='nav-link superadmin-navigation-link' activeclassname='active'>Search Admin User</NavLink>
-                            </li>
-                        </ul>
-                    </div>
-                </Container>
-            </div>
-
 
         </>
     )
-
 }
 
-export default NavbarMenu;
-
-
-
+export default Header;

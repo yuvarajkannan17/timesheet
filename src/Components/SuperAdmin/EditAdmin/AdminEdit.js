@@ -133,7 +133,7 @@ function AdminEdit() {
 
                 dispatch(adminDetailsEdit(true));
                 dispatch(editSuccessModal(true));
-                navigate('/searchAdmin/adminDetailsView/')
+                navigate('/superadmin/searchAdmin/adminDetailsView/'+id)
              }
 
 
@@ -145,47 +145,13 @@ function AdminEdit() {
 // reset the form
     const handleCancel = () => {
         resetForm();
-        navigate('/searchAdmin/adminDetailsView/'+id)
+        navigate('/superadmin/searchAdmin/adminDetailsView/'+id)
     };
 
     return (
         <>
 
-            {/* navbar header */}
-            <header>
-            <div className='navbar-bg'>
-                <div className='navbar-header d-flex text-white'>
-
-                    <div className='first-half d-flex justify-content-between align-items-center '>
-                        <div>
-                            <Navbar.Brand href="#home">
-                                <img
-                                    src={chiselonLogo}
-                                    width="35"
-                                    height="35"
-                                    className="d-inline-block align-top"
-                                    alt="chiselon logo" />
-
-                            </Navbar.Brand>
-                        </div>
-                        <div className='h2'>
-                            Timesheet
-                        </div>
-
-                    </div>
-                    <div className='seconds-half d-flex justify-content-end align-items-center '>
-                        <div className='time text-warning'>
-                            {formattedDateTime}
-                        </div>
-                        <div className='h3 sign-in'>
-                            <a href='#' className='nav-link'>Y</a>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-            </header>
+          
             <section>
                 <div className='editAdmin'>
                     <div className='editAdmin-content'>
