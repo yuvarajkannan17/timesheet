@@ -109,8 +109,8 @@ function SupervisorEditTimesheet() {
     return (
        <>
        {timesheetData && (
-         <div className="background-clr">
-         <div className="employeeEdit-container pt-4">
+         <div className="ti-background-clr">
+         <div className="ti-data-field-container pt-4">
              <div>
                  <p className='fs-4 '>Edit Timesheet</p>
              </div>
@@ -160,7 +160,7 @@ function SupervisorEditTimesheet() {
                                  </div>
                              </th>
                              {timesheetData && timesheetData.timesheetData.map((date, index) => (
-                                 <td key={date.date} style={{ backgroundColor: '#B7F203' }}  ><input type="number" min={0} max={12} className="workInput-edit border border-none text-center mt-3" value={date.hoursWorked} onChange={(e) => handleWorkHoursChange(index, e.target.value)}></input></td>
+                                 <td key={date.date} style={{ backgroundColor: '#B7F203' }}  ><input type="number" min={0} max={12} className="ti-workInput-edit border border-none text-center mt-3" value={date.hoursWorked} onChange={(e) => handleWorkHoursChange(index, e.target.value)}></input></td>
                              ))}
                          </tr>
                      </tbody>

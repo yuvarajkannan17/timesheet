@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { successModal} from '../../features/modal';
 import { Modal,Button } from 'react-bootstrap';
 import successCheck from '../../Image/checked.png'
+import SuperAdminNav from '../Navbar/SuperAdminNav';
 function SearchAdmin() {
     // admin List
     const [adminList, setAdminList] = useState([]);
@@ -66,11 +67,11 @@ function SearchAdmin() {
 
     return (
         <>
-
-            <div className='searchAdminPanel-bg'>
-                <div className='searchAdminPanel row'>
+         <SuperAdminNav/>
+            <div className='ti-background-clr'>
+                <div className='ti-data-field-container row py-4'>
                     {/* admin list view and search */}
-                    <div className='col search-admin'>
+                    <div className='col '>
                         <div className=' d-flex justify-content-between  flex-wrap p-2' style={{ backgroundColor: "white" }}>
                             <p className='me-2 '>ADMIN USERS</p>
                             <div>
@@ -81,9 +82,9 @@ function SearchAdmin() {
 
                             </div>
                         </div>
-                        <div className='admin-list table-responsive'>
+                        <div className='sprAdmin-admin-list table-responsive'>
                             <table className='table custom-table  table-hover '>
-                                <thead className='table-header'>
+                                <thead className='sprAdmin-searchAdmin-table-header'>
                                     <tr className='text-center text-white'>
                                         <th scope="col">Admin Id</th>
                                         <th scope="col"> Name</th>

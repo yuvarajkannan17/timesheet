@@ -1,34 +1,30 @@
 /* for navbar  */
 
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+
 
 /* for header */
-.navbar-bg{
+.ti-navbar-bg{
     background-color: #1C2FBA;
 }
 
-.navbar-header{
+.ti-navbar-header{
     width: 90%;
     margin: 0 auto;
     padding: 5px;
 }
 
-.navbar-header .first-half{
+.ti-navbar-header .first-half{
     width: 50%;
 }
 
-.navbar-header .seconds-half{
+.ti-navbar-header .seconds-half{
     width: 50%;
 }
-.time{
+.ti-time{
     margin-right: 50px;
 }
 
-.sign-in{
+.ti-sign-in{
     border: 2px solid white;
     margin-top: 4px;
     padding:0 5px;

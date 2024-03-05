@@ -18,14 +18,19 @@ function SupervisorHome() {
 
     }
 
+    function goToSubmitPage(){
+        navigate('/supervisor/submittimesheet');
+
+    }
+
     return (
         <>
-            <div className="addTimesheet">
+            <div className="ti-background-clr">
 
-                <div className='addTimesheet-container'>
+                <div className='ti-home-container'>
 
 {/* notification about timesheet */}
-                    <div className="row text-center add-timesheet-notification">
+                    <div className="row text-center ti-home-notification">
 
                         <div className="col   mx-5 my-2 p-2 ">Timesheet to be approved</div>
                         <div className="col  mx-5  my-2 p-2  ">Rejected Timesheets</div>
@@ -33,12 +38,12 @@ function SupervisorHome() {
                     </div>
 
 {/* timesheet content */}
-                    <div className="row text-center add-timesheet-content mt-2">
+                    <div className="row text-center ti-home-content mt-2">
                         {/* timesheet status */}
                         <div className="col mx-5 my-2 p-2 ">
                             <p className='p-2 title'>Your Submitted Timesheet</p>
                             <div className='body   p-2 text-start'>
-                                <div className='m-4 status p-4'>
+                                <div className='m-4 ti-home-ti-status p-4'>
                                     <p className=''>Timesheet Period :</p>
                                     <p  className=''>Created On :</p>
                                     <div className='d-flex justify-content-around flex-wrap '>
@@ -57,6 +62,9 @@ function SupervisorHome() {
                                 </div>
                                 <div className='my-4'>
                                     <button type='button' className='btn p-2 select-btn' onClick={goToEditPage}>Edit Timesheet</button>
+                                </div>
+                                <div className='my-4'>
+                                    <button type='button' className='btn p-2 select-btn' onClick={goToSubmitPage}>Submit Timesheet</button>
                                 </div>
                                 <div className='my-4'>
                                     <button type='button' className='btn p-2 select-btn' onClick={goToApprovePage}>Approve Timesheet</button>

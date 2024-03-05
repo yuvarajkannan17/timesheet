@@ -1,13 +1,15 @@
-import Navbar from './NavbarMenu'
-// for conditional rendering navbar
-import ApprovelHead from './Header';
-function Layout({children,hideNavbar}){
+import Header from './Header';
+import Footer from './Footer';
+
+function Layout({ children }) {
 
 
-    return(
+    return (
         <>
-        {hideNavbar ? <ApprovelHead/> : <Navbar/>}
-        {children}
+            {/* common Header */}
+            <Header />
+            {children}
+            <Footer />
 
         </>
     )

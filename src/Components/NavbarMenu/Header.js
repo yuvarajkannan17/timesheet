@@ -4,6 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import chiselonLogo from '../Image/logochiselon.png'
+import './Header.css'
 
 import React, { useState, useEffect } from 'react';
 function Header() {
@@ -25,8 +26,8 @@ function Header() {
     return (
         <>
            
-           <div className='navbar-bg'>
-                <div className='navbar-header d-flex text-white'>
+           <div className='ti-navbar-bg'>
+                <div className='ti-navbar-header d-flex text-white'>
 
                     <div className='first-half d-flex justify-content-between align-items-center '>
                         <div>
@@ -46,11 +47,11 @@ function Header() {
 
                     </div>
                     <div className='seconds-half d-flex justify-content-end align-items-center '>
-                        <div className='time text-warning'>
+                        <div className='ti-time text-warning'>
                             {formattedDateTime}
                         </div>
-                        <div className='h3 sign-in'>
-                            <a href='#' className='nav-link'>Y</a>
+                        <div className='h3 ti-sign-in'>
+                            <a href='#' className='nav-link'>C</a>
                         </div>
                     </div>
 

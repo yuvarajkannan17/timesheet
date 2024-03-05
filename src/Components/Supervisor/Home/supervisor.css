@@ -1,32 +1,29 @@
 
 /* bg color */
-.addTimesheet{
-    background-color:#F5FFD7 ;
-    min-height: 100vh;
-}
+
 
 /* align the container center */
-.addTimesheet-container{
+.ti-home-container{
     width: 80%;
     margin: 0 auto;
     padding-top: 20px;
 }
 
 /* notification */
-.add-timesheet-notification .col{
+.ti-home-notification .col{
     border: 2px solid black;
     border-radius: 10px;
 }
 
 /* content title */
-.add-timesheet-content .col .title{
+.ti-home-content .col .title{
     background-color: #A5D28D;
     border-radius: 10px;
     margin: 0;
 }
 
 /* content body */
-.add-timesheet-content .col .body {
+.ti-home-content .col .body {
     background-color: #fff;
     margin: 0;
     border-radius: 10px;
@@ -34,7 +31,7 @@
 }
 
 /* btn for select */
-.add-timesheet-content .select-btn{
+.ti-home-content .select-btn{
     width: 100%;
     max-width: 200px;
     background-color: #1C2FBA;
@@ -45,13 +42,13 @@
 }
 
 /* timesheet status */
-.status{
+.ti-home-ti-status{
     background-color: #C6CAED;
     border-radius: 5px;
 }
 
 /* btn for status */
-.status .view-btn,.status-btn{
+.ti-home-ti-status .view-btn,.status-btn{
     width: 100%;
     max-width: 100px;
     border: none;
@@ -59,17 +56,14 @@
 }
 
 
-
-
-
 /* view btn */
-.status .view-btn{
+.ti-home-ti-status .view-btn{
     background-color: #1C2FBA;
     color: #fff;
 }
 
 /* status btn */
-.status .status-btn{
+.ti-home-ti-status .status-btn{
     background-color: green;
     color: #fff;
 }

@@ -1,55 +1,47 @@
 /* Create Admin User form */
-.adminUser{
-    background-color:#F5FFD7;
-    min-height: 100vh;
-    height: 100%;
-}
-.createAdmin{
+
+.sprAdmin-createAdmin{
     width: 90%;
     margin: 0 auto;
    
 }
 
-.createAdmin-title{
+.sprAdmin-createAdmin-title{
   letter-spacing:2px;
   font-weight: 900;
 }
 
-.createAdmin-body{
+.sprAdmin-createAdmin-body{
     background-color: #fff;
     
 }
 
-.createAdmin-form{
-    width: 80%;
+.sprAdmin-createAdmin-form{
+    width: 100%;
     margin: 20px auto;
 }
 
-/* buttons */
 
-.createAdmin-button button{
-    width: 100px;
-    margin: 5px;
-    
-}
 /* checkboxes */
-.checkbox-create:checked{
-   background-color: green;
+.sprAdmin-createAdmin-checkbox-create:checked{
+   background-color: green !important; 
 }
 
-.checkbox-delete:checked{
-    background-color:red;
+.sprAdmin-createAdmin-checkbox-delete:checked{
+    background-color:red !important;
  }
 
  /* form error */
 
- .input-error{
+ .sprAdmin-createAdmin-input-br-error{
     border: 2px solid rgba(228, 66, 66, 0.826) !important;
  }
 
- .error-message{
+ .sprAdmin-createAdmin-error-message{
     color:rgba(228, 14, 14, 0.826) ;
  }
+
+
 /* modal */
  /* customize the modal overall width */
 
@@ -63,7 +55,7 @@
     width: 50px;
  }
 
- #address{
+ .sprAdmin-createAdmin-address {
     width: 100%; /* Make the textarea occupy the full width of its container */
     border: 1px solid #ccc;
     padding: 8px;

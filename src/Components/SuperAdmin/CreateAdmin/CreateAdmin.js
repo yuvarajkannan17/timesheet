@@ -1,6 +1,6 @@
 
 import { useFormik } from "formik";
-import './createProfile.css'
+import './CreateAdmin.css'
 import { basicSchema } from './ValidationSchema'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 import failedCheck from '../../Image/failed.png'
 import successCheck from '../../Image/checked.png'
+import SuperAdminNav from "../Navbar/SuperAdminNav";
 function CreateAdmin() {
 
     // for navigation 
@@ -107,42 +108,43 @@ function CreateAdmin() {
 
     return (
         <>
-            <div className="adminUser">
-                <div className="createAdmin">
-                    <p className="createAdmin-title ">Create Profile</p>
+         <SuperAdminNav/>
+            <div className="ti-background-clr">
+                <div className="sprAdmin-createAdmin">
+                    <p className="sprAdmin-createAdmin-title ">Create Profile</p>
                     <form onSubmit={handleSubmit}>
-                        <div className="createAdmin-body border border-1 border-dark rounded">
+                        <div className="sprAdmin-createAdmin-body border border-1 border-dark rounded p-4">
                             {/* create admin user form */}
-                            <div className="row createAdmin-form" >
+                            <div className="row sprAdmin-createAdmin-form" >
                                 {/* col-5 under the row */}
                                 <div className="col-md-5" >
 
                                     <div className="mb-3">
                                         <label htmlFor="firstName" className="form-label">First Name</label>
-                                        <input type="text" maxLength={50} className={`form-control  ${errors.fName && touched.fName ? "input-error" : ""}`} name="fName" id="firstName" onChange={handleChange} onBlur={handleBlur} value={values.fName} ></input>
-                                        {errors.fName && touched.fName && <p className="error-message small mt-1">{errors.fName}</p>}
+                                        <input type="text" maxLength={50} className={`form-control  ${errors.fName && touched.fName ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="fName" id="firstName" onChange={handleChange} onBlur={handleBlur} value={values.fName} ></input>
+                                        {errors.fName && touched.fName && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.fName}</p>}
                                     </div>
 
                                     <div className="mb-3">
                                         <label htmlFor="lastName" className="form-label">Last Name</label>
-                                        <input type="text" maxLength={50} className={`form-control  ${errors.lName && touched.lName ? "input-error" : ""}`} name="lName" id="lastName" onChange={handleChange} onBlur={handleBlur} value={values.lName} ></input>
-                                        {errors.lName && touched.lName && <p className="error-message small mt-1">{errors.lName}</p>}
+                                        <input type="text" maxLength={50} className={`form-control  ${errors.lName && touched.lName ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="lName" id="lastName" onChange={handleChange} onBlur={handleBlur} value={values.lName} ></input>
+                                        {errors.lName && touched.lName && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.lName}</p>}
                                     </div>
                                     <div className="mb-3">
                                         <label htmlFor="address" className="form-label">Address </label>
-                                        <textarea maxLength={100} className={`form-control  ${errors.address && touched.address ? "input-error" : ""}`} name="address" id="address" onChange={handleChange} onBlur={handleBlur} value={values.address}></textarea>
-                                        {errors.address && touched.address && <p className="error-message small mt-1">{errors.address}</p>}
+                                        <textarea maxLength={100} className={`form-control sprAdmin-createAdmin-address  ${errors.address && touched.address ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="address" id="address" onChange={handleChange} onBlur={handleBlur} value={values.address}></textarea>
+                                        {errors.address && touched.address && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.address}</p>}
                                     </div>
                                     <div className="mb-3">
                                         <label htmlFor="email" className="form-label">Email Id </label>
-                                        <input type="email" maxLength={100} className={`form-control  ${errors.email && touched.email ? "input-error" : ""}`} name="email" id="email" onChange={handleChange} onBlur={handleBlur} value={values.email} ></input>
+                                        <input type="email" maxLength={100} className={`form-control  ${errors.email && touched.email ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="email" id="email" onChange={handleChange} onBlur={handleBlur} value={values.email} ></input>
                                         {errors.email && touched.email && <p className="error-message small mt-1">{errors.email}</p>}
-                                        {userAlreadyExit && <p className="error-message small mt-1">{userAlreadyExit}</p>}
+                                        {userAlreadyExit && <p className="sprAdmin-createAdmin-error-message small mt-1">{userAlreadyExit}</p>}
                                     </div>
                                     <div className="mb-3">
                                         <label htmlFor="phone" className="form-label">Phone Number</label>
-                                        <input type="text" maxLength={10} className={`form-control  ${errors.phone && touched.phone ? "input-error" : ""}`} name="phone" id="phone" onChange={handleChange} onBlur={handleBlur} value={values.phone} ></input>
-                                        {errors.phone && touched.phone && <p className="error-message small mt-1">{errors.phone}</p>}
+                                        <input type="text" maxLength={10} className={`form-control  ${errors.phone && touched.phone ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="phone" id="phone" onChange={handleChange} onBlur={handleBlur} value={values.phone} ></input>
+                                        {errors.phone && touched.phone && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.phone}</p>}
                                     </div>
                                 </div>
                                 {/* Skip the next 1 columns */}
@@ -153,13 +155,13 @@ function CreateAdmin() {
                                 <div className="col-md-5" >
                                     <div className="mb-3">
                                         <label htmlFor="aadharNumber" className="form-label">Aadhar Number</label>
-                                        <input type="text" maxLength={12} className={`form-control  ${errors.aadhar && touched.aadhar ? "input-error" : ""}`} name="aadhar" id="aadharNumber" onChange={handleChange} onBlur={handleBlur} value={values.aadhar} ></input>
-                                        {errors.aadhar && touched.aadhar && <p className="error-message small mt-1">{errors.aadhar}</p>}
+                                        <input type="text" maxLength={12} className={`form-control  ${errors.aadhar && touched.aadhar ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="aadhar" id="aadharNumber" onChange={handleChange} onBlur={handleBlur} value={values.aadhar} ></input>
+                                        {errors.aadhar && touched.aadhar && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.aadhar}</p>}
                                     </div>
                                     <div className="mb-3">
                                         <label htmlFor="panNumber" className="form-label">Pan Number</label>
-                                        <input type="text" maxLength={10} className={`form-control  ${errors.pan && touched.pan ? "input-error" : ""}`} name="pan" id="panNumber" onChange={handleChange} onBlur={handleBlur} value={values.pan} ></input>
-                                        {errors.pan && touched.pan && <p className="error-message small mt-1">{errors.pan}</p>}
+                                        <input type="text" maxLength={10} className={`form-control  ${errors.pan && touched.pan ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="pan" id="panNumber" onChange={handleChange} onBlur={handleBlur} value={values.pan} ></input>
+                                        {errors.pan && touched.pan && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.pan}</p>}
                                     </div>
                                     {/* checkboxes */}
                                     <div className="form-group">
@@ -168,16 +170,16 @@ function CreateAdmin() {
 
                                             <label htmlFor="checkBoxGroupTitle d-block" >Access Permission for Employee details </label>
                                             <div className="form-check ">
-                                                <input className="form-check-input checkbox-create" name="employeeAccess.create" type="checkbox" id="empcreate" checked={values.employeeAccess.create} onBlur={handleBlur} onChange={handleChange}></input>
+                                                <input className="form-check-input sprAdmin-createAdmin-checkbox-create" name="employeeAccess.create" type="checkbox" id="empcreate" checked={values.employeeAccess.create} onBlur={handleBlur} onChange={handleChange}></input>
                                                 <label className="form-check-label" htmlFor="empcreate">Create</label>
 
                                             </div>
                                             <div className="form-check ">
-                                                <input className="form-check-input checkbox-edit" name="employeeAccess.edit" type="checkbox" id="empedit" checked={values.employeeAccess.edit} onBlur={handleBlur} onChange={handleChange}></input>
+                                                <input className="form-check-input sprAdmin-createAdmin-checkbox-edit" name="employeeAccess.edit" type="checkbox" id="empedit" checked={values.employeeAccess.edit} onBlur={handleBlur} onChange={handleChange}></input>
                                                 <label className="form-check-label" htmlFor="empedit">Edit</label>
                                             </div>
                                             <div className="form-check form-check-inline">
-                                                <input className="form-check-input checkbox-delete" name="employeeAccess.delete" type="checkbox" id="empdelete" checked={values.employeeAccess.delete} onBlur={handleBlur} onChange={handleChange}></input>
+                                                <input className="form-check-input sprAdmin-createAdmin-checkbox-delete" name="employeeAccess.delete" type="checkbox" id="empdelete" checked={values.employeeAccess.delete} onBlur={handleBlur} onChange={handleChange}></input>
                                                 <label className="form-check-label" htmlFor="empdelete">Delete</label>
                                             </div>
 
@@ -187,15 +189,15 @@ function CreateAdmin() {
 
                                             <label htmlFor="checkBoxGroupTitle d-block">Access Permission for Project details </label>
                                             <div className="form-check ">
-                                                <input className="form-check-input checkbox-create" name="projectAccess.create" type="checkbox" id="pjcreate" checked={values.projectAccess.create} onBlur={handleBlur} onChange={handleChange}></input>
+                                                <input className="form-check-input sprAdmin-createAdmin-checkbox-create" name="projectAccess.create" type="checkbox" id="pjcreate" checked={values.projectAccess.create} onBlur={handleBlur} onChange={handleChange}></input>
                                                 <label className="form-check-label" htmlFor="pjcreate">Create</label>
                                             </div>
                                             <div className="form-check ">
-                                                <input className="form-check-input checkbox-edit" name="projectAccess.edit" type="checkbox" id="pjedit" checked={values.projectAccess.edit} onBlur={handleBlur} onChange={handleChange}></input>
+                                                <input className="form-check-input sprAdmin-createAdmin-checkbox-edit" name="projectAccess.edit" type="checkbox" id="pjedit" checked={values.projectAccess.edit} onBlur={handleBlur} onChange={handleChange}></input>
                                                 <label className="form-check-label" htmlFor="pjedit">Edit</label>
                                             </div>
                                             <div className="form-check form-check-inline">
-                                                <input className="form-check-input checkbox-delete" name="projectAccess.delete" type="checkbox" id="pjdelete" checked={values.projectAccess.delete} onBlur={handleBlur} onChange={handleChange}></input>
+                                                <input className="form-check-input sprAdmin-createAdmin-checkbox-delete" name="projectAccess.delete" type="checkbox" id="pjdelete" checked={values.projectAccess.delete} onBlur={handleBlur} onChange={handleChange}></input>
                                                 <label className="form-check-label" htmlFor="pjdelete">Delete</label>
                                             </div>
 
@@ -205,7 +207,7 @@ function CreateAdmin() {
                             </div>
                         </div>
                         {/* buttons for save & reset form */}
-                        <div className="createAdmin-button d-flex flex-wrap justify-content-end my-3 mx-5">
+                        <div className="ti-common-buttons d-flex flex-wrap justify-content-end my-3 mx-5">
                             <button type="submit" disabled={isSubmitting} className="btn btn-success ">Save</button>
                             <button type="button" className="btn btn-info" onClick={handleCancel}>Cancel</button>
                         </div>

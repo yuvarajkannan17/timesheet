@@ -1,29 +1,14 @@
 /* for editadmin page  */
-.editAdmin{
-    background-color:#F5FFD7;
-    padding-top: 8px;
-    min-height: 100vh;
-    
-}
+/*  */
 
-.editAdmin-content{
-    width: 90%;
-    margin: 0 auto;
-    
-}
-
-.editAdmin-title{
+.sprAdmin-editAdmin-title{
     letter-spacing:2px;
     font-weight: 900;
   }
 
-.editAdmin-form{
-    width: 80%;
+.sprAdmin-editAdmin-form{
+    width: 100%;
     margin: 0 auto;
     background-color:#fff;
 }
 
-.editAdmin-button button{
-    width:100px;
-    margin:0 5px;
-}

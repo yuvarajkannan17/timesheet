@@ -9,6 +9,7 @@ import { Modal,Button } from 'react-bootstrap';
 import archiveUrl from '../../Api/archive'
 import successCheck from '../../Image/checked.png'
 import { editSuccessModal,deleteSuccessModal } from '../../features/modal';
+import SuperAdminNav from "../Navbar/SuperAdminNav";
 
 function AdminDetailsView() {
     // admin details state
@@ -89,10 +90,10 @@ function AdminDetailsView() {
 
     return (
         <>
-
-            <div className='viewAdmin'>
+       <SuperAdminNav/>
+            <div className='ti-background-clr pt-5'>
                 {adminDetails &&
-                    <div className='admin-details'>
+                    <div className='sprAdmin-admin-details '>
                         <div className='d-flex justify-content-between flex-wrap '>
                             <p className=''>Admin User</p>
                             <div>

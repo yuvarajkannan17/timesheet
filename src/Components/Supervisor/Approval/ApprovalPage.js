@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { editTimesheetSuccessModal,editTimesheetRejectModal } from '../../features/modal';
 import employeeSheetUrl from "../../Api/employeeEdit";
-function ApprovelBody() {
+function ApprovelPage() {
   const [timesheetDatas, setTimesheetDatas] = useState([])
   const [askConfitrmationForApprove, setAskConfirmationForApprove] = useState(false)
   const [askConfitrmationForReject, setAskConfirmationForReject] = useState(false)
@@ -194,10 +194,10 @@ function ApprovelBody() {
   return (
     <>
 
-      <div className="approvel-body">
+      <div className="ti-background-clr">
         <Container>
           <div className="py-3 ">
-            <p className=" text-center approvel-title ">Timesheet List</p>
+            <p className=" text-center spr-approval-title ">Timesheet List</p>
           </div>
           {/* without select timesheet error  */}
           {errorMessage && <div className="alert alert-danger" role="alert">
@@ -206,8 +206,8 @@ function ApprovelBody() {
           {/* table head */}
           <div className="table-responsive">
             <table className="table table-bordered   table-hover border border-1 border-black">
-              <thead className="table-header" >
-                <tr className="text-center " style={{backgroundColor:"blue"}}>
+              <thead className="" >
+                <tr className="text-center spr-approval-header" >
                   <th>Select</th>
                   <th>Emp Id</th>
                   <th>Emp Name</th>
@@ -321,4 +321,4 @@ function ApprovelBody() {
   )
 }
 
-export default ApprovelBody;
+export default ApprovelPage;

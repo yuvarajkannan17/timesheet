@@ -1,17 +1,5 @@
-
 /* search admin details */
-.searchAdminPanel-bg {
-    
-    background-color: #F5FFD7;
-    min-height: 100vh;
-}
 
-.searchAdminPanel {
-    width: 90%;
-    margin: 0 auto;
-    padding: 10px 0;
-
-    }
 
 .no-focus-outline input:focus {
     outline: none !important;
@@ -23,38 +11,26 @@
     border-radius: 0 !important;
 }
 
-.table-header th{
+.sprAdmin-searchAdmin-table-header th {
     background-color: #1C2FBA !important;
     color: #fff !important;
 }
-/* view admin details */
-.viewAdmin{
-    padding-top: 10px;
-    background-color: #F5FFD7;
-    min-height: 100vh;
-}
 
-
- .admin-details{
-    width: 80%;
-    margin: 0 auto;
-    background-color:#fff;
-    padding: 20px 40px;
-    border-radius: 10px;
-     box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.1),
-    -5px -5px 0 rgba(0, 0, 0, 0.1),
-    5px -5px 0 rgba(0, 0, 0, 0.1),
-    -5px 5px 0 rgba(0, 0, 0, 0.1);
-    
-}
-
-
-.admin-list :hover{
+.sprAdmin-admin-list :hover {
     cursor: pointer;
 }
 
+/* view admin details */
 
+.sprAdmin-admin-details {
+    width: 80%;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px 40px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.1),
+        -5px -5px 0 rgba(0, 0, 0, 0.1),
+        5px -5px 0 rgba(0, 0, 0, 0.1),
+        -5px 5px 0 rgba(0, 0, 0, 0.1);
 
-
-
-
+}

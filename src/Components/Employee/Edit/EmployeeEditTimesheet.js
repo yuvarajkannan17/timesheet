@@ -2,7 +2,7 @@ import axios from "axios";
 import employeeSheetUrl from "../../Api/employeeEdit";
 import Select from 'react-select';
 import { useEffect, useState, useRef } from "react";
-import './employeeEdit.css'
+
 import { useNavigate } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
 import successCheck from '../../Image/checked.png'
@@ -109,13 +109,15 @@ function EmployeeEditTimesheet() {
     return (
         <>
         {timesheetData && (
-            <div className="background-clr">
-            <div className="employeeEdit-container pt-4">
+            <div className="ti-background-clr">
+           <div className="">
+                <div >
+                <div className="ti-data-field-container pt-4">
                 <div>
                     <p className='fs-4 '>Edit Timesheet</p>
                 </div>
 
-                <div className="d-flex justify-content-between">
+                <div className=" d-flex justify-content-between">
                     <div className="m-1">
                         <label htmlFor="fromDate"> Date :  </label>
                         <input type="date" id="fromDate" className="mx-1" value={timesheetData.StartDate} readOnly></input>
@@ -127,7 +129,7 @@ function EmployeeEditTimesheet() {
                 </div>
 
 
-                <div className=" border border-1 rounded p-4 border-black my-4" style={{ position: 'relative', zIndex: 1}}>
+                <div className=" border table-responsive border-1 rounded p-4 border-black my-4" style={{ position: 'relative', zIndex: 1}}>
                     <table className="table table-bordered border-dark  text-center "  >
                         <thead>
                             <tr>
@@ -161,7 +163,7 @@ function EmployeeEditTimesheet() {
                                     </div>
                                 </th>
                                 {timesheetData && timesheetData.timesheetData.map((date, index) => (
-                                    <td key={date.date} style={{ backgroundColor: '#B7F203' }}  ><input type="number"  className="workInput-edit border border-none text-center mt-3" value={date.hoursWorked} min={0} max={12} onChange={(e) => handleWorkHoursChange(index, e.target.value)}></input></td>
+                                    <td key={date.date} style={{ backgroundColor: '#B7F203' }}  ><input type="number"  className="ti-workInput-edit border border-none text-center mt-3" value={date.hoursWorked} min={0} max={12} onChange={(e) => handleWorkHoursChange(index, e.target.value)}></input></td>
                                 ))}
                             </tr>
                         </tbody>
@@ -176,6 +178,10 @@ function EmployeeEditTimesheet() {
                 </div>
 
             </div>
+
+                </div>
+               
+           </div>
             {/* confirmation modal */}
             <Modal show={editDataSaveConfirmation}>
 

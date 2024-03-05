@@ -8,3 +8,28 @@
     font-family: 'Poppins', sans-serif;
     font-size: 12px;
   }
+
+  .ti-background-clr{
+    background-color:#F5FFD7 ;
+    min-height: 100vh;
+    width: 100%;
+    
+}
+
+ .ti-workInput-edit{
+  width: 100%;
+  max-width: 40px;
+ }
+
+ .ti-data-field-container{
+  width: 90%;
+  margin: 0 auto;
+}
+
+/* buttons */
+
+.ti-common-buttons button{
+  width: 100px;
+  margin: 5px;
+  
+}
