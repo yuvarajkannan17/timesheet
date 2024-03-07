@@ -1,4 +1,4 @@
-/* ProjectForm.css */
+
 .adminUser-ProjectForm {
   display: flex;
   justify-content: center;
@@ -90,3 +90,6 @@
   border-radius: 8px;
 }
 
+.error-message-ProjectForm {
+  color: #aa0b00;
+}
