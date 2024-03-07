@@ -142,7 +142,7 @@ const CreateProject = () => {
       setTeamMembers([{ employeeID: '', employeeName: '' }]);
       setSupervisorEmployees([{ employeeID: '', employeeName: '' }]);
       // Navigate back to home page after successful submission
-      navigate('/');
+      navigate('/admin/updateprojectdetails');
     } catch (error) {
       console.error('Error creating project:', error.message);
       alert('Error creating project. Please try again.');
@@ -151,7 +151,7 @@ const CreateProject = () => {
 
   const handleCancel = () => {
     // Navigate back to home page when cancel is clicked
-    navigate('/');
+    navigate('/admin/updateprojectdetails');
   };
 
   return (
