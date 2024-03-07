@@ -83,7 +83,7 @@ function SearchAdmin() {
                             </div>
                         </div>
                         <div className='sprAdmin-admin-list table-responsive'>
-                            <table className='table custom-table  table-hover '>
+                            <table className='table custom-table  table-hover mt-0 '>
                                 <thead className='sprAdmin-searchAdmin-table-header'>
                                     <tr className='text-center text-white'>
                                         <th scope="col">Admin Id</th>
