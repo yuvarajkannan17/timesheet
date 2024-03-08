@@ -22,6 +22,7 @@ import SupSubmitTimesheet from '../Supervisor/Submit/SubmitTimesheet.js';
 import AddTimesheet from '../Employee/AddTimesheet/AddTimesheet.js';
 import CreateProject from '../Admin/Employee/CreateProject.js';
 import UpdateProjectDetails from '../Admin/Employee/UpdateProjectDetails.js';
+import TimesheetLogin from '../Login/TimesheetLogin.js';
 import Layout from './Layout.js';
 
 function RouterSetup() {
@@ -32,7 +33,7 @@ function RouterSetup() {
       <Router>
              
         <Routes>
-       
+          <Route path='/' element={<TimesheetLogin/>} />
           <Route path='/superadmin/createadmin' element={<Layout><CreateAdmin/></Layout>} />
           <Route path='/superadmin/searchadmin/admindetailsview/editadmin/:id' element={<Layout><AdminEdit/></Layout>} />
           <Route path='/superadmin/searchadmin' element={ <Layout><SearchAdmin /></Layout>} />
