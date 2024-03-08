@@ -7,6 +7,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialAdminDetailsState = {
     adminDetails:null,
     adminDetailsEditValue:false,
+    isAuthenticated:false
 };
 
 
@@ -22,12 +23,15 @@ export const adminDetailsSlice =createSlice({
         // change the state value once edit admin completed
         adminDetailsEdit:(state,action)=>{
            state.value.adminDetailsEditValue=action.payload;
-        }
+        },
+        authenticate:(state,action)=>{
+            state.value.isAuthenticated=action.payload;
+         }
       
     }
 });
 
 // function to change the value
-export const {changeAdminDetails,adminDetailsEdit}=adminDetailsSlice.actions;
+export const {changeAdminDetails,adminDetailsEdit,authenticate}=adminDetailsSlice.actions;
 // reducer to access the data 
 export default  adminDetailsSlice.reducer;

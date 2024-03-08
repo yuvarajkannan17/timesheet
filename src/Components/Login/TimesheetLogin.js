@@ -4,9 +4,12 @@ import { useState } from "react";
 import login from "../Api/login";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { UseDispatch, useDispatch } from "react-redux";
+import { authenticate } from "../features/adminDetails";
 function TimesheetLogin() {
     const navigate=useNavigate();
     const [userError,setUserError]=useState('');
+    const dispatch=useDispatch();
     const { values,isSubmitting, handleChange,touched, errors,handleSubmit,handleBlur,resetForm } = useFormik({
         initialValues: {
             username: "",
@@ -21,19 +24,21 @@ function TimesheetLogin() {
        try{
          const response = await axios.get(login)
           const users=response.data;
-          const actualUser=users.find((user)=>user.username===values.username);
-           if(actualUser){
-              if(actualUser.username==="employee"){
+          const actualUserName=users.find((user)=>user.username===values.username);
+          const actualUserPassword=users.find((user)=>user.password===values.password);
+           if(actualUserName&&actualUserPassword){
+              dispatch(authenticate(true));
+              if(actualUserName.username==="employee"){
                  navigate('/employee')
-              }else if(actualUser.username==="supervisor"){
+              }else if(actualUserName.username==="supervisor"){
                 navigate('/supervisor')
-              }else if(actualUser.username==="admin"){
+              }else if(actualUserName.username==="admin"){
                 navigate('/admin/createemployee')
-              }else if(actualUser.username==="superadmin"){
+              }else if(actualUserName.username==="superadmin"){
                 navigate('/superadmin/createadmin')
               }
            }else{
-              setUserError('Please enter the vaild username')
+              setUserError('Incorrect Username or Password ')
            }
        }catch(error){
          console.log(error)
@@ -55,11 +60,12 @@ function TimesheetLogin() {
                 <div className="ti-login-content pt-3">
 
                     <form className="ti-login-form" onSubmit={handleSubmit} >
+                        {userError && touched.username && <p style={{color:'rgba(228, 14, 14, 0.826)'}}>{userError}</p>}
                         <div className="my-2">
                             <label className="form-label">User Name</label>
                             <input className={`form-control ${errors.username && touched.username ? "ti-lg-make-border-error":""}`} type="text" placeholder="username" id="lgusername" name="username" onChange={handleChange} value={values.username} onBlur={handleBlur}></input>
                              {errors.username && touched.username && <p style={{color:'rgba(228, 14, 14, 0.826)'}}>{errors.username}</p> }
-                             {userError && touched.username && <p style={{color:'rgba(228, 14, 14, 0.826)'}}>{userError}</p>}
+                             
                         </div>
                         <div className="my-2">
                             <label className="form-label fsb">Password</label>
