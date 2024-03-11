@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './CreateProject.css';
+import NavPages from '../NavPages';
 
 const CreateProject = () => {
   const navigate = useNavigate();
@@ -155,7 +156,9 @@ const CreateProject = () => {
   };
 
   return (
-    <div className="adminUser-ProjectForm">
+   <div className='background-clr'>
+    <NavPages/>
+    <div className="adminUser-ProjectForm ">
       <div className="createAdmin-ProjectForm">
         <p className="createAdmin-title-ProjectForm">Create New Project</p>
         <form>
@@ -274,6 +277,7 @@ const CreateProject = () => {
         </form>
       </div>
     </div>
+   </div>
   );
 };
 

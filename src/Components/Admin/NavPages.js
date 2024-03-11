@@ -9,7 +9,7 @@ const NavPages = () => {
     }
     return (
 
-        <div >
+        <div className='pb-3' >
 
             <div className='nav-links admin-menus pt-4'>
                 <ul>
