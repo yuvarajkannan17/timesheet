@@ -24,8 +24,9 @@ import CreateProject from '../Admin/Employee/CreateProject.js';
 import UpdateProjectDetails from '../Admin/Employee/UpdateProjectDetails.js';
 import TimesheetLogin from '../Login/TimesheetLogin.js';
 import Layout from './Layout.js';
+import SupAddTimesheet from '../Supervisor/AddTimesheet/AddTimesheet.js';
 import { useSelector } from 'react-redux';
-import adminDetails from '../features/adminDetails.js';
+
 
 function RouterSetup() {
        const {isAuthenticated}=useSelector(state=>state.adminDetails.value);
@@ -43,12 +44,15 @@ function RouterSetup() {
           <Route path='/superadmin/searchadmin/admindetailsview/editadmin/:id' element={isAuthenticated ?<Layout><AdminEdit/></Layout>:<TimesheetLogin/>} />
           <Route path='/superadmin/searchadmin' element={isAuthenticated ? <Layout><SearchAdmin /></Layout>:<TimesheetLogin/>} />
           <Route path='/superadmin/searchadmin/admindetailsview/:id' element={isAuthenticated ? <Layout><AdminDetailsView /></Layout>:<TimesheetLogin/>} />
-          <Route path='/searchAdmin/admindetailsview' element={isAuthenticated ? <Layout><AdminDetailsView /></Layout> :<TimesheetLogin/>} />
+          
           <Route path='/supervisor' element={isAuthenticated ? <Layout><SupervisorHome /></Layout>:<TimesheetLogin/>} />
+          <Route path='/supervisor/addtimesheet' element={isAuthenticated ? <Layout><SupAddTimesheet /></Layout>:<TimesheetLogin/>} />
           <Route path='/supervisor/approvelList' element={isAuthenticated ? <Layout><ApprovelBody /></Layout>:<TimesheetLogin/>} />
           <Route path='/supervisor/editTimesheet' element={isAuthenticated ? <Layout><SupervisorEditTimesheet /></Layout>:<TimesheetLogin/>} />
           <Route path='/supervisor/modifyEmployeeTimesheet/:id' element={isAuthenticated ? <Layout><EditTimesheet /></Layout>:<TimesheetLogin/>} />
           <Route path='/supervisor/submittimesheet' element={isAuthenticated ? <Layout><SupSubmitTimesheet /></Layout>:<TimesheetLogin/>} />
+         
+          {/* employee */}
           <Route path='/employee' element={isAuthenticated ? <Layout><EmployeeHome /></Layout>:<TimesheetLogin/>} />
           <Route path='/employee/edittimesheet' element={isAuthenticated ? <Layout><EmployeeEditTimesheet /></Layout>:<TimesheetLogin/>} />
           <Route path='/employee/rejecttimesheet' element={isAuthenticated ? <Layout><RejectTimesheet /></Layout>:<TimesheetLogin/>} />
