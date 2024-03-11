@@ -5,7 +5,7 @@ function SupervisorHome() {
     const navigate=useNavigate();
 
     function goToAddTimesheetPage(){
-        
+        navigate('/supervisor/addtimesheet');
     }
 
     function goToEditPage(){

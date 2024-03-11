@@ -64,13 +64,13 @@ function TimesheetLogin() {
                         <div className="my-2">
                             <label className="form-label">User Name</label>
                             <input className={`form-control ${errors.username && touched.username ? "ti-lg-make-border-error":""}`} type="text" placeholder="username" id="lgusername" name="username" onChange={handleChange} value={values.username} onBlur={handleBlur}></input>
-                             {errors.username && touched.username && <p style={{color:'rgba(228, 14, 14, 0.826)'}}>{errors.username}</p> }
+                             {errors.username && touched.username && <p className="small" style={{color:'rgba(228, 14, 14, 0.826)'}}>{errors.username}</p> }
                              
                         </div>
                         <div className="my-2">
                             <label className="form-label fsb">Password</label>
                             <input className={`form-control ${errors.password && touched.password ? "ti-lg-make-border-error":""}`} type="password" placeholder="password" id="lgpassword" name="password" onChange={handleChange} value={values.password} onBlur={handleBlur} ></input>
-                             {errors.password && touched.password && <p style={{color:'rgba(228, 14, 14, 0.826)'}}>{errors.password}</p> }
+                             {errors.password && touched.password && <p className="small"  style={{color:'rgba(228, 14, 14, 0.826)'}}>{errors.password}</p> }
                         </div>
                         <div className="my-4 text-center">
                             <button type="submit" disabled={isSubmitting}  className="btn btn-primary ti-login-btn">Login</button>

@@ -127,22 +127,22 @@ function SubmitTimesheet() {
                     <table className="table table-bordered table-dark text-center">
                         <thead>
                             <tr>
-                                <th style={{ backgroundColor: '#B7F203' }} className='text-dark date-col'>Date</th>
+                                <th style={{ backgroundColor: '#c8e184' }} className='text-dark date-col'>Date</th>
                                 {timesheetData && timesheetData.timesheetData.map((date) => (
-                                    <th className="text-black" style={{ backgroundColor: '#B7F203' }} key={date.date}>{date.date}</th>
+                                    <th className="text-black" style={{ backgroundColor: '#c8e184' }} key={date.date}>{date.date}</th>
                                 ))}
                             </tr>
                         </thead>
                         <tbody>
 
                             <tr >
-                                <th style={{ backgroundColor: '#B7F203' }} className='text-dark projectid' >Day</th>
+                                <th style={{ backgroundColor: '#c8e184' }} className='text-dark projectid' >Day</th>
                                 {timesheetData && timesheetData.timesheetData.map((date) => (
-                                    <td key={date.date} className="text-black" style={{ backgroundColor: date.day.toLowerCase() === 'sunday' ? 'gold' : '#B7F203' }}>{date.day}</td>
+                                    <td key={date.date} className="text-black" style={{ backgroundColor: date.day.toLowerCase() === 'sunday' ? 'gold' : '#c8e184' }}>{date.day}</td>
                                 ))}
                             </tr>
                             <tr>
-                                <td  className="projectid" style={{ backgroundColor: '#B7F203' }}>
+                                <td  className="projectid" style={{ backgroundColor: '#e8fcaf' }}>
 
                                     <div>
                                         <Select
@@ -157,7 +157,7 @@ function SubmitTimesheet() {
                                     </div>
                                 </td>
                                 {timesheetData && timesheetData.timesheetData.map((date, index) => (
-                                    <td key={date.date} style={{ backgroundColor: '#B7F203' }}  ><input type="number" className="workInput-edit border border-none text-center mt-3" readOnly value={date.hoursWorked} onChange={(e) => handleWorkHoursChange(index, e.target.value)}></input></td>
+                                    <td key={date.date} style={{ backgroundColor: '#e8fcaf' }}  ><input type="number" className="workInput-edit border border-none text-center mt-3" readOnly value={date.hoursWorked} onChange={(e) => handleWorkHoursChange(index, e.target.value)}></input></td>
                                 ))}
                             </tr>
                         </tbody>

@@ -131,22 +131,22 @@ function SupervisorEditTimesheet() {
                  <table className="table table-bordered border-dark text-center">
                      <thead>
                          <tr>
-                             <th style={{ backgroundColor: '#B7F203' }} >Date</th>
+                             <th style={{ backgroundColor: '#c8e184' }} >Date</th>
                              {timesheetData && timesheetData.timesheetData.map((date) => (
-                                 <th style={{ backgroundColor: '#B7F203' }} key={date.date}>{date.date}</th>
+                                 <th style={{ backgroundColor: '#c8e184' }} key={date.date}>{date.date}</th>
                              ))}
                          </tr>
                      </thead>
                      <tbody>
 
                          <tr>
-                             <th style={{ backgroundColor: '#B7F203' }} >Day</th>
+                             <th style={{ backgroundColor: '#c8e184' }} >Day</th>
                              {timesheetData && timesheetData.timesheetData.map((date) => (
-                                 <td key={date.date} style={{ backgroundColor: date.day.toLowerCase() === 'sunday' ? 'yellow' : '#B7F203' }}>{date.day}</td>
+                                 <td key={date.date} style={{ backgroundColor: date.day.toLowerCase() === 'sunday' ? 'yellow' : '#c8e184' }}>{date.day}</td>
                              ))}
                          </tr>
                          <tr>
-                             <th style={{ backgroundColor: '#B7F203' }}  >
+                             <th style={{ backgroundColor: '#e8fcaf' }}  >
 
                                  <div>
                                      <Select
@@ -160,7 +160,7 @@ function SupervisorEditTimesheet() {
                                  </div>
                              </th>
                              {timesheetData && timesheetData.timesheetData.map((date, index) => (
-                                 <td key={date.date} style={{ backgroundColor: '#B7F203' }}  ><input type="number" min={0} max={12} className="ti-workInput-edit border border-none text-center mt-3" value={date.hoursWorked} onChange={(e) => handleWorkHoursChange(index, e.target.value)}></input></td>
+                                 <td key={date.date} style={{ backgroundColor: '#e8fcaf' }}  ><input type="number" min={0} max={12} className="ti-workInput-edit border border-none text-center mt-3" value={date.hoursWorked} onChange={(e) => handleWorkHoursChange(index, e.target.value)}></input></td>
                              ))}
                          </tr>
                      </tbody>
