@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import Select from 'react-select';
 import './AddTimesheet.css';
+import { Alert } from 'bootstrap';
 
 const AddTimesheet = () => {
   const [selectedMonth, setSelectedMonth] = useState('');
@@ -18,9 +19,13 @@ const AddTimesheet = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.get('https://65c0706125a83926ab964c6f.mockapi.io/api/projectdetails/projects');
+        const response = await axios.get('https://65e69d32d7f0758a76e8a1e0.mockapi.io/projectIDs');
         const data = response.data;
-        setAvailableProjects(data);
+        const projectOptions = data.map(project => ({
+          value: project.projectID,
+          label: project.projectID,
+        }));
+        setAvailableProjects(projectOptions);
       } catch (error) {
         console.error('Error fetching projects:', error);
       }
@@ -28,6 +33,32 @@ const AddTimesheet = () => {
 
     fetchProjects();
   }, []);
+
+  const saveTimesheetData = async () => {
+    try {
+      if (!selectedMonth) {
+        console.error('Please select a month before saving.');
+        return;
+      }
+
+      const timesheetPayload = {
+        selectedMonth,
+        showFirstHalf,
+        data: timesheetData.map(({ date, entries }) => ({
+          date: date.toISOString(),
+          entries,
+        })),
+      };
+
+      const response = await axios.post('https://65c0706125a83926ab964c6f.mockapi.io/api/projectdetails/timesheets', timesheetPayload);
+
+      console.log('Timesheet data saved successfully:', response.data);
+      alert('Timesheet data saved successfully:')
+    } catch (error) {
+      console.error('Error saving timesheet data:', error);
+      alert('Error saving timesheet data:')
+    }
+  };
 
   const handleForward = () => {
     const nextMonth = new Date(selectedMonth);
@@ -121,7 +152,7 @@ const AddTimesheet = () => {
               className="AddTimesheet btn btn-primary ms-2"
               onClick={handleForward}
             >
-              Forward
+              Forward<i className="bi bi-caret-right-fill"></i>
             </button>
           </div>
         </div>
@@ -156,8 +187,8 @@ const AddTimesheet = () => {
                     <div>
                       <Select
                         options={availableProjects.map((project) => ({
-                          value: project.id,
-                          label: project.title,
+                          value: project.value,
+                          label: project.label,
                         }))}
                         value={timesheetData[rowIndex]?.entries[0]?.projectId ? { value: timesheetData[rowIndex].entries[0].projectId, label: timesheetData[rowIndex].entries[0].projectId } : null}
                         onChange={(selectedOption) => handleProjectChange(rowIndex, 0, selectedOption)}
@@ -201,8 +232,12 @@ const AddTimesheet = () => {
           <span className='AddTimesheet fw-bold'>Total Hours Worked : </span> <span className='AddTimesheet fw-bold'>0</span>
         </div>
         <div className="d-flex justify-content-center" >
-          <button className="AddTimesheet btn btn-success m-3 w-5" onClick={() => {}} style={{ width: '100px' }}>Save</button>
-          <button className="AddTimesheet btn btn-secondary m-3 w-5" style={{ width: '100px' }}>Cancel</button>
+          <button className="AddTimesheet btn btn-success m-3 w-5" onClick={saveTimesheetData} style={{ width: '100px' }}>
+            Save
+          </button>
+          <button className="AddTimesheet btn btn-secondary m-3 w-5" style={{ width: '100px' }}>
+            Cancel
+          </button>
         </div>
       </div>
     </div>
@@ -210,6 +245,8 @@ const AddTimesheet = () => {
 };
 
 export default AddTimesheet;
+
+
 
 
 
