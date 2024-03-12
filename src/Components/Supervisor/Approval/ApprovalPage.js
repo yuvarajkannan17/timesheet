@@ -19,7 +19,7 @@ function ApprovelPage() {
   const editTimesheetRejectModalValue = useSelector(state => state.modal.value.editTimesheetRejectModalValue);
   const navigate=useNavigate();
   const dispatch=useDispatch();
-
+  console.log(timesheetDatas);
   useEffect(() => {
 
     async function getTimesheet() {
@@ -208,7 +208,7 @@ function ApprovelPage() {
             <table className="table table-bordered   table-hover border border-1 border-black">
               <thead className="" >
                 <tr className="text-center spr-approval-header" >
-                  <th>Select</th>
+                  <th>Select <input className="ms-1" type="checkbox"/></th>
                   <th>Emp Id</th>
                   <th>Emp Name</th>
                   <th>Timesheet Period</th>
