@@ -18,10 +18,11 @@ function SupervisorHome() {
 
     }
 
-    function goToSubmitPage(){
-        navigate('/supervisor/submittimesheet');
-
+    function goToRejectPage(){
+        navigate('/supervisor/rejecttimesheet')
     }
+
+  
 
     return (
         <>
@@ -63,9 +64,11 @@ function SupervisorHome() {
                                 <div className='my-4'>
                                     <button type='button' className='btn p-2 select-btn' onClick={goToEditPage}>Edit Timesheet</button>
                                 </div>
+
                                 <div className='my-4'>
-                                    <button type='button' className='btn p-2 select-btn' onClick={goToSubmitPage}>Submit Timesheet</button>
+                                    <button type='button' className='btn p-2 select-btn' onClick={goToRejectPage}>Reject Timesheet</button>
                                 </div>
+                               
                                 <div className='my-4'>
                                     <button type='button' className='btn p-2 select-btn' onClick={goToApprovePage}>Approve Timesheet</button>
                                 </div>

@@ -12,6 +12,14 @@
     font-weight: bold;
 }
 
+/* reject reason */
+.fixed-size-textarea {
+    resize: none;
+    width: 100%; /* Set width to 100% of container */
+    height: 100%; /* Set height to 100% of container */
+    max-height: 80px;
+  }
+
 /* .signInSymbol{
     border: 2px solid white;
     border-radius: 50%;
