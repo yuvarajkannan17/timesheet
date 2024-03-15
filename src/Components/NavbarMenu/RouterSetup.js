@@ -14,17 +14,18 @@ import RejectTimesheet from '../Employee/RejectTimesheet/RejectTimesheet.js';
 import CreateEmployee from '../Admin/Employee/CreateEmployee.js';
 import UploadEmployees from '../Admin/Employee/UploadEmployees.js';
 import SearchEmployee from '../Admin/Employee/SearchEmployee.js';
-import SubmitTimesheet from '../Employee/Submit/SubmitTimesheet.js';
+
 import EmployeeProfile from '../Admin/Employee/EmployeeProfile.js';
 import EditEmployee from '../Admin/Employee/EditEmployee.js';
 import EmployeeDetails from '../Admin/Employee/EmployeeDetails.js';
-import SupSubmitTimesheet from '../Supervisor/Submit/SubmitTimesheet.js';
+
 import AddTimesheet from '../Employee/AddTimesheet/AddTimesheet.js';
 import CreateProject from '../Admin/Employee/CreateProject.js';
 import UpdateProjectDetails from '../Admin/Employee/UpdateProjectDetails.js';
 import TimesheetLogin from '../Login/TimesheetLogin.js';
 import Layout from './Layout.js';
 import SupAddTimesheet from '../Supervisor/AddTimesheet/AddTimesheet.js';
+import SupRejectTimesheet from '../Supervisor/RejectTimesheet/RejectTimesheet.js';
 import { useSelector } from 'react-redux';
 
 
@@ -50,13 +51,14 @@ function RouterSetup() {
           <Route path='/supervisor/approvelList' element={isAuthenticated ? <Layout><ApprovelBody /></Layout>:<TimesheetLogin/>} />
           <Route path='/supervisor/editTimesheet' element={isAuthenticated ? <Layout><SupervisorEditTimesheet /></Layout>:<TimesheetLogin/>} />
           <Route path='/supervisor/modifyEmployeeTimesheet/:id' element={isAuthenticated ? <Layout><EditTimesheet /></Layout>:<TimesheetLogin/>} />
-          <Route path='/supervisor/submittimesheet' element={isAuthenticated ? <Layout><SupSubmitTimesheet /></Layout>:<TimesheetLogin/>} />
+          <Route path='/supervisor/rejecttimesheet' element={isAuthenticated ? <Layout><SupRejectTimesheet /></Layout>:<TimesheetLogin/>} />
+          
          
           {/* employee */}
           <Route path='/employee' element={isAuthenticated ? <Layout><EmployeeHome /></Layout>:<TimesheetLogin/>} />
           <Route path='/employee/edittimesheet' element={isAuthenticated ? <Layout><EmployeeEditTimesheet /></Layout>:<TimesheetLogin/>} />
           <Route path='/employee/rejecttimesheet' element={isAuthenticated ? <Layout><RejectTimesheet /></Layout>:<TimesheetLogin/>} />
-          <Route path='/employee/submittimesheet' element={isAuthenticated ? <Layout><SubmitTimesheet /></Layout>:<TimesheetLogin/>} />
+          
           <Route path='/employee/addtimesheet' element={isAuthenticated ? <Layout><AddTimesheet /></Layout>:<TimesheetLogin/>} />
           {/* admin */}
           <Route path='/admin/createemployee' element={ isAuthenticated ? <Layout><CreateEmployee /></Layout>:<TimesheetLogin/>} />

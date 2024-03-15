@@ -18,9 +18,7 @@ function EmployeeHome() {
         navigate('/employee/rejecttimesheet');
     }
 
-    function goToSubmitPage(){
-        navigate('/employee/submittimesheet');
-    }
+    
 
     return (
         <>
@@ -62,9 +60,7 @@ function EmployeeHome() {
                                 <div className='my-4'>
                                     <button type='button' className='btn p-2 select-btn' onClick={goToEditPage}>Edit Timesheet</button>
                                 </div>
-                                <div className='my-4'>
-                                    <button type='button' className='btn p-2 select-btn' onClick={goToSubmitPage}>Submit Timesheet</button>
-                                </div>
+                                
                                 <div className='my-4'>
                                     <button type='button' className='btn p-2 select-btn' onClick={goToViewRejectPage}>View Rejected Timesheet</button>
                                 </div>
