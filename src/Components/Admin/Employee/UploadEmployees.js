@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
 import NavPages from '../NavPages';
+import successCheck from '../../Image/checked.png'
 
 
 export default function UploadEmployees() {
@@ -13,23 +14,18 @@ export default function UploadEmployees() {
   // onchange states
   const [excelFile, setExcelFile] = useState(null);
   const [typeError, setTypeError] = useState(null);
-  const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
+  const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);  
+  const [SuccessConfirmation, setSuccessConfirmation] = useState(false);
 
-
-  // const [selectedFile, setSelectedFile] = useState(null);
-  // const [errorMessage, setErrorMessage] = useState('');
 
   // submit state
-  const [excelData, setExcelData] = useState(null);
-  
-  
+  const [excelData, setExcelData] = useState(null);  
 
   // onchange event
   const handleFile=(e)=>{
     const file = e.target.files[0];
     const maxSize = 20 * 1024; // 20KB in bytes
-
-
+    
     setTypeError(null)
     // Validate file type (Excel only)
     const allowedFileTypes = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'];
@@ -42,14 +38,7 @@ export default function UploadEmployees() {
       setTypeError('File size exceeds the limit (20KB)');
        return;
     }
-    // else {
-      
-      // let reader = new FileReader();
-      //   reader.readAsArrayBuffer(file);
-      //   reader.onload=(e)=>{
-      //     setExcelFile(e.target.result);
-      //   }
-    // } 
+    
     setExcelData(file) 
   }
   const handleUpload = () => {
@@ -59,35 +48,34 @@ export default function UploadEmployees() {
     }
     setSuccessModalOpen(true)
   }
-  // submit event
-  // const handleFileSubmit=(e)=>{
-  //   e.preventDefault();
-  //   if(excelFile!==null){
-  //     const workbook = XLSX.read(excelFile,{type: 'buffer'});
-  //     const worksheetName = workbook.SheetNames[0];
-  //     const worksheet = workbook.Sheets[worksheetName];
-  //     const data = XLSX.utils.sheet_to_json(worksheet);
-  //     setExcelData(data.slice(0,10));
-  //   }
-  //   // fileupload= " ";
-  //   setSuccessModalOpen(true)
-  // }
-  //  const handleClose = () =>{
-  //     setExcelData(false)
-  //  }
+  
 
   const handleClose = () => {setSuccessModalOpen(false); }
+  const handleSuccessClick = () => {
+    setSuccessModalOpen(false)
+    setSuccessConfirmation(true)
+  }
+  const handleConfirmClose = () => {
+    setSuccessConfirmation(false);
+     setExcelFile(null)}
+
   
   const navigate = useNavigate()
-//   const handleSuccess = ()=> {
-//   // navigate('')
-//   window.location.reload();
-// }
-  const handleSuccessClick = () => {
-    Swal.fire({icon: 'success',
-    title: 'Success!',
-    text: 'File Uploaded Successfully', showConfirmButton: true}).then(()=> {window.location.reload()})  
+  const ConfirmClose = () => {
+    // setSuccessConfirmation(false)
+    // window.location.reload()
+    setExcelData(null)
+    navigate('/admin/uploademployees')
   }
+
+  
+    // setSuccessConfirmation(false); 
+   
+    
+    // Swal.fire({icon: 'success',
+    // title: 'Success!',
+    // text: 'File Uploaded Successfully', showConfirmButton: true}).then(()=> {window.location.reload()})  
+ 
 
 
   return (
@@ -96,24 +84,24 @@ export default function UploadEmployees() {
     <div className="container employee-form">
       <h3>Upload & View Employee files</h3>
          <div className='row'>
-{/* form */}
+<form onSubmit={handleUpload}>
     <div className="col-md-8 form-group" >
     <input type="file" name='fileupload' className="form-control" required onChange={handleFile} />  
     </div>
 
    <div className='col-md-4'>
-   <button type="button" className="btn btn-success btn-md" onClick={handleUpload}>UPLOAD</button>
+   <button type="submit" className="btn btn-success btn-md" >UPLOAD</button>
    </div>
+   </form>
    </div>
       {typeError&&(
     <p className="text-danger"> {typeError} </p>        
     )}  
 
+    
 
-<Modal show={isSuccessModalOpen} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmation</Modal.Title>
-        </Modal.Header>
+
+      <Modal show={isSuccessModalOpen} onHide={handleClose}>        
         <Modal.Body>Do you want to Upload</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -122,45 +110,23 @@ export default function UploadEmployees() {
           <Button variant="primary" onClick={handleSuccessClick}>
             Yes 
           </Button>
-        </Modal.Footer>
+      </Modal.Footer>
       </Modal>
 
-   {/* <button onClick={handleSuccessClick}>Upload</button> */}
-{/* view data */}
-<div className="viewer">
-  {/* {excelData?( */}
-    <div className="table-responsive">
-      {/* <table className="table"> */}
+      <Modal centered size='sm' show={SuccessConfirmation} onHide={handleConfirmClose}>          
+        <Modal.Body>
+          <div className="d-flex flex-column modal-success p-4 align-items-center ">
+            <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />                        
+            <p className="mb-4 text-center">Employee Profile Uploaded Successfully</p>
+            <button className="btn  w-100 text-white" onClick =  {ConfirmClose} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+          </div>
+        </Modal.Body>
+      </Modal>    
 
-        {/* <thead>
-          <tr>
-            {Object.keys(excelData[0]).map((key)=>(
-              <th key={key}>{key}</th>
-            ))}
-          </tr>
-        </thead> */}
-
-        {/* <tbody>
-          {excelData.map((individualExcelData, index)=>(
-            <tr key={index}>
-              {Object.keys(individualExcelData).map((key)=>(
-                <td key={key}>{individualExcelData[key]}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody> */}
-
-      {/* </table> */}
-
-      {/* <button onClick={handleClose} type="button" class="btn btn-primary btn-sm">Close</button> */}
-
+   
     </div>
-  {/* ):(
-    <div>No File is uploaded yet!</div>
-  )} */}
+  
 </div>
-    </div>
-   {/* ajdajdksj */}
-   </div>
+    
   )
 }

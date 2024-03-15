@@ -351,20 +351,20 @@ export default function CreateEmployee() {
 
           </div>
         </form>
+        
         <Modal show={isSuccessModalOpen} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>Confirmation</Modal.Title>
-          </Modal.Header>
+          
           <Modal.Body>Do you want to Save</Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
               Cancel
             </Button>
             <Button variant="primary" onClick={handleSuccess}>
-              Yes
+              Save
             </Button>
           </Modal.Footer>
         </Modal>
+        
 
 
       </div>

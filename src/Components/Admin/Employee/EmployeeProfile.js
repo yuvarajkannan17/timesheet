@@ -1,30 +1,38 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import  { getLastEnteredEmployee } from './mockempdetails';
-import Swal from 'sweetalert2';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import '../../css/style.css'
+import successCheck from '../../Image/checked.png'
+
 
 export default function EmployeeProfile() {
   const userData = getLastEnteredEmployee();
   const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
+  const [SuccessConfirmation, setSuccessConfirmation] = useState(false);
 
   
   const handleEditConfirm = () => {setSuccessModalOpen(true)}
   const handleClose = () => {setSuccessModalOpen(false); window.location.reload()}
+  const handleConfirmClose = () => {setSuccessConfirmation(false); window.location.reload()}
+
   const navigate = useNavigate()
 
     const handleSubmitClick = () => {
-      Swal.fire('Success!', 'Employee profile Uploded Successfully,', 'success')
+      setSuccessConfirmation(true)
+      
+    }
+    const ConfirmClose = () => {
+      setSuccessConfirmation(false)
       navigate('/admin/createemployee')
+
     }
     const handleSuccessClick = () => {
       const LastEnteredEmployee = getLastEnteredEmployee();
       if(LastEnteredEmployee){
         navigate('/admin/createemployee?editMode=true') 
       }
-      // Swal.fire('Success!', 'File Uploded Successfully,', 'success')
      
     }
   
@@ -99,9 +107,7 @@ export default function EmployeeProfile() {
           </div>
 
           <Modal show={isSuccessModalOpen} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmation</Modal.Title>
-        </Modal.Header>
+        
         <Modal.Body>Do you want to go back</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -113,23 +119,15 @@ export default function EmployeeProfile() {
         </Modal.Footer>
       </Modal>
 
-      {/* <Modal show={isSuccessModalOpen} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmation</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Do you want to Submit</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleSuccess}>
-            Yes 
-          </Button>
-        </Modal.Footer>
-      </Modal> */}
-
-
-      
+      <Modal centered size='sm' show={SuccessConfirmation} onHide={handleConfirmClose}>          
+        <Modal.Body>
+          <div className="d-flex flex-column modal-success p-4 align-items-center ">
+            <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />                        
+            <p className="mb-4 text-center">Employee Profile Created Successfully</p>
+            <button className="btn  w-100 text-white" onClick =  {ConfirmClose} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+          </div>
+        </Modal.Body>
+      </Modal>    
         
     
      </div>

@@ -5,6 +5,8 @@ import { getEmployeeData, addEmployeeData  } from "./mockempdetails";
 import { useParams, useNavigate } from "react-router-dom"
 import Swal from "sweetalert2";
 import '../../css/style.css'
+import successCheck from '../../Image/checked.png'
+
 
 export default function EditEmployee() {
   // const [formValues, setFormValues] = useState({
@@ -27,33 +29,9 @@ const [formValues, setFormValues] = useState(userData || {});
 
   const [formErrors, setFormErrors] = useState({});
   const [isEditMode, setIsEditMode] = useState(false);
-  // const lastEnteredEmployee = getLastEnteredEmployee()
   const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
   const [isCancelModalOpen, setCancelModalOpen] = useState(false);
-
-//   useEffect(() => {
-//     const lastEnteredEmployee = getLastEnteredEmployee();
-
-//     if (lastEnteredEmployee) {
-//       // If there is a last entered employee, set the form values for editing
-//       setFormValues({
-//         firstname: lastEnteredEmployee.firstname,
-//         lastname: lastEnteredEmployee.lastname,
-//         address: lastEnteredEmployee.address,
-//         mobilenumber: lastEnteredEmployee.mobilenumber,
-//         emailid: lastEnteredEmployee.emailid,
-//         projectid: lastEnteredEmployee.projectid,
-//         aadharnumber: lastEnteredEmployee.aadharnumber,
-//         pannumber: lastEnteredEmployee.pannumber,
-        
-
-//         // Add other fields as needed
-//       });
-
-//       // Set edit mode to true
-//       setIsEditMode(true);
-//     }
-//   }, []);
+  const [SuccessConfirmation, setSuccessConfirmation] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -167,10 +145,22 @@ const [formValues, setFormValues] = useState(userData || {});
   const handleConfirmClose = () => {setCancelModalOpen(true); }
   const handleCancelSuccess = () => {setCancelModalOpen(false); 
     navigate('admin/searchemployees')}
+     
+    const handleSubmitClick = () => {
+      setSuccessConfirmation(true)
+      // navigate('/admin/searchemployee')
+    }
+
+    const ConfirmClose = () => {
+      setSuccessConfirmation(false)
+      navigate('/admin/searchemployee')
+
+    }
     const handleSuccess=()=>{
-      Swal.fire('Success!', 'Employee Details Updated Successfully,', 'success')
+      // Swal.fire('Success!', 'Employee Details Updated Successfully,', 'success')
       navigate('/admin/searchemployee')
     }
+    
 
 
 
@@ -305,7 +295,7 @@ const [formValues, setFormValues] = useState(userData || {});
             </div>
             
             <div className="buttons">              
-              <button type="submit" className="btn-submit btn-sm" >                
+              <button type="submit" className="btn-submit btn-sm" onClick={handleSubmitClick}>                
                 Submit
               </button>
               <button type="button" className="btn-cancel btn-sm" onClick={handleConfirmClose}>                
@@ -316,25 +306,20 @@ const [formValues, setFormValues] = useState(userData || {});
       
       </div>
       </form>
-      <Modal show={isSuccessModalOpen} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmation</Modal.Title>
-        </Modal.Header>
+
+      {/* <Modal show={isSuccessModalOpen} onHide={handleClose}>        
         <Modal.Body>Do you want to Submit</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Cancel
           </Button>
           <Button variant="primary" onClick={handleSuccess}>
-            Yes 
+            Submit
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
 
-      <Modal show={isCancelModalOpen} onHide={handleConfirmClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmation</Modal.Title>
-        </Modal.Header>
+      <Modal show={isCancelModalOpen} onHide={handleConfirmClose}>        
         <Modal.Body>Would you like to discard the changes</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleConfirmClose}>
@@ -344,6 +329,16 @@ const [formValues, setFormValues] = useState(userData || {});
             Yes 
           </Button>
         </Modal.Footer>
+      </Modal>
+
+      <Modal centered size='sm' show={SuccessConfirmation} onHide={handleConfirmClose}>          
+        <Modal.Body>
+          <div className="d-flex flex-column modal-success p-4 align-items-center ">
+            <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />                        
+            <p className="mb-4 text-center">Employee Profile Updated Successfully</p>
+            <button className="btn  w-100 text-white" onClick =  {ConfirmClose} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+          </div>
+        </Modal.Body>
       </Modal>
 
     </div>
