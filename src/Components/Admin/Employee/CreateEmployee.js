@@ -8,6 +8,7 @@ import { getEmployeeData, addEmployeeData, getLastEnteredEmployee } from "../Emp
 import { useLocation } from "react-router-dom"
 import NavPages from "../NavPages";
 import '../../css/style.css'
+// import { useHistory } from 'react-router';
 
 
 export default function CreateEmployee() {
@@ -40,6 +41,7 @@ export default function CreateEmployee() {
 
   const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
   const location = useLocation()
+  // const history = useHistory();
 
   useEffect(() => {
     const lastEnteredEmployee = getLastEnteredEmployee();
@@ -97,22 +99,12 @@ export default function CreateEmployee() {
     const validationError = validate(formValues);
     if (Object.keys(validationError).length > 0) {
       setFormErrors(validationError);
-      return;
+      return;      
     }
 
     // else{
     // alert("Form submitted successfully")
-    addEmployeeData(formValues)
-    setFormValues({
-      firstname: '',
-      lastname: '',
-      address: '',
-      mobilenumber: '',
-      emailid: '',
-      projectid: '',
-      aadharnumber: '',
-      pannumber: '',
-    });
+    
     setSuccessModalOpen(true)
 
     console.log(formValues);
@@ -201,7 +193,37 @@ export default function CreateEmployee() {
   const handleClose = () => { setSuccessModalOpen(false); window.location.reload() }
   const navigate = useNavigate()
   const handleSuccess = () => {
+    const lastEnteredEmployee = getLastEnteredEmployee();
+  
+  // Perform form submission or data update here
+  if (isEditMode && lastEnteredEmployee) {
+    const updatedEmployeeData = getEmployeeData().map(employee => {
+      if (employee.id === lastEnteredEmployee.id) {
+        return {
+          ...employee,
+          ...formValues
+        };
+      }
+      return employee;
+    });
+    sessionStorage.setItem('employeedatas', JSON.stringify(updatedEmployeeData));
+  } else {
+    addEmployeeData(formValues);
+  }
+    // addEmployeeData(formValues)
+    setFormValues({
+      firstname: '',
+      lastname: '',
+      address: '',
+      mobilenumber: '',
+      emailid: '',
+      projectid: '',
+      aadharnumber: '',
+      pannumber: '',
+    });
+    setSuccessModalOpen(false)
     navigate('/admin/employeeprofile')
+    // history.push('/admin/employeeprofile');
   }
 
   return (

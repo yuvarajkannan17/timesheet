@@ -7,24 +7,18 @@ import { useParams, useNavigate } from 'react-router-dom';
 import '../../css/style.css'
 import successCheck from '../../Image/checked.png'
 
-
-
-
 export default function EmployeeDetails() {
 
   const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [SuccessConfirmation, setSuccessConfirmation] = useState(false);
-
-
-  const { id } = useParams(); // Get the employee id from the route parameters
- 
+  const { id } = useParams(); // Get the employee id from the route parameters 
   const navigate = useNavigate();
   const employeeData = getEmployeeData()  
   const [empData, setEmpData] = useState() 
-const userData = employeeData.find((employee) => employee.id === parseInt(id, 10));
-const [editedEmployee, setEditedEmployee] = useState(userData || {});
-const DeleteEmployee = employeeData[employeeData.length - 1];
+  const userData = employeeData.find((employee) => employee.id === parseInt(id, 10));
+  const [editedEmployee, setEditedEmployee] = useState(userData || {});
+  const DeleteEmployee = employeeData[employeeData.length - 1];
 
 
   const handleEdit = () => {
@@ -36,23 +30,21 @@ const DeleteEmployee = employeeData[employeeData.length - 1];
     setEditedEmployee({
       ...editedEmployee,
       [e.target.name]: e.target.value,
-    });
-  };
+   });
+  };
 
   
   const handleEditConfirm = () => {setSuccessModalOpen(true)}
   const handleClose = () => {setSuccessModalOpen(false); window.location.reload()}
   const handleConfirmClose = () => {setSuccessConfirmation(false); window.location.reload()}
-
+  
   const handleSuccess = ()=> {
     navigate(`/admin/editemployee/${id}`);
-}
-const ConfirmClose = () => {
-  setSuccessConfirmation(false)
-  navigate('/admin/searchemployee')
-
-}
-           
+  }
+  const ConfirmClose = () => {
+    setSuccessConfirmation(false)
+    navigate('/admin/searchemployee')
+  }           
     
     const handleSuccessClick = () => {
     navigate('/admin/searchemployee')

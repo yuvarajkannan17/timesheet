@@ -24,7 +24,8 @@ export const addEmployeeData = (newData) => {
 };
 
 export const getLastEnteredEmployee = () => {
-    const employeedatas = getEmployeeData();
+    // const employeedatas = getEmployeeData();
+    const employeedatas = JSON.parse(sessionStorage.getItem('employeedatas')) || [];
     if (employeedatas.length === 0) {
       return null;
     }

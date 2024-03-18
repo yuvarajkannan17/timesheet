@@ -42,6 +42,10 @@ export default function UploadEmployees() {
     setExcelData(file) 
   }
   const handleUpload = () => {
+    if (!excelData) {
+      setTypeError('Please select a file to upload.');
+      return;
+    }
     if(typeError){
       setTypeError(typeError)
       return
@@ -54,18 +58,21 @@ export default function UploadEmployees() {
   const handleSuccessClick = () => {
     setSuccessModalOpen(false)
     setSuccessConfirmation(true)
+    // handleConfirmClose()
+    // setExcelFile(null)
+    setExcelData(null)
   }
   const handleConfirmClose = () => {
     setSuccessConfirmation(false);
      setExcelFile(null)}
 
   
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const ConfirmClose = () => {
-    // setSuccessConfirmation(false)
+    setSuccessConfirmation(false)
     // window.location.reload()
-    setExcelData(null)
-    navigate('/admin/uploademployees')
+    setExcelFile(null)
+    // navigate('/admin/uploademployees')
   }
 
   
@@ -84,15 +91,17 @@ export default function UploadEmployees() {
     <div className="container employee-form">
       <h3>Upload & View Employee files</h3>
          <div className='row'>
-<form onSubmit={handleUpload}>
+{/* <form > */}
     <div className="col-md-8 form-group" >
-    <input type="file" name='fileupload' className="form-control" required onChange={handleFile} />  
+    <input type="file" name='fileupload' className="form-control" required onChange={handleFile} 
+    key={excelData ? excelData.name : 'default'}/> 
+
     </div>
 
    <div className='col-md-4'>
-   <button type="submit" className="btn btn-success btn-md" >UPLOAD</button>
+   <button type="button" className="btn btn-success btn-md" onClick={handleUpload} >UPLOAD</button>
    </div>
-   </form>
+   {/* </form> */}
    </div>
       {typeError&&(
     <p className="text-danger"> {typeError} </p>        
