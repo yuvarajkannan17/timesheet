@@ -120,29 +120,29 @@ function CreateAdmin() {
                                 <div className="col-md-5" >
 
                                     <div className="mb-3">
-                                        <label htmlFor="firstName" className="form-label">First Name</label>
+                                        <label htmlFor="firstName" className="form-label">First Name<span style={{color:'red'}}>*</span> </label>
                                         <input type="text" maxLength={50} className={`form-control  ${errors.fName && touched.fName ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="fName" id="firstName" onChange={handleChange} onBlur={handleBlur} value={values.fName} ></input>
                                         {errors.fName && touched.fName && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.fName}</p>}
                                     </div>
 
                                     <div className="mb-3">
-                                        <label htmlFor="lastName" className="form-label">Last Name</label>
+                                        <label htmlFor="lastName" className="form-label">Last Name<span style={{color:'red'}}>*</span> </label>
                                         <input type="text" maxLength={50} className={`form-control  ${errors.lName && touched.lName ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="lName" id="lastName" onChange={handleChange} onBlur={handleBlur} value={values.lName} ></input>
                                         {errors.lName && touched.lName && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.lName}</p>}
                                     </div>
                                     <div className="mb-3">
-                                        <label htmlFor="address" className="form-label">Address </label>
+                                        <label htmlFor="address" className="form-label">Address<span style={{color:'red'}}>*</span>  </label>
                                         <textarea maxLength={100} className={`form-control sprAdmin-createAdmin-address  ${errors.address && touched.address ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="address" id="address" onChange={handleChange} onBlur={handleBlur} value={values.address}></textarea>
                                         {errors.address && touched.address && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.address}</p>}
                                     </div>
                                     <div className="mb-3">
-                                        <label htmlFor="email" className="form-label">Email Id </label>
+                                        <label htmlFor="email" className="form-label">Email Id<span style={{color:'red'}}>*</span>  </label>
                                         <input type="email" maxLength={100} className={`form-control  ${errors.email && touched.email ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="email" id="email" onChange={handleChange} onBlur={handleBlur} value={values.email} ></input>
                                         {errors.email && touched.email && <p className="error-message small mt-1">{errors.email}</p>}
                                         {userAlreadyExit && <p className="sprAdmin-createAdmin-error-message small mt-1">{userAlreadyExit}</p>}
                                     </div>
                                     <div className="mb-3">
-                                        <label htmlFor="phone" className="form-label">Phone Number</label>
+                                        <label htmlFor="phone" className="form-label">Phone Number<span style={{color:'red'}}>*</span> </label>
                                         <input type="text" maxLength={10} className={`form-control  ${errors.phone && touched.phone ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="phone" id="phone" onChange={handleChange} onBlur={handleBlur} value={values.phone} ></input>
                                         {errors.phone && touched.phone && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.phone}</p>}
                                     </div>
@@ -154,12 +154,12 @@ function CreateAdmin() {
                                 {/* col-5 under the row */}
                                 <div className="col-md-5" >
                                     <div className="mb-3">
-                                        <label htmlFor="aadharNumber" className="form-label">Aadhar Number</label>
+                                        <label htmlFor="aadharNumber" className="form-label">Aadhar Number<span style={{color:'red'}}>*</span> </label>
                                         <input type="text" maxLength={12} className={`form-control  ${errors.aadhar && touched.aadhar ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="aadhar" id="aadharNumber" onChange={handleChange} onBlur={handleBlur} value={values.aadhar} ></input>
                                         {errors.aadhar && touched.aadhar && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.aadhar}</p>}
                                     </div>
                                     <div className="mb-3">
-                                        <label htmlFor="panNumber" className="form-label">Pan Number</label>
+                                        <label htmlFor="panNumber" className="form-label">Pan Number<span style={{color:'red'}}>*</span> </label>
                                         <input type="text" maxLength={10} className={`form-control  ${errors.pan && touched.pan ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="pan" id="panNumber" onChange={handleChange} onBlur={handleBlur} value={values.pan} ></input>
                                         {errors.pan && touched.pan && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.pan}</p>}
                                     </div>

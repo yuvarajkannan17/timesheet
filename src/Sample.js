@@ -1,47 +1,29 @@
-import React, { useState } from 'react';
+function Sample() {
 
-function CheckboxExample() {
-  const [checkboxes, setCheckboxes] = useState({
-    yuvaraj: false,
-    sachin: false,
-    sehwag: false
-  });
-
-  const handleChange = (event) => {
-    const { id, checked } = event.target;
-    setCheckboxes({ ...checkboxes, [id]: checked });
-    console.log(`${id} is ${checked ? "checked" : "unchecked"}`);
-  };
-
-  const handleSelectAll = (event) => {
-    // console.log(event.target.checked)
-    
-    const checked = event.target.checked;
-    const updatedCheckboxes = {};
-    for (let key in checkboxes) {
-      updatedCheckboxes[key] = checked;
+  function validateInput(input) {
+    let value = input.value; // Convert input value to a number
+   console.log(typeof value)
+    // Ensure the value is within the range of 0 to 12
+    if (value < 0 || value > 12 || isNaN(value)) {
+      // If the value is less than 0 or greater than 12, set it to 0 or 12 respectively
+      value = Math.min(Math.max(value, 0), 12);
     }
-    console.log(updatedCheckboxes);
-    setCheckboxes(updatedCheckboxes);
-  };
+  
+    // Update the input value
+    input.value = value;
+    console.log(value);
+  }
+  
+  
 
   return (
-    <div>
-      <div>Select All<input type="checkbox" onChange={handleSelectAll} /></div>
-      <div>
-        <label htmlFor="yuvaraj">Yuvaraj</label>
-        <input type="checkbox" id="yuvaraj" checked={checkboxes.yuvaraj} onChange={handleChange} />
-      </div>
-      <div>
-        <label htmlFor="sachin">Sachin</label>
-        <input type="checkbox" id="sachin" checked={checkboxes.sachin} onChange={handleChange} />
-      </div>
-      <div>
-        <label htmlFor="sehwag">Sehwag</label>
-        <input type="checkbox" id="sehwag" checked={checkboxes.sehwag} onChange={handleChange} />
-      </div>
-    </div>
-  );
+    <>
+        <label for="inputField">Field Name</label>
+        <input type="text" inputMode="numeric" onInput={(event) => validateInput(event.target)} />
+
+
+      </>
+      )
 }
 
-export default CheckboxExample;
+export default Sample;

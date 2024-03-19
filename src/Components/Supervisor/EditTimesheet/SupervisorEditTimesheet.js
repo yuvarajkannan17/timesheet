@@ -42,14 +42,21 @@ function SupervisorEditTimesheet() {
 
     };
     const handleWorkHoursChange = (index, value) => {
-        const newWorkHour = [...timesheetData.timesheetData];
-        newWorkHour[index].hoursWorked = Number(value); // Update the hoursWorked property at the specified index
-        setTimesheetData(prevState => ({
-            ...prevState,
-            timesheetData: newWorkHour // Update the timesheetData state with the modified array
+       if(!isNaN(value)){
+        if (value < 0 || value > 12) {
+            // If the value is less than 0 or greater than 12, we don't need to do anything.
+            
+          }else{
+            const newWorkHour = [...timesheetData.timesheetData];
+            newWorkHour[index].hoursWorked = Number(value); // Update the hoursWorked property at the specified index
+            setTimesheetData(prevState => ({
+                ...prevState,
+                timesheetData: newWorkHour // Update the timesheetData state with the modified array
 
-        }));
+            }));
+          }
 
+       }
     };
     function calculateTotalWorkHours() {
         if (timesheetData.timesheetData) {
@@ -160,7 +167,7 @@ function SupervisorEditTimesheet() {
                                  </div>
                              </th>
                              {timesheetData && timesheetData.timesheetData.map((date, index) => (
-                                 <td key={date.date} style={{ backgroundColor: '#e8fcaf' }}  ><input type="number" min={0} max={12} className="ti-workInput-edit border border-none text-center mt-3" value={date.hoursWorked} onChange={(e) => handleWorkHoursChange(index, e.target.value)}></input></td>
+                                 <td key={date.date} style={{ backgroundColor: '#e8fcaf' }}  ><input type="text" inputMode="numeric" min={0} max={12} className="ti-workInput-edit border border-none text-center mt-3" value={date.hoursWorked} onChange={(e) => handleWorkHoursChange(index, e.target.value)}></input></td>
                              ))}
                          </tr>
                      </tbody>

@@ -10,7 +10,7 @@ import employeeSheetUrl from "../../Api/employeeEdit";
 function ApprovelPage() {
   const [timesheetDatas, setTimesheetDatas] = useState([])
   const [selectAllChecked, setSelectAllChecked] = useState(false);
-  const [rejectReason, setRejectReason] = useState('Please reach out supervisor regarding your timesheet.');
+  const [rejectReason, setRejectReason] = useState('Your timesheet has been rejected. Please reach out supervisor regarding your timesheet.');
   const [askConfitrmationForApprove, setAskConfirmationForApprove] = useState(false)
   const [askConfitrmationForReject, setAskConfirmationForReject] = useState(false)
   const [successModalForApprove, setSuccessModalForApprove] = useState(false)
@@ -117,7 +117,7 @@ function ApprovelPage() {
 
       // Wait for all updates to finish
       const updatedSheets = await Promise.all(updates);
-      console.log("k", updatedSheets);
+    
       // Update the state with the updated data
       setTimesheetDatas(updatedSheets);
 
@@ -293,14 +293,16 @@ function ApprovelPage() {
           <Modal show={askConfitrmationForReject}>
             <Modal.Body>
               Are you sure you want to reject this sheets?
-              <textarea
-                rows="4"
-                cols="40"
-                placeholder="Enter reason for rejection..."
-                value={rejectReason}
-                onChange={(e) => setRejectReason(e.target.value)}
-                className="mt-2 fixed-size-textarea"
-              />
+              <div className="textarea-container">
+                <textarea
+                  rows="4"
+                  cols="40"
+                  placeholder="Enter reason for rejection..."
+                  value={rejectReason}
+                  onChange={(e) => setRejectReason(e.target.value)}
+                  className="mt-2 fixed-size-textarea"
+                />
+              </div>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={rejectCancelConfirmation}>
