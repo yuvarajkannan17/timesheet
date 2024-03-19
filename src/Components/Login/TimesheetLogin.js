@@ -33,7 +33,7 @@ function TimesheetLogin() {
               }else if(actualUserName.username==="supervisor"){
                 navigate('/supervisor')
               }else if(actualUserName.username==="admin"){
-                navigate('/admin/createemployee')
+                navigate('/admin')
               }else if(actualUserName.username==="superadmin"){
                 navigate('/superadmin/createadmin')
               }

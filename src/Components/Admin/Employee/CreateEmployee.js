@@ -190,7 +190,7 @@ export default function CreateEmployee() {
   };
 
   // const handleModel = () => setSuccessModalOpen(true);
-  const handleClose = () => { setSuccessModalOpen(false); window.location.reload() }
+  // const handleClose = () => { setSuccessModalOpen(false); window.location.reload() }
   const navigate = useNavigate()
   const handleSuccess = () => {
     const lastEnteredEmployee = getLastEnteredEmployee();
@@ -225,6 +225,9 @@ export default function CreateEmployee() {
     navigate('/admin/employeeprofile')
     // history.push('/admin/employeeprofile');
   }
+  function handleClose(){
+    navigate('/admin')
+  }
 
   return (
     <div className="background-clr">
@@ -241,7 +244,7 @@ export default function CreateEmployee() {
 
 
                 <div className="col-md-6 form-group ">
-                  <label className="label"> Firstname: </label>
+                  <label className="label">Firstname<span class="required">*</span></label>
                   <input
                     type="text"
                     name="firstname"
@@ -252,7 +255,7 @@ export default function CreateEmployee() {
                   <p className="text-danger"> {formErrors.firstname} </p>
                 </div>
                 <div className="col-md-6 form-group">
-                  <label className="label"> Lastname: </label>
+                  <label className="label">Lastname<span class="required">*</span></label>
                   <input
                     type="text"
                     name="lastname"
@@ -265,7 +268,7 @@ export default function CreateEmployee() {
               </div>
               <div className="row">
                 <div className="col-md-6 form-group">
-                  <label className="address"> Address: </label>
+                  <label className="address">Address<span class="required">*</span></label>
                   <textarea
                     name="address"
                     className="form-control"
@@ -277,7 +280,7 @@ export default function CreateEmployee() {
                   <p className="text-danger"> {formErrors.address} </p>
                 </div>
                 <div className="col-md-6 form-group">
-                  <label className="label"> Mobile Number: </label>
+                  <label className="label">Mobile Number<span class="required">*</span></label>
                   <input
                     type="text"
                     name="mobilenumber"
@@ -292,7 +295,7 @@ export default function CreateEmployee() {
               </div>
               <div className="row">
                 <div className="col-md-6 form-group">
-                  <label className="label"> Email Id: </label>
+                  <label className="label">Email Id<span class="required">*</span></label>
                   <input
                     type="text"
                     name="emailid"
@@ -303,7 +306,7 @@ export default function CreateEmployee() {
                   <p className="text-danger"> {formErrors.emailid} </p>
                 </div>
                 <div className="col-md-6 form-group">
-                  <label className="label"> Employee Id: </label>
+                  <label className="label">Employee Id<span class="required">*</span></label>
                   <input
                     disabled="disabled"
                     type="text"
@@ -314,9 +317,9 @@ export default function CreateEmployee() {
                   />
                   <p className="text-danger"> {formErrors.employeeid} </p>
                 </div>
-                <div className="row">
+                {/* <div className="row"> */}
                   <div className="col-md-6 form-group">
-                    <label className="label"> Project Id: </label>
+                    <label className="label">Project Id</label>
                     <input
                       type="text"
                       name="projectid"
@@ -324,10 +327,10 @@ export default function CreateEmployee() {
                       value={formValues.projectid}
                       onChange={handleChange}
                     />
-                    <p className="text-danger"> {formErrors.projectid} </p>
+                    {/* <p className="text-danger"> {formErrors.projectid} </p> */}
                   </div>
                   <div className="col-md-6 form-group">
-                    Aadhar Number:
+                    Aadhar Number<span class="required">*</span>
                     <input
                       type="text"
                       name="aadharnumber"
@@ -337,12 +340,12 @@ export default function CreateEmployee() {
                       value={formValues.aadharnumber}
                       onChange={handleChange}
                     />
-                    <p className="text-danger"> {formErrors.aadharnumber} </p>
-                    <div className="form-group">
+                     <p className="text-danger"> {formErrors.aadharnumber} </p>
+                    {/* <div className="form-group">
                       <label className="label"> Aadhar Card  </label>
                       <input type="file" name="aadharcard" className="form-control-file1" />
-                    </div>
-                    Pan Number:
+                    </div>                     */}
+                    Pan Number<span class="required">*</span>
                     <input
                       type="text"
                       name="pannumber"
@@ -352,11 +355,11 @@ export default function CreateEmployee() {
                       onChange={handleChange}
                     />
                     <p className="text-danger"> {formErrors.pannumber} </p>
-                    <div className="form-group">
+                    {/* <div className="form-group">
                       <label className="label"> Pan Card  </label>
                       <input type="file" name="pancard" className="form-control-file2" />
-                    </div>
-                  </div>
+                    </div> */}
+                  {/* </div> */}
                 </div>
               </div>
             </div>

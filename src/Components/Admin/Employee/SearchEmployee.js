@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom'
 import NavPages from '../NavPages';
 import '../../css/style.css'
+
+
 export default function SearchEmployee() {
   
   const [result, setResult] = useState(null)
@@ -131,19 +133,7 @@ export default function SearchEmployee() {
               )}    
       </div>
       </div>  
-    </div>
-
-    {/* <div className="buttons">              
-              <button type="button" className="btn-edit btn-sm">
-                Edit
-              </button>
-              <button type="submit" className="btn-save btn-sm" >                
-                Save
-              </button>
-              <button type="button" className="btn-delete btn-sm">                
-                Delete
-              </button>
-    </div> */}
+    </div>    
     </div>
    
    </div>

@@ -8,8 +8,10 @@
     margin-top: 20px;    
     padding: 20px;    
 }
-
-
+.required {
+  color: red;
+  margin-left: 5px;
+}
 
 .admin-menus ul {
     display: flex;
@@ -234,7 +236,7 @@
  height: 35px;
 }
 
- .form-group {
+ .form-group {  
   margin-bottom: 30px;  
 }
 
