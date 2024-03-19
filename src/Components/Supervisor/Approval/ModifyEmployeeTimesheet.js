@@ -16,6 +16,7 @@ function EmployeeEditTimesheet() {
 
     const [editApproveConfirmationModal, setEditApproveConfirmationModal] = useState(false);
     const [editRejectConfirmationModal, setEditRejectConfirmationModal] = useState(false);
+    const [rejectReason, setRejectReason] = useState('Please reach out supervisor regarding your timesheet.');
 
 
 
@@ -86,13 +87,20 @@ function EmployeeEditTimesheet() {
 
     };
     const handleWorkHoursChange = (index, value) => {
-        const newWorkHour = [...timesheetData.timesheetData];
-        newWorkHour[index].hoursWorked = Number(value); // Update the hoursWorked property at the specified index
-        setTimesheetData(prevState => ({
-            ...prevState,
-            timesheetData: newWorkHour // Update the timesheetData state with the modified array
-
-        }));
+        if(!isNaN(value)){
+            if (value < 0 || value > 12) {
+                // If the value is less than 0 or greater than 12, we don't need to do anything
+                
+              }else{
+                const newWorkHour = [...timesheetData.timesheetData];
+                newWorkHour[index].hoursWorked = Number(value); // Update the hoursWorked property at the specified index
+                setTimesheetData(prevState => ({
+                    ...prevState,
+                    timesheetData: newWorkHour // Update the timesheetData state with the modified array
+    
+                }));
+              }
+        }
 
     };
     function calculateTotalWorkHours() {
@@ -113,109 +121,124 @@ function EmployeeEditTimesheet() {
     }, [timesheetData.timesheetData])
 
 
-
+    function goToHomePage() {
+        navigate('/supervisor')
+    }
 
 
 
 
     return (
-       <>
-       {timesheetData && ( <div className="ti-background-clr">
-            <div className="ti-data-field-container pt-4">
-                <div>
-                    <p className='fs-4 '>Edit Timesheet</p>
-                </div>
+        <>
+            {timesheetData && (<div className="ti-background-clr">
+                <div className="ti-data-field-container pt-4">
+                    <div>
+                        <p className='fs-4 '>Edit Timesheet</p>
+                    </div>
 
-                <div className="d-flex justify-content-between">
-                    <div className="m-1">
-                        <label htmlFor="fromDate"> Date :  </label>
-                        <input type="date" id="fromDate" className="mx-1" value={timesheetData.StartDate} readOnly></input>
+                    <div className="d-flex justify-content-between">
+                        <div className="m-1">
+                            <label htmlFor="fromDate"> Date :  </label>
+                            <input type="date" id="fromDate" className="mx-1" value={timesheetData.StartDate} readOnly></input>
+                        </div>
+
+                    </div>
+
+
+                    <div className=" border border-1 rounded p-4 border-black my-4" style={{ position: 'relative', zIndex: 1 }}>
+                        <table className="table table-bordered border-dark text-center">
+                            <thead>
+                                <tr>
+                                    <th style={{ backgroundColor: '#c8e184' }} >Date</th>
+                                    {timesheetData && timesheetData.timesheetData.map((date) => (
+                                        <th style={{ backgroundColor: '#c8e184' }} key={date.date}>{date.date}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <th style={{ backgroundColor: '#c8e184' }} >Day</th>
+                                    {timesheetData && timesheetData.timesheetData.map((date) => (
+                                        <td key={date.date} style={{ backgroundColor: date.day.toLowerCase() === 'sunday' ? 'yellow' : ' #c8e184' }}>{date.day}</td>
+                                    ))}
+                                </tr>
+                                <tr>
+                                    <th style={{ backgroundColor: '#e8fcaf' }}  >
+
+                                        <div>
+                                            <Select
+                                                options={timesheetData.projectOptions}
+
+                                                value={timesheetData.workingProject}
+                                                onChange={handleChange}
+                                                placeholder="choose the project"
+                                                className="my-2"
+                                            />
+                                        </div>
+                                    </th>
+                                    {timesheetData && timesheetData.timesheetData.map((date, index) => (
+                                        <td key={date.date} style={{ backgroundColor: '#e8fcaf' }}  ><input type="text" inputMode="numeric" min={0} max={12} className="ti-workInput-edit border border-none text-center mt-3" value={date.hoursWorked} onChange={(e) => handleWorkHoursChange(index, e.target.value)}></input></td>
+                                    ))}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <span className='fw-bold'>Total Hours Worked : </span> <span className='fw-bold'>{timesheetData.noOfHoursWorked}</span>
+                    </div>
+                    <div className="d-flex justify-content-center" >
+
+                        <button type="button" onClick={editTimesheetApproveConfirmation} className="btn btn-success m-3 " style={{ width: '100px' }}>Approve</button>
+                        <button type="button" onClick={editTimesheetRejectConfirmation} className="btn btn-danger m-3 " style={{ width: '100px' }}>Reject</button>
+                        <button type="button" onClick={goToHomePage} className="btn btn-secondary m-3 " style={{ width: '100px' }}>Cancel</button>
                     </div>
 
                 </div>
-
-
-                <div className=" border border-1 rounded p-4 border-black my-4" style={{ position: 'relative', zIndex: 1 }}>
-                    <table className="table table-bordered border-dark text-center">
-                        <thead>
-                            <tr>
-                                <th style={{ backgroundColor: '#c8e184' }} >Date</th>
-                                {timesheetData && timesheetData.timesheetData.map((date) => (
-                                    <th style={{ backgroundColor: '#c8e184' }}  key={date.date}>{date.date}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <tr>
-                                <th style={{ backgroundColor: '#c8e184' }} >Day</th>
-                                {timesheetData && timesheetData.timesheetData.map((date) => (
-                                    <td key={date.date} style={{ backgroundColor: date.day.toLowerCase() === 'sunday' ? 'yellow' : ' #c8e184' }}>{date.day}</td>
-                                ))}
-                            </tr>
-                            <tr>
-                                <th style={{ backgroundColor: '#e8fcaf' }}  >
-
-                                    <div>
-                                        <Select
-                                            options={timesheetData.projectOptions}
-
-                                            value={timesheetData.workingProject}
-                                            onChange={handleChange}
-                                            placeholder="choose the project"
-                                            className="my-2"
-                                        />
-                                    </div>
-                                </th>
-                                {timesheetData && timesheetData.timesheetData.map((date, index) => (
-                                    <td key={date.date} style={{ backgroundColor: '#e8fcaf' }}  ><input type="number" min={0} max={12} className="ti-workInput-edit border border-none text-center mt-3" value={date.hoursWorked} onChange={(e) => handleWorkHoursChange(index, e.target.value)}></input></td>
-                                ))}
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
                 <div>
-                    <span className='fw-bold'>Total Hours Worked : </span> <span className='fw-bold'>{timesheetData.noOfHoursWorked}</span>
+                    {/* modals for confirmation */}
+
+                    <Modal show={editApproveConfirmationModal}>
+
+                        <Modal.Body >Do you want to approve this timesheet?</Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={editTimesheetApproveCancel}>
+                                Cancel
+                            </Button>
+                            <Button variant="primary" onClick={editTimesheetApproveSave}>
+                                Approve
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+
+                    <Modal show={editRejectConfirmationModal}>
+
+                        <Modal.Body >Do you want to reject this timesheet?
+                            <div className="textarea-container">
+                                <textarea
+                                    rows="4"
+                                    cols="40"
+                                    placeholder="Enter reason for rejection..."
+                                    value={rejectReason}
+                                    onChange={(e) => setRejectReason(e.target.value)}
+                                    className="mt-2 fixed-size-textarea"
+                                />
+                            </div>
+                        </Modal.Body>
+
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={editTimesheetRejectCancel}>
+                                Cancel
+                            </Button>
+                            <Button variant="danger" onClick={editTimesheetRejectSave}>
+                                Reject
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+
                 </div>
-                <div className="d-flex justify-content-center" >
-
-                    <button type="button" onClick={editTimesheetApproveConfirmation} className="btn btn-success m-3 " style={{ width: '100px' }}>Approve</button>
-                    <button type="button" onClick={editTimesheetRejectConfirmation} className="btn btn-danger m-3 " style={{ width: '100px' }}>Reject</button>
-                </div>
-
-            </div>
-            <div>
-                {/* modals for confirmation */}
-
-                <Modal show={editApproveConfirmationModal}>
-
-                    <Modal.Body >Do you want to approve this timesheet?</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={editTimesheetApproveCancel}>
-                            Cancel
-                        </Button>
-                        <Button variant="primary" onClick={editTimesheetApproveSave}>
-                            Approve
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-
-                <Modal show={editRejectConfirmationModal}>
-
-                    <Modal.Body >Do you want to reject this timesheet?</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={editTimesheetRejectCancel}>
-                            Cancel
-                        </Button>
-                        <Button variant="danger" onClick={editTimesheetRejectSave}>
-                            Reject
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-
-            </div>
-        </div>)}
-       </>
+            </div>)}
+        </>
     );
 }
 

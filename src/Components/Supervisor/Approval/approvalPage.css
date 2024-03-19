@@ -20,6 +20,10 @@
     max-height: 80px;
   }
 
+  .textarea-container{
+    overflow: hidden;
+  }
+
 /* .signInSymbol{
     border: 2px solid white;
     border-radius: 50%;
