@@ -4,7 +4,11 @@ import axios from 'axios';
 import Select from 'react-select';
 import './AddTimesheet.css';
 import { Alert } from 'bootstrap';
+import { Modal, Button } from "react-bootstrap";
+
 import { useNavigate } from "react-router-dom";
+import successCheck from '../../Image/checked.png'
+
 
 
 const AdminAddTimesheet = () => {
@@ -13,6 +17,14 @@ const AdminAddTimesheet = () => {
   const [availableProjects, setAvailableProjects] = useState([]);
   const [tableRowCount, setTableRowCount] = useState(1);
   const [showFirstHalf, setShowFirstHalf] = useState(true);
+  const [addDataSaveConfirmation, setAddDataSaveConfirmation] = useState(false);
+  const [addDataSubmitConfirmation, setAddDataSubmitConfirmation] = useState(false);
+
+  const [saveModalForEmployeeAdd, setSaveModalForEmployeeAdd] = useState(false);
+  const [successModalForEmployeeAdd, setSuccessModalForEmployeeAdd] = useState(false);
+
+
+
 
   useEffect(() => {
     generateTimesheetData(selectedMonth);
@@ -36,7 +48,25 @@ const AdminAddTimesheet = () => {
     fetchProjects();
   }, []);
 
-  const saveTimesheetData = async () => {
+  function addSaveDataCancelFun() {
+    setAddDataSaveConfirmation(false)
+  }
+
+  async function addDataSaveConfirmationFun() {
+    setAddDataSaveConfirmation(true);
+}
+async function addDataSubmitConfirmationFun() {
+  setAddDataSubmitConfirmation(true);        
+} 
+
+function addSubmitDataCancelFun() {
+  setAddDataSubmitConfirmation(false)
+}
+
+  const addDataSaveFun = async () => {
+    setAddDataSaveConfirmation(false);
+
+
     try {
       if (!selectedMonth) {
         console.error('Please select a month before saving.');
@@ -53,14 +83,20 @@ const AdminAddTimesheet = () => {
       };
 
       const response = await axios.post('https://65c0706125a83926ab964c6f.mockapi.io/api/projectdetails/timesheets', timesheetPayload);
+      setSaveModalForEmployeeAdd(true);
 
       console.log('Timesheet data saved successfully:', response.data);
-      alert('Timesheet data saved successfully:')
+      // alert('Timesheet data saved successfully:')
     } catch (error) {
       console.error('Error saving timesheet data:', error);
-      alert('Error saving timesheet data:')
+      // alert('Error saving timesheet data:')
     }
   };
+
+  function addDataSumbitFun(){
+    setAddDataSubmitConfirmation(false);
+    setSuccessModalForEmployeeAdd(true)
+}
 
   const handleForward = () => {
     const nextMonth = new Date(selectedMonth);
@@ -108,6 +144,8 @@ const AdminAddTimesheet = () => {
     setTimesheetData(newTimesheetData);
   };
 
+  
+
   const handleProjectChange = (rowIndex, columnIndex, selectedOption) => {
     const newTimesheetData = [...timesheetData];
     newTimesheetData[rowIndex].entries[columnIndex].projectId = selectedOption.value;
@@ -128,6 +166,11 @@ const AdminAddTimesheet = () => {
   function goToAdminHome() {
     navigate('/admin')
 }
+
+
+
+
+
 
   return (
     <div className="AddTimesheet background-clr">
@@ -238,14 +281,48 @@ const AdminAddTimesheet = () => {
           <span className='AddTimesheet fw-bold'>Total Hours Worked : </span> <span className='AddTimesheet fw-bold'>0</span>
         </div>
         <div className="d-flex justify-content-center" >
-          <button className="AddTimesheet btn btn-success m-3 w-5" onClick={saveTimesheetData} style={{ width: '100px' }}>
-            Save
-          </button>
-          <button className="AddTimesheet btn btn-secondary m-3 w-5" onClick={goToAdminHome} style={{ width: '100px' }}>
-            Cancel
-          </button>
+            <button className="btn btn-primary m-3 w-5" onClick={addDataSubmitConfirmationFun} style={{ width: '100px' }}>Submit</button>
+            <button className="AddTimesheet btn btn-success m-3 w-5" onClick={addDataSaveConfirmationFun} style={{ width: '100px' }}>Save</button>
+            <button className="AddTimesheet btn btn-secondary m-3 w-5" onClick={goToAdminHome} style={{ width: '100px' }}>Cancel</button>
         </div>
       </div>
+      <Modal show={addDataSaveConfirmation} >
+                <Modal.Body >Do you want to Save this sheet?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={addSaveDataCancelFun}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" onClick={addDataSaveFun}>
+                        Save
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={saveModalForEmployeeAdd}  >
+                <div className="d-flex flex-column modal-success p-4 align-items-center ">
+                    <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+                    <p className="mb-4 text-center"> Your Timesheet has been saved.</p>
+                    <button className="btn  w-100 text-white" onClick={() => { setSaveModalForEmployeeAdd(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+                </div>
+            </Modal>
+            <Modal show={addDataSubmitConfirmation}>
+                <Modal.Body >Do you want to Submit?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={addSubmitDataCancelFun}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" onClick={addDataSumbitFun}>
+                        Submit
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForEmployeeAdd}  >
+                <div className="d-flex flex-column modal-success p-4 align-items-center ">
+                    <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+                    <p className="mb-4 text-center"> Your Timesheet has submitted for approval.</p>
+                    <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForEmployeeAdd(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+                </div>
+            </Modal>
     </div>
   );
 };

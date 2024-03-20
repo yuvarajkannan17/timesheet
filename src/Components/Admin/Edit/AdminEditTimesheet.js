@@ -12,6 +12,8 @@ function AdminEditTimesheet() {
     const [editId, setEditId] = useState('');
     const objectPositionRef = useRef(1);
     const [editDataSaveConfirmation, setEditDataSaveConfirmation] = useState(false);
+    const [editDataSubmitConfirmation, setEditDataSubmitConfirmation] = useState(false);
+    const [saveModalForEmployeeEdit, setSaveModalForEmployeeEdit] = useState(false);
     const [successModalForEmployeeEdit, setSuccessModalForEmployeeEdit] = useState(false);
     const navigate = useNavigate();
 
@@ -73,6 +75,10 @@ function AdminEditTimesheet() {
     async function editDataSaveConfirmationFun() {
         setEditDataSaveConfirmation(true);
     }
+    async function editDataSubmitConfirmationFun() {
+        setEditDataSubmitConfirmation(true);        
+    }
+     
 
     function goToAdminHome() {
         navigate('/admin')
@@ -84,20 +90,27 @@ function AdminEditTimesheet() {
         getEditTimesheet();
     }
 
-    function editDataCancelFun() {
+    function editSaveDataCancelFun() {
         setEditDataSaveConfirmation(false)
     }
 
+    function editSubmitDataCancelFun() {
+        setEditDataSubmitConfirmation(false)
+    }
+
+    
     async function editDataSaveFun() {
         setEditDataSaveConfirmation(false);
         try {
             await axios.put(`${employeeSheetUrl}/${editId}`, timesheetData);
-            setSuccessModalForEmployeeEdit(true);
+            setSaveModalForEmployeeEdit(true);
         } catch (error) {
             console.log(error)
         }
-
-
+    }
+    function editDataSumbitFun(){
+        setEditDataSubmitConfirmation(false);
+        setSuccessModalForEmployeeEdit(true)
     }
 
     return (
@@ -167,6 +180,7 @@ function AdminEditTimesheet() {
                     <span className='fw-bold'>Total Hours Worked : </span> <span className='fw-bold'>{timesheetData.noOfHoursWorked}</span>
                 </div>
                 <div className="d-flex justify-content-center" >
+                    <button className="btn btn-primary m-3 w-5" onClick={editDataSubmitConfirmationFun} style={{ width: '100px' }}>Submit</button>
                     <button className="btn btn-success m-3 w-5" onClick={editDataSaveConfirmationFun} style={{ width: '100px' }}>Save</button>
                     <button className="btn btn-secondary m-3 w-5" onClick={goToAdminHome} style={{ width: '100px' }}>Go Back</button>
                 </div>
@@ -177,11 +191,10 @@ function AdminEditTimesheet() {
                
            </div>
             {/* confirmation modal */}
-            <Modal show={editDataSaveConfirmation}>
-
+            <Modal show={editDataSaveConfirmation} >
                 <Modal.Body >Do you want to Save this sheet?</Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={editDataCancelFun}>
+                    <Button variant="secondary" onClick={editSaveDataCancelFun}>
                         Cancel
                     </Button>
                     <Button variant="primary" onClick={editDataSaveFun}>
@@ -189,18 +202,39 @@ function AdminEditTimesheet() {
                     </Button>
                 </Modal.Footer>
             </Modal>
-            {/* modal for success edit */}
-            <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForEmployeeEdit}  >
+            
+            <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={saveModalForEmployeeEdit}  >
                 <div className="d-flex flex-column modal-success p-4 align-items-center ">
                     <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
                     <p className="mb-4 text-center"> Your Timesheet has been updated.</p>
+                    <button className="btn  w-100 text-white" onClick={() => { setSaveModalForEmployeeEdit(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+                </div>
+            </Modal>
+
+            <Modal show={editDataSubmitConfirmation}>
+                <Modal.Body >Do you want to Submit?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={editSubmitDataCancelFun}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" onClick={editDataSumbitFun}>
+                        Submit
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForEmployeeEdit}  >
+                <div className="d-flex flex-column modal-success p-4 align-items-center ">
+                    <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+                    <p className="mb-4 text-center"> Your Timesheet has submitted for approval.</p>
                     <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForEmployeeEdit(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
                 </div>
             </Modal>
+
+
         </div>
         )}
         </>
     );
-}
 
+}
 export default AdminEditTimesheet;

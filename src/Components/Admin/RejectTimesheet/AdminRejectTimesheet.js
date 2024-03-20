@@ -11,7 +11,10 @@ function RejectTimesheet() {
     const [editId, setEditId] = useState('');
     const objectPositionRef = useRef(1);
     const [editDataSaveConfirmation, setEditDataSaveConfirmation] = useState(false);
-    const [successModalForEmployeeRejectEdit,setSuccessModalForEmployeeRejectEdit]=useState(false);
+    const [saveModalForEmployeeReject,setSaveModalForEmployeeReject]=useState(false);
+    const [rejectDataSubmitConfirmation, setRejectDataSubmitConfirmation] = useState(false);
+    const [successModalForEmployeeReject, setSuccessModalForEmployeeReject] = useState(false);
+
     const navigate = useNavigate();
 
 
@@ -70,8 +73,11 @@ function RejectTimesheet() {
 
    
 
-    async function editDataSaveConfirmationFun() {
+    async function rejectDataSaveConfirmationFun() {
        setEditDataSaveConfirmation(true);
+    }
+    async function rejectDataSubmitConfirmationFun() {
+        setRejectDataSubmitConfirmation(true);        
     }
 
     function goToAdminHome() {
@@ -84,11 +90,21 @@ function RejectTimesheet() {
         setEditDataSaveConfirmation(false)
     }
 
+    function rejectSubmitDataCancelFun() {
+        setRejectDataSubmitConfirmation(false)
+    }
+
+    function rejectDataSumbitFun(){
+        setRejectDataSubmitConfirmation(false);
+        setSuccessModalForEmployeeReject(true)
+    }
+
+
    async function editDataSaveFun(){
         setEditDataSaveConfirmation(false);
         try{
             await axios.put(`${employeeSheetUrl}/${editId}`, timesheetData);
-            setSuccessModalForEmployeeRejectEdit(true);
+            setSaveModalForEmployeeReject(true);
         }catch(error){
           console.log(error)
         }
@@ -158,15 +174,14 @@ function RejectTimesheet() {
                     <span className='fw-bold'>Total Hours Worked : </span> <span className='fw-bold'>{timesheetData.noOfHoursWorked}</span>
                 </div>
                 <div className="d-flex justify-content-center" >
-                    <button className="btn btn-primary m-3 w-5"  style={{ width: '100px' }}>Submit</button>
-                    <button className="btn btn-success m-3 w-5" onClick={editDataSaveConfirmationFun} style={{ width: '100px' }}>Save</button>
+                    <button className="btn btn-primary m-3 w-5" onClick={rejectDataSubmitConfirmationFun} style={{ width: '100px' }}>Submit</button>
+                    <button className="btn btn-success m-3 w-5" onClick={rejectDataSaveConfirmationFun} style={{ width: '100px' }}>Save</button>
                     <button className="btn btn-secondary m-3 w-5" onClick={goToAdminHome} style={{ width: '100px' }}>Cancel</button>
                 </div>
 
             </div>
             {/* confirmation modal */}
             <Modal show={editDataSaveConfirmation}>
-
                 <Modal.Body >Do you want to Save this sheet?</Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={editDataCancelFun}>
@@ -178,13 +193,32 @@ function RejectTimesheet() {
                 </Modal.Footer>
             </Modal>
                {/* modal for success edit */}
-            <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForEmployeeRejectEdit}  >
+            <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={saveModalForEmployeeReject}  >
             <div className="d-flex flex-column modal-success p-4 align-items-center ">
               <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
               <p className="mb-4 text-center"> Your Timesheet has been Saved.</p>
-              <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForEmployeeRejectEdit(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+              <button className="btn  w-100 text-white" onClick={() => { setSaveModalForEmployeeReject(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
             </div>
           </Modal>
+
+          <Modal show={rejectDataSubmitConfirmation}>
+                <Modal.Body >Do you want to Submit?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={rejectSubmitDataCancelFun}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" onClick={rejectDataSumbitFun}>
+                        Submit
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForEmployeeReject}  >
+                <div className="d-flex flex-column modal-success p-4 align-items-center ">
+                    <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+                    <p className="mb-4 text-center"> Your Timesheet has submitted for approval.</p>
+                    <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForEmployeeReject(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+                </div>
+            </Modal>
         </div>)}
         </>
     );

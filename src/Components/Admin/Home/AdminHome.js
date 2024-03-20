@@ -33,8 +33,8 @@ function AdminHome() {
 {/* notification about timesheet */}
                     <div className="row text-center ti-home-notification">
 
-                        <div className="col   mx-5 my-2 p-2 ">Timesheet to be approved</div>
-                        <div className="col  mx-5  my-2 p-2  ">Rejected Timesheets</div>
+                        <div className="col   mx-5 my-2 p-2 ">Timesheet to be approved :</div>
+                        <div className="col  mx-5  my-2 p-2  ">Rejected Timesheets :</div>
 
                     </div>
 

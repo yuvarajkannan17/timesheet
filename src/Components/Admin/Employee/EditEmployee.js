@@ -204,6 +204,8 @@ const [formValues, setFormValues] = useState(userData || {});
                 <textarea                 
                   name="address"
                   className="form-control"
+                  rows="5"
+                  cols="50"
                   value={formValues.address}
                   onChange={handleChange}
                ></textarea>
@@ -257,7 +259,7 @@ const [formValues, setFormValues] = useState(userData || {});
                     value={formValues.projectid}
                     onChange={handleChange}
                   />
-                  <p className="text-danger"> {formErrors.projectid} </p>
+                  {/* <p className="text-danger"> {formErrors.projectid} </p> */}
                 </div>
                 <div className="col-md-6 form-group">
                   Aadhar Number:
@@ -271,10 +273,10 @@ const [formValues, setFormValues] = useState(userData || {});
                     onChange={handleChange}
                   />
                   <p className="text-danger"> {formErrors.aadharnumber} </p>
-                  <div className="form-group">
+                  {/* <div className="form-group">
                     <label className="label"> Aadhar Card  </label>
                     <input type="file" name="aadharcard" className="form-control-file1" />
-                  </div>
+                  </div> */}
                   Pan Number:
                   <input
                     type="text"
@@ -285,10 +287,10 @@ const [formValues, setFormValues] = useState(userData || {});
                     onChange={handleChange}
                   />
                   <p className="text-danger"> {formErrors.pannumber} </p>
-                  <div className="form-group">
+                  {/* <div className="form-group">
                     <label className="label"> Pan Card  </label>
                     <input type="file" name="pancard" className="form-control-file2" />
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
