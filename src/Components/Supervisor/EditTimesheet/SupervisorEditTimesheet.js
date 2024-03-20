@@ -177,8 +177,9 @@ function SupervisorEditTimesheet() {
                  <span className='fw-bold'>Total Hours Worked : </span> <span className='fw-bold'>{timesheetData.noOfHoursWorked}</span>
              </div>
              <div className="d-flex justify-content-center" >
-                 <button className="btn btn-success m-3 w-5" onClick={editDataSaveConfirmationFun} style={{ width: '100px' }}>Save</button>
-                 <button className="btn btn-secondary m-3 w-5" onClick={goToSupervisorHome} style={{ width: '100px' }}>Go Back</button>
+                 <button className="btn btn-primary m-3 w-5" onClick={editDataSaveConfirmationFun} style={{ width: '100px' }}>Save</button>
+                 <button className="btn btn-success m-3 w-5"  style={{ width: '100px' }}>Submit</button>
+                 <button className="btn btn-secondary m-3 w-5" onClick={goToSupervisorHome} style={{ width: '100px' }}>Cancel</button>
              </div>
 
          </div>

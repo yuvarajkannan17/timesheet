@@ -170,8 +170,8 @@ function RejectTimesheet() {
                         <span className='fw-bold'>Total Hours Worked : </span> <span className='fw-bold'>{timesheetData.noOfHoursWorked}</span>
                     </div>
                     <div className="d-flex justify-content-center" >
-                        <button className="btn btn-primary m-3 w-5" style={{ width: '100px' }}>Save</button>
-                        <button className="btn btn-success m-3 w-5" onClick={editDataSaveConfirmationFun} style={{ width: '100px' }}>Submit</button>
+                        <button className="btn btn-primary m-3 w-5" onClick={editDataSaveConfirmationFun} style={{ width: '100px' }}>Save</button>
+                        <button className="btn btn-success m-3 w-5"  style={{ width: '100px' }}>Submit</button>
                         <button className="btn btn-secondary m-3 w-5" onClick={goToEmployeeHome} style={{ width: '100px' }}>Cancel</button>
                     </div>
 
@@ -179,13 +179,13 @@ function RejectTimesheet() {
                 {/* confirmation modal */}
                 <Modal show={editDataSaveConfirmation}>
 
-                    <Modal.Body >Do you want to Submit this sheet?</Modal.Body>
+                    <Modal.Body >Do you want to Save this sheet?</Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={editDataCancelFun}>
                             Cancel
                         </Button>
                         <Button variant="primary" onClick={editDataSaveFun}>
-                            Submit
+                            Save
                         </Button>
                     </Modal.Footer>
                 </Modal>
@@ -193,7 +193,7 @@ function RejectTimesheet() {
                 <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForEmployeeRejectEdit}  >
                     <div className="d-flex flex-column modal-success p-4 align-items-center ">
                         <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
-                        <p className="mb-4 text-center"> Your Timesheet has been Submitted For The Approval.</p>
+                        <p className="mb-4 text-center"> Your Timesheet has been Saved. </p>
                         <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForEmployeeRejectEdit(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
                     </div>
                 </Modal>
