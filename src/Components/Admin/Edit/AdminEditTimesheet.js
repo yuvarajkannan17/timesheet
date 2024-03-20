@@ -93,6 +93,10 @@ function AdminEditTimesheet() {
     function editSubmitDataCancelFun() {
         setEditDataSubmitConfirmation(false)
     }
+    function editDataSumbitFun(){
+        setEditDataSubmitConfirmation(false);
+        setSuccessModalForEmployeeEdit(true)
+    }
 
     
     async function editDataSaveFun() {
@@ -104,10 +108,7 @@ function AdminEditTimesheet() {
             console.log(error)
         }
     }
-    function editDataSumbitFun(){
-        setEditDataSubmitConfirmation(false);
-        setSuccessModalForEmployeeEdit(true)
-    }
+    
 
     return (
         <>

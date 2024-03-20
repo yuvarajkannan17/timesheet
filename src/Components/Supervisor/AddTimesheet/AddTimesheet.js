@@ -3,6 +3,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import Select from 'react-select';
 import './AddTimesheet.css';
+import { Modal, Button } from "react-bootstrap";
+
+import successCheck from '../../Image/checked.png'
 
 const AddTimesheet = () => {
   const [selectedMonth, setSelectedMonth] = useState('');
@@ -10,6 +13,9 @@ const AddTimesheet = () => {
   const [availableProjects, setAvailableProjects] = useState([]);
   const [tableRowCount, setTableRowCount] = useState(1);
   const [showFirstHalf, setShowFirstHalf] = useState(true);
+  const [addDataSubmitConfirmation, setAddDataSubmitConfirmation] = useState(false);
+  const [successModalForEmployeeAdd, setSuccessModalForEmployeeAdd] = useState(false);
+
 
   useEffect(() => {
     generateTimesheetData(selectedMonth);
@@ -26,8 +32,23 @@ const AddTimesheet = () => {
       }
     };
 
+    
+
     fetchProjects();
   }, []);
+
+  function addSubmitDataCancelFun() {
+    setAddDataSubmitConfirmation(false)
+  }
+
+  function addDataSumbitFun(){
+    setAddDataSubmitConfirmation(false);
+    setSuccessModalForEmployeeAdd(true)
+}
+
+async function addDataSubmitConfirmationFun() {
+  setAddDataSubmitConfirmation(true);        
+} 
 
   const handleForward = () => {
     const nextMonth = new Date(selectedMonth);
@@ -201,10 +222,30 @@ const AddTimesheet = () => {
           <span className='AddTimesheet fw-bold'>Total Hours Worked : </span> <span className='AddTimesheet fw-bold'>0</span>
         </div>
         <div className="d-flex justify-content-center" >
+        <button className="btn btn-primary m-3 w-5" onClick={addDataSubmitConfirmationFun} style={{ width: '100px' }}>Submit</button>
+
           <button className="AddTimesheet btn btn-success m-3 w-5" onClick={() => {}} style={{ width: '100px' }}>Save</button>
           <button className="AddTimesheet btn btn-secondary m-3 w-5" style={{ width: '100px' }}>Cancel</button>
         </div>
       </div>
+      <Modal show={addDataSubmitConfirmation}>
+                <Modal.Body >Do you want to Submit?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={addSubmitDataCancelFun}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" onClick={addDataSumbitFun}>
+                        Submit
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForEmployeeAdd}  >
+                <div className="d-flex flex-column modal-success p-4 align-items-center ">
+                    <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+                    <p className="mb-4 text-center"> Your Timesheet has submitted for approval.</p>
+                    <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForEmployeeAdd(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+                </div>
+            </Modal>
     </div>
   );
 };

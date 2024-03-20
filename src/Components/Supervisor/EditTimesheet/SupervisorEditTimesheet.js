@@ -12,6 +12,10 @@ function SupervisorEditTimesheet() {
     const objectPositionRef = useRef(1);
     const [editDataSaveConfirmation, setEditDataSaveConfirmation] = useState(false);
     const [successModalForSupervisorEdit,setSuccessModalForSupervisorEdit]=useState(false);
+    const [editDataSubmitConfirmation, setEditDataSubmitConfirmation] = useState(false);
+    const [successModalForEmployeeEdit, setSuccessModalForEmployeeEdit] = useState(false);
+
+
     const navigate = useNavigate();
 
 
@@ -84,6 +88,9 @@ function SupervisorEditTimesheet() {
     async function editDataSaveConfirmationFun() {
        setEditDataSaveConfirmation(true);
     }
+    async function editDataSubmitConfirmationFun() {
+        setEditDataSubmitConfirmation(true);        
+    }
 
     function goToSupervisorHome() {
         navigate('/supervisor')
@@ -97,6 +104,14 @@ function SupervisorEditTimesheet() {
 
     function editDataCancelFun(){
         setEditDataSaveConfirmation(false)
+    }
+
+    function editSubmitDataCancelFun() {
+        setEditDataSubmitConfirmation(false)
+    }
+    function editDataSumbitFun(){
+        setEditDataSubmitConfirmation(false);
+        setSuccessModalForEmployeeEdit(true)
     }
 
    async function editDataSaveFun(){
@@ -178,7 +193,7 @@ function SupervisorEditTimesheet() {
              </div>
              <div className="d-flex justify-content-center" >
                  <button className="btn btn-primary m-3 w-5" onClick={editDataSaveConfirmationFun} style={{ width: '100px' }}>Save</button>
-                 <button className="btn btn-success m-3 w-5"  style={{ width: '100px' }}>Submit</button>
+                 <button className="btn btn-success m-3 w-5" onClick={editDataSubmitConfirmationFun} style={{ width: '100px' }}>Submit</button>
                  <button className="btn btn-secondary m-3 w-5" onClick={goToSupervisorHome} style={{ width: '100px' }}>Cancel</button>
              </div>
 
@@ -204,6 +219,26 @@ function SupervisorEditTimesheet() {
            <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForSupervisorEdit(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
          </div>
        </Modal>
+
+       <Modal show={editDataSubmitConfirmation}>
+                <Modal.Body >Do you want to Submit?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={editSubmitDataCancelFun}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" onClick={editDataSumbitFun}>
+                        Submit
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForEmployeeEdit}  >
+                <div className="d-flex flex-column modal-success p-4 align-items-center ">
+                    <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+                    <p className="mb-4 text-center"> Your Timesheet has submitted for approval.</p>
+                    <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForEmployeeEdit(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+                </div>
+            </Modal>
      </div>
        )}
        </>
