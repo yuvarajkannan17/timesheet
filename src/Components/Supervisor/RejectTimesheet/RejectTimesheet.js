@@ -113,6 +113,10 @@ function RejectTimesheet() {
                     <div>
                         <p className='fs-4 text-danger '>Reject Timesheet</p>
                     </div>
+                    
+                    <div  className="p-1 my-2 border border-danger border-2 bg-light" >
+                        <p>Please reach out supervisor regarding your timesheet.</p>
+                    </div>
 
 
                     <div className="m-1">
