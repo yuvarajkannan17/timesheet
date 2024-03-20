@@ -2,7 +2,6 @@ import axios from "axios";
 import employeeSheetUrl from "../../Api/employeeEdit";
 import Select from 'react-select';
 import { useEffect, useState, useRef } from "react";
-
 import { useNavigate } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
 import successCheck from '../../Image/checked.png'
@@ -24,14 +23,11 @@ function AdminEditTimesheet() {
         const sheetData = datas[length - objectPositionRef.current];
         setEditId(sheetData.id)
         setTimesheetData(sheetData);
-
     }
 
     useEffect(() => {
         getEditTimesheet();
     }, []);
-
-
 
     const handleChange = (selectedOptions) => {
         setTimesheetData((preValue) => ({
@@ -170,7 +166,7 @@ function AdminEditTimesheet() {
                                     </div>
                                 </th>
                                 {timesheetData && timesheetData.timesheetData.map((date, index) => (
-                                    <td key={date.date} style={{ backgroundColor: '#e8fcaf' }}  ><input type="number"  className="ti-workInput-edit border border-none text-center mt-3" value={date.hoursWorked} min={0} max={12} onChange={(e) => handleWorkHoursChange(index, e.target.value)}></input></td>
+                                    <td key={date.date} style={{ backgroundColor: '#e8fcaf' }}  ><input type="text" inputMode="numeric" className="ti-workInput-edit border border-none text-center mt-3" value={date.hoursWorked} min={0} max={12} onChange={(e) => handleWorkHoursChange(index, e.target.value)}></input></td>
                                 ))}
                             </tr>
                         </tbody>
@@ -182,7 +178,7 @@ function AdminEditTimesheet() {
                 <div className="d-flex justify-content-center" >
                     <button className="btn btn-primary m-3 w-5" onClick={editDataSubmitConfirmationFun} style={{ width: '100px' }}>Submit</button>
                     <button className="btn btn-success m-3 w-5" onClick={editDataSaveConfirmationFun} style={{ width: '100px' }}>Save</button>
-                    <button className="btn btn-secondary m-3 w-5" onClick={goToAdminHome} style={{ width: '100px' }}>Go Back</button>
+                    <button className="btn btn-secondary m-3 w-5" onClick={goToAdminHome} style={{ width: '100px' }}>Cancel</button>
                 </div>
 
             </div>

@@ -3,9 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import Select from 'react-select';
 import './AddTimesheet.css';
-import { Alert } from 'bootstrap';
 import { Modal, Button } from "react-bootstrap";
-
 import { useNavigate } from "react-router-dom";
 import successCheck from '../../Image/checked.png'
 
@@ -19,12 +17,8 @@ const AdminAddTimesheet = () => {
   const [showFirstHalf, setShowFirstHalf] = useState(true);
   const [addDataSaveConfirmation, setAddDataSaveConfirmation] = useState(false);
   const [addDataSubmitConfirmation, setAddDataSubmitConfirmation] = useState(false);
-
   const [saveModalForEmployeeAdd, setSaveModalForEmployeeAdd] = useState(false);
   const [successModalForEmployeeAdd, setSuccessModalForEmployeeAdd] = useState(false);
-
-
-
 
   useEffect(() => {
     generateTimesheetData(selectedMonth);
@@ -84,12 +78,9 @@ function addSubmitDataCancelFun() {
 
       const response = await axios.post('https://65c0706125a83926ab964c6f.mockapi.io/api/projectdetails/timesheets', timesheetPayload);
       setSaveModalForEmployeeAdd(true);
-
       console.log('Timesheet data saved successfully:', response.data);
-      // alert('Timesheet data saved successfully:')
     } catch (error) {
       console.error('Error saving timesheet data:', error);
-      // alert('Error saving timesheet data:')
     }
   };
 
@@ -119,11 +110,10 @@ function addSubmitDataCancelFun() {
     const daysInMonth = new Date(currentYear, parseInt(selectedMonth.slice(5, 7)), 0).getDate();
     const startDay = showFirstHalf ? 1 : 16;
     const totalDays = showFirstHalf ? 15 : daysInMonth - 15;
-
     const newTimesheetData = Array.from({ length: totalDays }, (_, i) => {
-      const dayOfMonth = startDay + i;
-      const date = new Date(currentYear, parseInt(selectedMonth.slice(5, 7)) - 1, dayOfMonth);
-      return { date, entries: Array(tableRowCount).fill({ projectId: '', workHours: '' }) };
+    const dayOfMonth = startDay + i;
+    const date = new Date(currentYear, parseInt(selectedMonth.slice(5, 7)) - 1, dayOfMonth);
+    return { date, entries: Array(tableRowCount).fill({ projectId: '', workHours: '' }) };
     });
 
     setTimesheetData(newTimesheetData);
@@ -142,9 +132,7 @@ function addSubmitDataCancelFun() {
 
     newTimesheetData[rowIndex].entries[columnIndex].workHours = value;
     setTimesheetData(newTimesheetData);
-  };
-
-  
+  }; 
 
   const handleProjectChange = (rowIndex, columnIndex, selectedOption) => {
     const newTimesheetData = [...timesheetData];
@@ -166,11 +154,15 @@ function addSubmitDataCancelFun() {
   function goToAdminHome() {
     navigate('/admin')
 }
-
-
-
-
-
+ // Calculate total work hours
+ const totalWorkHours = timesheetData.reduce((total, row) => {
+  return (
+    total +
+    row.entries.reduce((rowTotal, entry) => {
+      return rowTotal + (entry.workHours ? parseInt(entry.workHours) : 0);
+    }, 0)
+  );
+}, 0);
 
   return (
     <div className="AddTimesheet background-clr">
@@ -249,7 +241,8 @@ function addSubmitDataCancelFun() {
                   {timesheetData.map((entry, columnIndex) => (
                     <td key={columnIndex} style={{ backgroundColor: "#e8fcaf" }}>
                       <input
-                        type="number"
+                        type="text"
+                        inputMode="numeric"
                         className="AddTimesheet form-control" 
                         placeholder="0"
                         value={timesheetData[rowIndex]?.entries[columnIndex]?.workHours}
@@ -278,7 +271,8 @@ function addSubmitDataCancelFun() {
         </div>
 
         <div>
-          <span className='AddTimesheet fw-bold'>Total Hours Worked : </span> <span className='AddTimesheet fw-bold'>0</span>
+            <span className="AddTimesheet fw-bold">Total Hours Worked : </span>{' '}
+            <span className="AddTimesheet fw-bold">{totalWorkHours}</span> 
         </div>
         <div className="d-flex justify-content-center" >
             <button className="btn btn-primary m-3 w-5" onClick={addDataSubmitConfirmationFun} style={{ width: '100px' }}>Submit</button>
@@ -286,7 +280,7 @@ function addSubmitDataCancelFun() {
             <button className="AddTimesheet btn btn-secondary m-3 w-5" onClick={goToAdminHome} style={{ width: '100px' }}>Cancel</button>
         </div>
       </div>
-      <Modal show={addDataSaveConfirmation} >
+           <Modal show={addDataSaveConfirmation} >
                 <Modal.Body >Do you want to Save this sheet?</Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={addSaveDataCancelFun}>

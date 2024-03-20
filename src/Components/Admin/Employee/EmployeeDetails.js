@@ -65,16 +65,7 @@ export default function EmployeeDetails() {
 
         // updatedEmployeeData(newEmployeeData);
         setEmpData(updatedEmployeeData);
-        setSuccessConfirmation(true)
-
-
-    //     Swal.fire({icon: 'success',
-    // title: 'Success!',
-    // text: 'File deleted Successfully', showConfirmButton: true}).then(()=> {window.location.reload()})  
-   
-    
-
-    // navigate('/admin/searchemployee'); 
+        setSuccessConfirmation(true)    
     }
 
   

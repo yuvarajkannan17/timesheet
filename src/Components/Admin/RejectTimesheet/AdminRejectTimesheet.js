@@ -122,7 +122,10 @@ function RejectTimesheet() {
                     <p className='fs-4 text-danger '>Reject Timesheet</p>
                 </div>
 
-                
+                <div  className="p-1 my-2 border border-danger border-2 bg-light" >
+                        <p>Please reach out SuperAdmin regarding your timesheet.</p>
+                    </div>
+
                     <div className="m-1">
                         <label htmlFor="fromDate"> Date :  </label>
                         <input type="date" id="fromDate" className="mx-1" value={timesheetData.StartDate} readOnly></input>
@@ -164,7 +167,7 @@ function RejectTimesheet() {
                                     </div>
                                 </th>
                                 {timesheetData && timesheetData.timesheetData.map((date, index) => (
-                                    <td key={date.date} style={{ backgroundColor: '#e8fcaf' }}   ><input type="number" min={0} max={12} className="ti-workInput-edit border border-none text-center mt-3" value={date.hoursWorked} onChange={(e) => handleWorkHoursChange(index, e.target.value)}></input></td>
+                                    <td key={date.date} style={{ backgroundColor: '#e8fcaf' }}   ><input type="text" inputMode="numeric" min={0} max={12} className="ti-workInput-edit border border-none text-center mt-3" value={date.hoursWorked} onChange={(e) => handleWorkHoursChange(index, e.target.value)}></input></td>
                                 ))}
                             </tr>
                         </tbody>
