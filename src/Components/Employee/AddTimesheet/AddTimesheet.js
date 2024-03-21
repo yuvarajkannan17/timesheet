@@ -14,6 +14,7 @@ const AddTimesheet = () => {
   const [tableRowCount, setTableRowCount] = useState(1);
   const [showFirstHalf, setShowFirstHalf] = useState(true);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [showSubmitConfirmationModal, setShowSubmitConfirmationModal] = useState(false); // New state for submit confirmation modal
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const navigate = useNavigate();
 
@@ -69,7 +70,20 @@ const AddTimesheet = () => {
       console.error('Error saving timesheet data:', error);
       alert('Error saving timesheet data:');
     }
-  }
+  };
+
+  const handleSubmit = () => {
+    setShowSubmitConfirmationModal(true);
+  };
+
+  const handleConfirmSubmit = () => {
+    // Handle submit action here
+    setShowSubmitConfirmationModal(false);
+  };
+
+  const handleCancelSubmit = () => {
+    setShowSubmitConfirmationModal(false);
+  };
 
   const handleCancel = () => {
     navigate('/employee'); // Navigate back to the home page
@@ -177,7 +191,7 @@ const AddTimesheet = () => {
               className="AddTimesheet btn btn-primary ms-2"
               onClick={handleForward}
             >
-              Forward<i className="bi bi-caret-right-fill"></i>
+                            Forward<i className="bi bi-caret-right-fill"></i>
             </button>
           </div>
         </div>
@@ -277,6 +291,13 @@ const AddTimesheet = () => {
             Save
           </button>
           <button
+            className="AddTimesheet btn btn-primary m-3 w-5"
+            onClick={handleSubmit}
+            style={{ width: '100px' }}
+          >
+            Submit
+          </button>
+          <button
             className="AddTimesheet btn btn-secondary m-3 w-5"
             onClick={handleCancel}
             style={{ width: '100px' }}
@@ -299,6 +320,19 @@ const AddTimesheet = () => {
         </Modal.Footer>
       </Modal>
 
+      {/* Submit Confirmation Modal */}
+      <Modal show={showSubmitConfirmationModal} onHide={() => setShowSubmitConfirmationModal(false)}>
+        <Modal.Body>Do you want to Submit this sheet?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCancelSubmit}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleConfirmSubmit}>
+            Submit
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       {/* Success Modal */}
       <Modal
         className="custom-modal"
@@ -306,7 +340,7 @@ const AddTimesheet = () => {
         dialogClassName="modal-dialog-centered"
         show={showSuccessModal}
       >
-        <div className="d-flex flex-column modal-success p-4 align-items-center">
+        <div className="d-flex flex-column modal-success p-4         align-items-center">
           <img src={checkedImage} className="img-fluid mb-4" alt="successCheck" />
           <p className="mb-4 text-center">Your Timesheet has been updated.</p>
           <button
@@ -323,4 +357,3 @@ const AddTimesheet = () => {
 };
 
 export default AddTimesheet;
-
