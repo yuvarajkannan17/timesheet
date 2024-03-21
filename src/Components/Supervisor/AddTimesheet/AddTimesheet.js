@@ -29,25 +29,41 @@ const AddTimesheet = () => {
       } catch (error) {
         console.error('Error fetching projects:', error);
       }
-    };
-
-    
+    };   
 
     fetchProjects();
   }, []);
 
   function addSubmitDataCancelFun() {
     setAddDataSubmitConfirmation(false)
-  }
-
-  function addDataSumbitFun(){
-    setAddDataSubmitConfirmation(false);
-    setSuccessModalForEmployeeAdd(true)
-}
+  }  
 
 async function addDataSubmitConfirmationFun() {
   setAddDataSubmitConfirmation(true);        
 } 
+
+async function addDataSumbitFun(){
+  setAddDataSubmitConfirmation(false);
+  try{
+    if (!selectedMonth) {      
+      console.error('Please select a month before submit.');
+      return;
+    }
+    const timesheetPayload = {
+      selectedMonth,
+      showFirstHalf,
+      data: timesheetData.map(({ date, entries }) => ({
+        date: date.toISOString(),
+        entries,
+      })),
+    };
+    const response =  await axios.post('https://65c0706125a83926ab964c6f.mockapi.io/api/projectdetails/timesheets', timesheetPayload);    
+  setSuccessModalForEmployeeAdd(true)
+  console.log('Timesheet data submitted successfully:', response.data);
+}catch(error){
+  console.log(error)
+}
+}
 
   const handleForward = () => {
     const nextMonth = new Date(selectedMonth);
@@ -222,7 +238,6 @@ async function addDataSubmitConfirmationFun() {
         </div>
         <div className="d-flex justify-content-center" >
         <button className="btn btn-primary m-3 w-5" onClick={addDataSubmitConfirmationFun} style={{ width: '100px' }}>Submit</button>
-
           <button className="AddTimesheet btn btn-success m-3 w-5" onClick={() => {}} style={{ width: '100px' }}>Save</button>
           <button className="AddTimesheet btn btn-secondary m-3 w-5" style={{ width: '100px' }}>Cancel</button>
         </div>
