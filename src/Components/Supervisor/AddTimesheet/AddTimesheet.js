@@ -4,7 +4,7 @@ import axios from 'axios';
 import Select from 'react-select';
 import { Modal, Button } from 'react-bootstrap';
 import './AddTimesheet.css';
-import checkedImage from '../../Image/checked.png';
+import successCheck from '../../Image/checked.png';
 import { useNavigate } from 'react-router-dom';
 
 const AddTimesheet = () => {
@@ -14,8 +14,11 @@ const AddTimesheet = () => {
   const [tableRowCount, setTableRowCount] = useState(1);
   const [showFirstHalf, setShowFirstHalf] = useState(true);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-  const [showSubmitConfirmationModal, setShowSubmitConfirmationModal] = useState(false); // New state for submit confirmation modal
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successModalForEmployeeAdd, setSuccessModalForEmployeeAdd] = useState(false);
+  const [addDataSubmitConfirmation, setAddDataSubmitConfirmation] = useState(false);
+
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,6 +47,9 @@ const AddTimesheet = () => {
     setShowConfirmationModal(true);
   };
 
+  function addSubmitDataCancelFun() {
+    setAddDataSubmitConfirmation(false)
+  }
   const handleConfirmSave = async () => {
     try {
       if (!selectedMonth) {
@@ -72,21 +78,42 @@ const AddTimesheet = () => {
     }
   };
 
-  const handleSubmit = () => {
-    setShowSubmitConfirmationModal(true);
-  };
+  async function addDataSumbitFun(){
+    setAddDataSubmitConfirmation(false);
+    try{
+      if (!selectedMonth) {      
+        console.error('Please select a month before submit.');
+        return;
+      }
+      const timesheetPayload = {
+        selectedMonth,
+        showFirstHalf,
+        data: timesheetData.map(({ date, entries }) => ({
+          date: date.toISOString(),
+          entries,
+        })),
+      };
+      const response =  await axios.post('https://65c0706125a83926ab964c6f.mockapi.io/api/projectdetails/timesheets', timesheetPayload);    
+    setSuccessModalForEmployeeAdd(true)
+    console.log('Timesheet data submitted successfully:', response.data);
+  }catch(error){
+    console.log(error)
+  }
 
-  const handleConfirmSubmit = () => {
-    // Handle submit action here
-    setShowSubmitConfirmationModal(false);
-  };
+}
 
-  const handleCancelSubmit = () => {
-    setShowSubmitConfirmationModal(false);
-  };
+async function addDataSubmitConfirmationFun() {
+  setAddDataSubmitConfirmation(true);        
+} 
+
+  
+
+  
+
+  
 
   const handleCancel = () => {
-    navigate('/employee'); // Navigate back to the home page
+    navigate('/supervisor'); // Navigate back to the home page
   };
 
   const handleForward = () => {
@@ -283,27 +310,9 @@ const AddTimesheet = () => {
           <span className="AddTimesheet fw-bold">{totalWorkHours}</span>
         </div>
         <div className="d-flex justify-content-center">
-          <button
-            className="AddTimesheet btn btn-success m-3 w-5"
-            onClick={saveTimesheetData}
-            style={{ width: '100px' }}
-          >
-            Save
-          </button>
-          <button
-            className="AddTimesheet btn btn-primary m-3 w-5"
-            onClick={handleSubmit}
-            style={{ width: '100px' }}
-          >
-            Submit
-          </button>
-          <button
-            className="AddTimesheet btn btn-secondary m-3 w-5"
-            onClick={handleCancel}
-            style={{ width: '100px' }}
-          >
-            Cancel
-          </button>
+          <button className="AddTimesheet btn btn-success m-3 w-5" onClick={saveTimesheetData} style={{ width: '100px' }}>Save</button>
+          <button className="AddTimesheet btn btn-primary m-3 w-5" onClick={addDataSubmitConfirmationFun} style={{ width: '100px' }}>Submit</button>
+          <button className="AddTimesheet btn btn-secondary m-3 w-5" onClick={handleCancel} style={{ width: '100px' }}>Cancel</button>
         </div>
       </div>
 
@@ -320,37 +329,35 @@ const AddTimesheet = () => {
         </Modal.Footer>
       </Modal>
 
+      <Modal
+        className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={showSuccessModal}>
+        <div className="d-flex flex-column modal-success p-4 align-items-center">
+          <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+          <p className="mb-4 text-center">Your Timesheet has been updated.</p>
+          <button className="btn  w-100 text-white" onClick={() => setShowSuccessModal(false)} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+        </div>
+      </Modal>
+
       {/* Submit Confirmation Modal */}
-      <Modal show={showSubmitConfirmationModal} onHide={() => setShowSubmitConfirmationModal(false)}>
+      <Modal show={addDataSubmitConfirmation} >
         <Modal.Body>Do you want to Submit this sheet?</Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCancelSubmit}>
+          <Button variant="secondary" onClick={addSubmitDataCancelFun}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleConfirmSubmit}>
+          <Button variant="primary" onClick={addDataSumbitFun}>
             Submit
           </Button>
         </Modal.Footer>
       </Modal>
 
       {/* Success Modal */}
-      <Modal
-        className="custom-modal"
-        style={{ left: '50%', transform: 'translateX(-50%)' }}
-        dialogClassName="modal-dialog-centered"
-        show={showSuccessModal}
-      >
-        <div className="d-flex flex-column modal-success p-4         align-items-center">
-          <img src={checkedImage} className="img-fluid mb-4" alt="successCheck" />
-          <p className="mb-4 text-center">Your Timesheet has been updated.</p>
-          <button
-            className="btn  w-100 text-white"
-            onClick={() => setShowSuccessModal(false)}
-            style={{ backgroundColor: '#5EAC24' }}
-          >
-            Close
-          </button>
-        </div>
+      <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForEmployeeAdd}  >
+                <div className="d-flex flex-column modal-success p-4 align-items-center ">
+                    <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+                    <p className="mb-4 text-center"> Your Timesheet has submitted for approval.</p>
+                    <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForEmployeeAdd(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+                </div>
       </Modal>
     </div>
   );
