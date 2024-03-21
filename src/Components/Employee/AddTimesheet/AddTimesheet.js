@@ -69,21 +69,9 @@ const AddTimesheet = () => {
       console.error('Error saving timesheet data:', error);
       alert('Error saving timesheet data:');
     }
-  };
+  }
 
-  useEffect(() => {
-    calculateTotalWorkHours();
-  }, [timesheetData]);
-
-  const calculateTotalWorkHours = () => {
-    // Logic to calculate total work hours
-  };
-
-  const handleCancelSave = () => {
-    setShowConfirmationModal(false);
-  };
-
-    const handleCancel = () => {
+  const handleCancel = () => {
     navigate('/employee'); // Navigate back to the home page
   };
 
@@ -197,137 +185,142 @@ const AddTimesheet = () => {
         <div className=" table-responsive border border-1 rounded p-4 border-black my-4" style={{ position: 'relative', zIndex: 1 }}>
           <table className="table table-bordered text-center">
             <thead>
-                          <tr>
+              <tr>
                 <th style={{ backgroundColor: '#c8e184' }}>Date</th>
                 {timesheetData.map((entry, rowIndex) => (
-                    <th key={rowIndex} style={{ backgroundColor: ' #c8e184' }}>
-                        {entry.date.toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                        })}
-                    </th>
+                  <th key={rowIndex} style={{ backgroundColor: ' #c8e184' }}>
+                    {entry.date.toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </th>
                 ))}
                 <th style={{ backgroundColor: ' #c8e184' }}></th>
-            </tr>
-            <tr>
+              </tr>
+              <tr>
                 <th style={{ backgroundColor: ' #c8e184' }}>Day</th>
                 {timesheetData.map((entry, rowIndex) => (
-                    <td
-                        key={rowIndex}
-                        style={{ backgroundColor: entry.date.getDay() === 0 ? 'gold' : '#c8e184' }}
-                    >
-                        {entry.date.toLocaleDateString('en-US', { weekday: 'short' })}
-                    </td>
+                  <td
+                    key={rowIndex}
+                    style={{ backgroundColor: entry.date.getDay() === 0 ? 'gold' : '#c8e184' }}
+                  >
+                    {entry.date.toLocaleDateString('en-US', { weekday: 'short' })}
+                  </td>
                 ))}
                 <td style={{ backgroundColor: ' #c8e184' }}></td>
-            </tr>
-            {[...Array(tableRowCount)].map((_, rowIndex) => (
+              </tr>
+              {[...Array(tableRowCount)].map((_, rowIndex) => (
                 <tr key={rowIndex}>
-                    <th style={{ backgroundColor: '#e8fcaf' }}>
-                        <div>
-                            <Select
-                                options={availableProjects.map(project => ({
-                                    value: project.value,
-                                    label: project.label,
-                                }))}
-                                value={
-                                    timesheetData[rowIndex]?.entries[0]?.projectId
-                                        ? {
-                                            value: timesheetData[rowIndex].entries[0].projectId,
-                                            label: timesheetData[rowIndex].entries[0].projectId,
-                                        }
-                                        : null
-                                }
-                                onChange={selectedOption =>
-                                    handleProjectChange(rowIndex, 0, selectedOption)
-                                }
-                                placeholder="Project ID"
-                                className="AddTimesheet my-2"
-                            />
-                        </div>
-                    </th>
-                    {timesheetData.map((entry, columnIndex) => (
-                        <td key={columnIndex} style={{ backgroundColor: '#e8fcaf' }}>
-                            <input
-                                type="number"
-                                className="AddTimesheet form-control"
-                                placeholder="0"
-                                value={timesheetData[rowIndex]?.entries[columnIndex]?.workHours}
-                                onChange={e =>
-                                    handleWorkHoursChange(rowIndex, columnIndex, e.target.value)
-                                }
-                            />
-                        </td>
-                    ))}
-                    <td style={{ backgroundColor: '#e8fcaf' }}>
-                        <button
-                            className="AddTimesheet btn btn-danger"
-                            onClick={() => handleRemoveRow(rowIndex)}
-                        >
-                            X
-                        </button>
+                  <th style={{ backgroundColor: '#e8fcaf' }}>
+                    <div>
+                      <Select
+                        options={availableProjects.map(project => ({
+                          value: project.value,
+                          label: project.label,
+                        }))}
+                        value={
+                          timesheetData[rowIndex]?.entries[0]?.projectId
+                            ? {
+                              value: timesheetData[rowIndex].entries[0].projectId,
+                              label: timesheetData[rowIndex].entries[0].projectId,
+                            }
+                            : null
+                        }
+                        onChange={selectedOption =>
+                          handleProjectChange(rowIndex, 0, selectedOption)
+                        }
+                        placeholder="Project ID"
+                        className="AddTimesheet my-2"
+                      />
+                    </div>
+                  </th>
+                  {timesheetData.map((entry, columnIndex) => (
+                    <td key={columnIndex} style={{ backgroundColor: '#e8fcaf' }}>
+                      <input
+                        type="number"
+                        className="AddTimesheet form-control"
+                        placeholder="0"
+                        value={timesheetData[rowIndex]?.entries[columnIndex]?.workHours}
+                        onChange={e =>
+                          handleWorkHoursChange(rowIndex, columnIndex, e.target.value)
+                        }
+                      />
                     </td>
+                  ))}
+                  <td style={{ backgroundColor: '#e8fcaf' }}>
+                    <button
+                      className="AddTimesheet btn btn-danger"
+                      onClick={() => handleRemoveRow(rowIndex)}
+                    >
+                      X
+                    </button>
+                  </td>
                 </tr>
-            ))}
+              ))}
             </thead>
-        </table>
-        <button className="AddTimesheet btn btn-success ms-2" onClick={handleAddRow}>
+          </table>
+          <button className="AddTimesheet btn btn-success ms-2" onClick={handleAddRow}>
             +
-        </button>
-    </div>
+          </button>
+        </div>
 
-    <div>
-        <span className="AddTimesheet fw-bold">Total Hours Worked : </span>{' '}
-        <span className="AddTimesheet fw-bold">{totalWorkHours}</span>
-    </div>
-    <div className="d-flex justify-content-center">
-        <button
+        <div>
+          <span className="AddTimesheet fw-bold">Total Hours Worked : </span>{' '}
+          <span className="AddTimesheet fw-bold">{totalWorkHours}</span>
+        </div>
+        <div className="d-flex justify-content-center">
+          <button
             className="AddTimesheet btn btn-success m-3 w-5"
             onClick={saveTimesheetData}
             style={{ width: '100px' }}
-        >
+          >
             Save
-        </button>
-        <button className="AddTimesheet btn btn-secondary m-3 w-5" onClick={handleCancel} style={{ width: '100px' }}>
+          </button>
+          <button
+            className="AddTimesheet btn btn-secondary m-3 w-5"
+            onClick={handleCancel}
+            style={{ width: '100px' }}
+          >
             Cancel
-        </button>
-    </div>
-</div>
+          </button>
+        </div>
+      </div>
 
-{/* Confirmation Modal */}
-<Modal show={showConfirmationModal} onHide={handleCancelSave}>
-    <Modal.Body>Do you want to Save this sheet?</Modal.Body>
-    <Modal.Footer>
-        <Button variant="secondary" onClick={handleCancelSave}>
+      {/* Save Confirmation Modal */}
+      <Modal show={showConfirmationModal} onHide={() => setShowConfirmationModal(false)}>
+        <Modal.Body>Do you want to Save this sheet?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowConfirmationModal(false)}>
             Cancel
-        </Button>
-        <Button variant="primary" onClick={handleConfirmSave}>
+          </Button>
+          <Button variant="primary" onClick={handleConfirmSave}>
             Save
-        </Button>
-    </Modal.Footer>
-</Modal>
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
-{/* Success Modal */}
-<Modal
-    className="custom-modal"
-    style={{ left: '50%', transform: 'translateX(-50%)' }}
-    dialogClassName="modal-dialog-centered"
-    show={showSuccessModal}
->
-    <div className="d-flex flex-column modal-success p-4 align-items-center">
-        <img src={checkedImage} className="img-fluid mb-4" alt="successCheck" />
-        <p className="mb-4 text-center">Your Timesheet has been updated.</p>
-        <button
+      {/* Success Modal */}
+      <Modal
+        className="custom-modal"
+        style={{ left: '50%', transform: 'translateX(-50%)' }}
+        dialogClassName="modal-dialog-centered"
+        show={showSuccessModal}
+      >
+        <div className="d-flex flex-column modal-success p-4 align-items-center">
+          <img src={checkedImage} className="img-fluid mb-4" alt="successCheck" />
+          <p className="mb-4 text-center">Your Timesheet has been updated.</p>
+          <button
             className="btn  w-100 text-white"
             onClick={() => setShowSuccessModal(false)}
             style={{ backgroundColor: '#5EAC24' }}
-        >
+          >
             Close
-        </button>
+          </button>
+        </div>
+      </Modal>
     </div>
-</Modal>
-</div>
-);
+  );
 };
 
 export default AddTimesheet;
+
