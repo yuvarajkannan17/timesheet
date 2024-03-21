@@ -17,11 +17,6 @@ function RejectTimesheet() {
 
     const navigate = useNavigate();
 
-
-
-
-
-
     async function getEditTimesheet() {
         const response = await axios.get(employeeSheetUrl);
         const datas = response.data;
@@ -94,10 +89,10 @@ function RejectTimesheet() {
         setRejectDataSubmitConfirmation(false)
     }
 
-    function rejectDataSumbitFun(){
-        setRejectDataSubmitConfirmation(false);
-        setSuccessModalForEmployeeReject(true)
-    }
+    // function rejectDataSumbitFun(){
+    //     setRejectDataSubmitConfirmation(false);
+    //     setSuccessModalForEmployeeReject(true)
+    // }
 
 
    async function editDataSaveFun(){
@@ -105,13 +100,21 @@ function RejectTimesheet() {
         try{
             await axios.put(`${employeeSheetUrl}/${editId}`, timesheetData);
             setSaveModalForEmployeeReject(true);
+            console.log('Timesheet data saved successfully:', timesheetData);
         }catch(error){
           console.log(error)
-        }
-        
-         
+        }          
     }
-
+    async function rejectDataSumbitFun() {
+        setRejectDataSubmitConfirmation(false);
+        try {
+            await axios.put(`${employeeSheetUrl}/${editId}`, timesheetData);
+            setSuccessModalForEmployeeReject(true);
+            console.log('Timesheet data submitted successfully:', timesheetData);
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
 
     return (

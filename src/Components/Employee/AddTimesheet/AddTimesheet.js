@@ -74,6 +74,29 @@ const AddTimesheet = () => {
     }
   };
 
+  async function addDataSumbitFun(){
+    setAddDataSubmitConfirmation(false);
+    try{
+      if (!selectedMonth) {      
+        console.error('Please select a month before submit.');
+        return;
+      }
+      const timesheetPayload = {
+        selectedMonth,
+        showFirstHalf,
+        data: timesheetData.map(({ date, entries }) => ({
+          date: date.toISOString(),
+          entries,
+        })),
+      };
+      const response =  await axios.post('https://65c0706125a83926ab964c6f.mockapi.io/api/projectdetails/timesheets', timesheetPayload);    
+    setSuccessModalForEmployeeAdd(true)
+    console.log('Timesheet data submitted successfully:', response.data);
+  }catch(error){
+    console.log(error)
+  }
+}
+
   useEffect(() => {
     calculateTotalWorkHours();
   }, [timesheetData]);
@@ -89,12 +112,7 @@ const AddTimesheet = () => {
   function addSubmitDataCancelFun() {
     setAddDataSubmitConfirmation(false)
   }
-
-  function addDataSumbitFun(){
-    setAddDataSubmitConfirmation(false);
-    setSuccessModalForEmployeeAdd(true)
-}
-
+  
 async function addDataSubmitConfirmationFun() {
   setAddDataSubmitConfirmation(true);        
 } 

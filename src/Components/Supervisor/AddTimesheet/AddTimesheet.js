@@ -4,7 +4,6 @@ import axios from 'axios';
 import Select from 'react-select';
 import './AddTimesheet.css';
 import { Modal, Button } from "react-bootstrap";
-
 import successCheck from '../../Image/checked.png'
 
 const AddTimesheet = () => {

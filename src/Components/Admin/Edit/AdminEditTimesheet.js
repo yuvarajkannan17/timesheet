@@ -93,10 +93,10 @@ function AdminEditTimesheet() {
     function editSubmitDataCancelFun() {
         setEditDataSubmitConfirmation(false)
     }
-    function editDataSumbitFun(){
-        setEditDataSubmitConfirmation(false);
-        setSuccessModalForEmployeeEdit(true)
-    }
+    // function editDataSumbitFun(){
+    //     setEditDataSubmitConfirmation(false);
+    //     setSuccessModalForEmployeeEdit(true)
+    // }
 
     
     async function editDataSaveFun() {
@@ -104,6 +104,18 @@ function AdminEditTimesheet() {
         try {
             await axios.put(`${employeeSheetUrl}/${editId}`, timesheetData);
             setSaveModalForEmployeeEdit(true);
+            console.log('Timesheet data saved successfully:', timesheetData);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async function editDataSubmitFun() {
+        setEditDataSubmitConfirmation(false);
+        try {
+            await axios.put(`${employeeSheetUrl}/${editId}`, timesheetData);
+            setSuccessModalForEmployeeEdit(true);
+            console.log('Timesheet data submitted successfully:', timesheetData);
         } catch (error) {
             console.log(error)
         }
@@ -214,7 +226,7 @@ function AdminEditTimesheet() {
                     <Button variant="secondary" onClick={editSubmitDataCancelFun}>
                         Cancel
                     </Button>
-                    <Button variant="primary" onClick={editDataSumbitFun}>
+                    <Button variant="primary" onClick={editDataSubmitFun}>
                         Submit
                     </Button>
                 </Modal.Footer>

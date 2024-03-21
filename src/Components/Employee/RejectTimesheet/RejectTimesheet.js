@@ -107,13 +107,22 @@ function RejectTimesheet() {
         try {
             await axios.put(`${employeeSheetUrl}/${editId}`, timesheetData);
             setSaveModalForEmployeeRejectEdit(true);
+            console.log('Timesheet data saved successfully:', timesheetData);
+
         } catch (error) {
             console.log(error)
         }
-
-
     }
-
+    async function rejectDataSumbitFun() {
+        setRejectDataSubmitConfirmation(false);
+        try {
+            await axios.put(`${employeeSheetUrl}/${editId}`, timesheetData);
+            setSuccessModalForEmployeeReject(true);
+            console.log('Timesheet data submitted successfully:', timesheetData);
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
 
     return (

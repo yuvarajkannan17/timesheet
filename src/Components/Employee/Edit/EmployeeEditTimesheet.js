@@ -112,18 +112,26 @@ function EmployeeEditTimesheet() {
         try {
             await axios.put(`${employeeSheetUrl}/${editId}`, timesheetData);
             setSaveModalForEmployeeEdit(true);
+            console.log('Timesheet data saved successfully:', timesheetData);
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async function editDataSumbitFun() {
+        setEditDataSubmitConfirmation(false);
+        try {
+            await axios.put(`${employeeSheetUrl}/${editId}`, timesheetData);
+            setSuccessModalForEmployeeEdit(true);
+            console.log('Timesheet data submitted successfully:', timesheetData);
         } catch (error) {
             console.log(error)
         }
     }
     function editSubmitDataCancelFun() {
         setEditDataSubmitConfirmation(false)
-    }
-
-    function editDataSumbitFun(){
-        setEditDataSubmitConfirmation(false);
-        setSuccessModalForEmployeeEdit(true)
-    }
+    }  
 
 
     return (

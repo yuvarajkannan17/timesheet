@@ -57,16 +57,13 @@ function addSubmitDataCancelFun() {
   setAddDataSubmitConfirmation(false)
 }
 
-  const addDataSaveFun = async () => {
+const addDataSaveFun = async () => {
     setAddDataSaveConfirmation(false);
-
-
     try {
       if (!selectedMonth) {
         console.error('Please select a month before saving.');
         return;
       }
-
       const timesheetPayload = {
         selectedMonth,
         showFirstHalf,
@@ -84,9 +81,27 @@ function addSubmitDataCancelFun() {
     }
   };
 
-  function addDataSumbitFun(){
+  async function addDataSumbitFun(){
     setAddDataSubmitConfirmation(false);
+    try{
+      if (!selectedMonth) {      
+        console.error('Please select a month before submit.');
+        return;
+      }
+      const timesheetPayload = {
+        selectedMonth,
+        showFirstHalf,
+        data: timesheetData.map(({ date, entries }) => ({
+          date: date.toISOString(),
+          entries,
+        })),
+      };
+      const response =  await axios.post('https://65c0706125a83926ab964c6f.mockapi.io/api/projectdetails/timesheets', timesheetPayload);    
     setSuccessModalForEmployeeAdd(true)
+    console.log('Timesheet data submitted successfully:', response.data);
+  }catch(error){
+    console.log(error)
+  }
 }
 
   const handleForward = () => {
