@@ -5,7 +5,6 @@ import Select from 'react-select';
 import { Modal, Button } from 'react-bootstrap';
 import './AddTimesheet.css';
 import checkedImage from '../../Image/checked.png';
-import { useNavigate } from 'react-router-dom';
 
 const AddTimesheet = () => {
   const [selectedMonth, setSelectedMonth] = useState('');
@@ -15,7 +14,6 @@ const AddTimesheet = () => {
   const [showFirstHalf, setShowFirstHalf] = useState(true);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     generateTimesheetData(selectedMonth);
@@ -81,10 +79,6 @@ const AddTimesheet = () => {
 
   const handleCancelSave = () => {
     setShowConfirmationModal(false);
-  };
-
-  const handleCancel = () => {
-    navigate('/employee'); // Navigate back to the home page
   };
 
   const handleForward = () => {
@@ -288,7 +282,7 @@ const AddTimesheet = () => {
         >
             Save
         </button>
-        <button className="AddTimesheet btn btn-secondary m-3 w-5" onClick={handleCancel} style={{ width: '100px' }}>
+        <button className="AddTimesheet btn btn-secondary m-3 w-5" style={{ width: '100px' }}>
             Cancel
         </button>
     </div>

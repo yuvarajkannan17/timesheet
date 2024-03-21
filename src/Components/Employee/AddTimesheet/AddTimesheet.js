@@ -83,7 +83,7 @@ const AddTimesheet = () => {
     setShowConfirmationModal(false);
   };
 
-  const handleCancel = () => {
+    const handleCancel = () => {
     navigate('/employee'); // Navigate back to the home page
   };
 
