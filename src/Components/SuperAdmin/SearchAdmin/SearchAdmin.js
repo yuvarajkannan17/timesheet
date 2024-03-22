@@ -23,7 +23,7 @@ function SearchAdmin() {
      const modal = useSelector(state => state.modal.value)
      const showModal = modal.showSuccessModal;
 
-
+      
 
     //   fetch the data from api
     async function getDataFromApi() {
@@ -38,14 +38,14 @@ function SearchAdmin() {
         }
 
     }
-
+    
     useEffect(() => {
 
         // Otherwise, fetch and display the details of the last admin added by default
         getDataFromApi();
 
     }, []);
-
+    
     function handleAdminClick(admin) {
         setActiveRow(admin.id);
         navigate('/superadmin/searchadmin/admindetailsview/' + admin.id)
@@ -59,9 +59,9 @@ function SearchAdmin() {
 
     // searching admin based on name and id
     const filteredAdminList = adminList.filter((admin) =>
-        admin.fName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        admin.fname.toLowerCase().includes(searchQuery.toLowerCase()) ||
         admin.id.toString().includes(searchQuery)
-
+            
     );
 
 
@@ -94,10 +94,10 @@ function SearchAdmin() {
                                 </thead>
                                 <tbody>
 
-                                    {filteredAdminList.map((d) => (
+                                    {filteredAdminList&&filteredAdminList.map((d) => (
                                         <tr key={d.id} className={`text-center adminList-column ${activeRow === d.id ? 'table-active' : ''} `} onClick={() => handleAdminClick(d)}>
                                             <td>CTPLAD00{d.id}</td>
-                                            <td>{d.fName}</td>
+                                            <td>{d.fname}</td>
                                             <td>{d.email}</td>
 
                                         </tr>

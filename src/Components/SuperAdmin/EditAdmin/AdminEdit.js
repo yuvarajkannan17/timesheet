@@ -75,8 +75,8 @@ function AdminEdit() {
 // to get form input by formik
     const { values, isSubmitting, handleChange, handleBlur, errors, handleSubmit, touched, resetForm, setValues } = useFormik({
         initialValues: {
-            fName: "",
-            lName: "",
+            fname: "",
+            lname: "",
             address: "",
             phone: "",
             email: "",
@@ -175,14 +175,14 @@ function AdminEdit() {
 
                                             <div className="mb-3">
                                                 <label htmlFor="firstName" className="form-label">First Name<span style={{color:'red'}}>*</span> </label>
-                                                <input type="text" maxLength={50} className={`form-control  ${errors.fName && touched.fName ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="fName" id="firstName" onChange={handleChange} onBlur={handleBlur} value={values.fName} ></input>
-                                                {errors.fName && touched.fName && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.fName}</p>}
+                                                <input type="text" maxLength={50} className={`form-control  ${errors.fname && touched.fname ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="fname" id="firstName" onChange={handleChange} onBlur={handleBlur} value={values.fname} ></input>
+                                                {errors.fname && touched.fname && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.fname}</p>}
                                             </div>
 
                                             <div className="mb-3">
                                                 <label htmlFor="lastName" className="form-label">Last Name<span style={{color:'red'}}>*</span> </label>
-                                                <input type="text" maxLength={50} className={`form-control  ${errors.lName && touched.lName ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="lName" id="lastName" onChange={handleChange} onBlur={handleBlur} value={values.lName} ></input>
-                                                {errors.lName && touched.lName && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.lName}</p>}
+                                                <input type="text" maxLength={50} className={`form-control  ${errors.lname && touched.lname ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="lname" id="lastName" onChange={handleChange} onBlur={handleBlur} value={values.lname} ></input>
+                                                {errors.lname && touched.lname && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.lname}</p>}
                                             </div>
                                             <div className="mb-3">
                                                 <label htmlFor="address" className="form-label">Address<span style={{color:'red'}}>*</span>  </label>

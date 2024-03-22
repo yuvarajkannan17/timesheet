@@ -107,8 +107,8 @@ function AdminDetailsView() {
                         </div>
                         <hr />
                         <div className='text-center'>
-                            <img src={user} alt={adminDetails.fName} />
-                            <p className='text-primary'>{adminDetails.fName}</p>
+                            <img src={user} alt={adminDetails.fname} />
+                            <p className='text-primary'>{adminDetails.fname}</p>
                         </div>
                         <div className="row " >
                             <div className="col-md-6">
@@ -119,11 +119,11 @@ function AdminDetailsView() {
                                 </div>
                                 <div className='row mb-2'>
                                     <div className='col-md-6'>First Name</div>
-                                    <div className='col-md-6 text-secondary'>{adminDetails.fName}</div>
+                                    <div className='col-md-6 text-secondary'>{adminDetails.fname}</div>
                                 </div>
                                 <div className='row mb-2'>
                                     <div className='col-md-6'>Last Name</div>
-                                    <div className='col-md-6 text-secondary'>{adminDetails.lName}</div>
+                                    <div className='col-md-6 text-secondary'>{adminDetails.lname}</div>
                                 </div>
                                 <div className='row mb-2'>
                                     <div className='col-md-6'>Email </div>

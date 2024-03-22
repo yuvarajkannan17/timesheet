@@ -4,11 +4,11 @@ export const basicSchema = Yup.object().shape({
 
   // regex validation for form field
   // first name
-  fName: Yup.string()
+  fname: Yup.string()
     .matches(/^[A-Za-z]+(?:[ -][A-Za-z]+)*$/, 'Please enter the valid FirstName')
     .required('First Name is required'),
   // last name
-  lName: Yup.string()
+  lname: Yup.string()
     .matches(/^[A-Za-z]+(?:[ -][A-Za-z]+)*$/, 'Please enter the valid LastName')
     .required('Last Name is required'),
   // address
