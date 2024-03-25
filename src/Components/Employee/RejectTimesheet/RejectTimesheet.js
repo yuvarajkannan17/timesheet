@@ -223,7 +223,7 @@ function RejectTimesheet() {
                     <Button variant="secondary" onClick={rejectSubmitDataCancelFun}>
                         Cancel
                     </Button>
-                    <Button variant="primary" onClick={rejectDataSumbitFun}>
+                    <Button variant="success" onClick={rejectDataSumbitFun}>
                         Submit
                     </Button>
                 </Modal.Footer>

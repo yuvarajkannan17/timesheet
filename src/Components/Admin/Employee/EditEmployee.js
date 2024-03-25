@@ -3,7 +3,6 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { getEmployeeData, addEmployeeData  } from "./mockempdetails";
 import { useParams, useNavigate } from "react-router-dom"
-import Swal from "sweetalert2";
 import '../../css/style.css'
 import successCheck from '../../Image/checked.png'
 
@@ -144,7 +143,7 @@ const [formValues, setFormValues] = useState(userData || {});
   const handleClose = () => {setSuccessModalOpen(false); window.location.reload()}
   const handleConfirmClose = () => {setCancelModalOpen(true); }
   const handleCancelSuccess = () => {setCancelModalOpen(false); 
-    navigate('admin/searchemployees')}
+    navigate('admin/searchemployee')}
      
     const handleSubmitClick = () => {
       setSuccessConfirmation(true)
@@ -156,13 +155,6 @@ const [formValues, setFormValues] = useState(userData || {});
       navigate('/admin/searchemployee')
 
     }
-    const handleSuccess=()=>{
-      // Swal.fire('Success!', 'Employee Details Updated Successfully,', 'success')
-      navigate('/admin/searchemployee')
-    }
-    
-
-
 
   return (
     <div className="background-clr">
@@ -182,8 +174,7 @@ const [formValues, setFormValues] = useState(userData || {});
                   name="firstname"
                   className="form-control"
                   value={formValues.firstname}
-                  onChange={handleChange}
-                />
+                  onChange={handleChange}/>
                 <p className="text-danger"> {formErrors.firstname} </p>
               </div>
               <div className="col-md-6 form-group">
@@ -193,8 +184,7 @@ const [formValues, setFormValues] = useState(userData || {});
                   name="lastname"
                   className="form-control"
                   value={formValues.lastname}
-                  onChange={handleChange}
-                />
+                  onChange={handleChange}/>
                 <p className="text-danger"> {formErrors.lastname} </p>
               </div>
             </div>
@@ -207,8 +197,7 @@ const [formValues, setFormValues] = useState(userData || {});
                   rows="5"
                   cols="50"
                   value={formValues.address}
-                  onChange={handleChange}
-               ></textarea>
+                  onChange={handleChange}></textarea>
                 <p className="text-danger"> {formErrors.address} </p>
               </div>
               <div className="col-md-6 form-group">
@@ -220,8 +209,7 @@ const [formValues, setFormValues] = useState(userData || {});
                   minLength={10}
                   maxLength={10}
                   value={formValues.mobilenumber}
-                  onChange={handleChange}
-                />
+                  onChange={handleChange}/>
                 <p className="text-danger"> {formErrors.mobilenumber} </p>
               </div>
             </div>
@@ -233,8 +221,7 @@ const [formValues, setFormValues] = useState(userData || {});
                   name="emailid"
                   className="form-control"
                   value={formValues.emailid}
-                  onChange={handleChange}
-                />
+                  onChange={handleChange}/>
                 <p className="text-danger"> {formErrors.emailid} </p>
               </div>
               <div className="col-md-6 form-group">
@@ -245,8 +232,7 @@ const [formValues, setFormValues] = useState(userData || {});
                   name="employeeid"
                   className="form-control"
                   value={formValues.employeeid}
-                  onChange={handleChange}
-                />
+                  onChange={handleChange}/>
                 <p className="text-danger"> {formErrors.employeeid} </p>
               </div>
               <div className="row">
@@ -257,8 +243,7 @@ const [formValues, setFormValues] = useState(userData || {});
                     name="projectid"
                     className="form-control"
                     value={formValues.projectid}
-                    onChange={handleChange}
-                  />
+                    onChange={handleChange}/>
                   {/* <p className="text-danger"> {formErrors.projectid} </p> */}
                 </div>
                 <div className="col-md-6 form-group">
@@ -270,8 +255,7 @@ const [formValues, setFormValues] = useState(userData || {});
                     minLength={12}
                     maxLength={12}
                     value={formValues.aadharnumber}
-                    onChange={handleChange}
-                  />
+                    onChange={handleChange}/>
                   <p className="text-danger"> {formErrors.aadharnumber} </p>
                   {/* <div className="form-group">
                     <label className="label"> Aadhar Card  </label>
@@ -284,8 +268,7 @@ const [formValues, setFormValues] = useState(userData || {});
                     className="form-control"
                     maxLength={10}
                     value={formValues.pannumber}
-                    onChange={handleChange}
-                  />
+                    onChange={handleChange}/>
                   <p className="text-danger"> {formErrors.pannumber} </p>
                   {/* <div className="form-group">
                     <label className="label"> Pan Card  </label>

@@ -180,8 +180,8 @@ function RejectTimesheet() {
                     <span className='fw-bold'>Total Hours Worked : </span> <span className='fw-bold'>{timesheetData.noOfHoursWorked}</span>
                 </div>
                 <div className="d-flex justify-content-center" >
-                    <button className="btn btn-primary m-3 w-5" onClick={rejectDataSubmitConfirmationFun} style={{ width: '100px' }}>Submit</button>
-                    <button className="btn btn-success m-3 w-5" onClick={rejectDataSaveConfirmationFun} style={{ width: '100px' }}>Save</button>
+                    <button className="btn btn-success m-3 w-5" onClick={rejectDataSubmitConfirmationFun} style={{ width: '100px' }}>Submit</button>
+                    <button className="btn btn-primary m-3 w-5" onClick={rejectDataSaveConfirmationFun} style={{ width: '100px' }}>Save</button>
                     <button className="btn btn-secondary m-3 w-5" onClick={goToAdminHome} style={{ width: '100px' }}>Cancel</button>
                 </div>
 
@@ -213,7 +213,7 @@ function RejectTimesheet() {
                     <Button variant="secondary" onClick={rejectSubmitDataCancelFun}>
                         Cancel
                     </Button>
-                    <Button variant="primary" onClick={rejectDataSumbitFun}>
+                    <Button variant="success" onClick={rejectDataSumbitFun}>
                         Submit
                     </Button>
                 </Modal.Footer>

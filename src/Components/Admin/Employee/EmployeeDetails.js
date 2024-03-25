@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import  { getEmployeeData, addEmployeeData, deleteEmployeeData } from './mockempdetails';
-import Swal from 'sweetalert2';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useParams, useNavigate } from 'react-router-dom';

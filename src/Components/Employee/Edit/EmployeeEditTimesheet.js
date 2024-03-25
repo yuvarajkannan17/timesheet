@@ -239,7 +239,7 @@ function EmployeeEditTimesheet() {
                     <Button variant="secondary" onClick={editSubmitDataCancelFun}>
                         Cancel
                     </Button>
-                    <Button variant="primary" onClick={editDataSumbitFun}>
+                    <Button variant="success" onClick={editDataSumbitFun}>
                         Submit
                     </Button>
                 </Modal.Footer>

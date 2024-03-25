@@ -307,14 +307,14 @@ const AddTimesheet = () => {
         </div>
         <div className="d-flex justify-content-center">
           <button
-            className="AddTimesheet btn btn-success m-3 w-5"
+            className="AddTimesheet btn btn-primary m-3 w-5"
             onClick={saveTimesheetData}
             style={{ width: '100px' }}
           >
             Save
           </button>
           <button
-            className="AddTimesheet btn btn-primary m-3 w-5"
+            className="AddTimesheet btn btn-success m-3 w-5"
             onClick={addDataSubmitConfirmationFun}
             style={{ width: '100px' }}
           >
@@ -366,7 +366,7 @@ const AddTimesheet = () => {
                     <Button variant="secondary" onClick={addSubmitDataCancelFun}>
                         Cancel
                     </Button>
-                    <Button variant="primary" onClick={addDataSumbitFun}>
+                    <Button variant="success" onClick={addDataSumbitFun}>
                         Submit
                     </Button>
                 </Modal.Footer>

@@ -189,8 +189,8 @@ function AdminEditTimesheet() {
                     <span className='fw-bold'>Total Hours Worked : </span> <span className='fw-bold'>{timesheetData.noOfHoursWorked}</span>
                 </div>
                 <div className="d-flex justify-content-center" >
-                    <button className="btn btn-primary m-3 w-5" onClick={editDataSubmitConfirmationFun} style={{ width: '100px' }}>Submit</button>
-                    <button className="btn btn-success m-3 w-5" onClick={editDataSaveConfirmationFun} style={{ width: '100px' }}>Save</button>
+                    <button className="btn btn-success m-3 w-5" onClick={editDataSubmitConfirmationFun} style={{ width: '100px' }}>Submit</button>
+                    <button className="btn btn-primary m-3 w-5" onClick={editDataSaveConfirmationFun} style={{ width: '100px' }}>Save</button>
                     <button className="btn btn-secondary m-3 w-5" onClick={goToAdminHome} style={{ width: '100px' }}>Cancel</button>
                 </div>
 
@@ -226,7 +226,7 @@ function AdminEditTimesheet() {
                     <Button variant="secondary" onClick={editSubmitDataCancelFun}>
                         Cancel
                     </Button>
-                    <Button variant="primary" onClick={editDataSubmitFun}>
+                    <Button variant="success" onClick={editDataSubmitFun}>
                         Submit
                     </Button>
                 </Modal.Footer>
