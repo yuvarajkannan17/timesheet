@@ -6,9 +6,10 @@
     import { schemaLeave } from './LeaveSchema';
     import leaveUrl from '../../Api/leaveRequest';
     import axios from 'axios';
+    import { useNavigate } from 'react-router-dom';
     export function LeaveManagement() {
 
-        const [startDate, setStartDate] = useState(new Date());
+        const navigate=useNavigate();
         const formik =useFormik({
             initialValues:{
 
@@ -114,7 +115,7 @@
 
                                             <div className='my-5 text-end'>
                                                 <button type='submit' disabled={formik.isSubmitting} className='btn btn-success mx-2'>Submit</button>
-                                                <button  type='button' className='btn btn-secondary mx-2'>Cancel</button>
+                                                <button  type='button' className='btn btn-secondary mx-2' onClick={()=>{navigate('/employee')}}>Cancel</button>
                                             </div>
 
                                         </form>
