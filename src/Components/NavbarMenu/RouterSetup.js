@@ -30,6 +30,7 @@ import TimesheetLogin from '../Login/TimesheetLogin.js';
 import Layout from './Layout.js';
 import SupAddTimesheet from '../Supervisor/AddTimesheet/AddTimesheet.js';
 import SupRejectTimesheet from '../Supervisor/RejectTimesheet/RejectTimesheet.js';
+import { LeaveManagement } from '../Employee/LeaveManagement/LeaveManagement.js';
 import { useSelector } from 'react-redux';
 
 
@@ -62,7 +63,7 @@ function RouterSetup() {
           <Route path='/employee' element={isAuthenticated ? <Layout><EmployeeHome /></Layout>:<TimesheetLogin/>} />
           <Route path='/employee/edittimesheet' element={isAuthenticated ? <Layout><EmployeeEditTimesheet /></Layout>:<TimesheetLogin/>} />
           <Route path='/employee/rejecttimesheet' element={isAuthenticated ? <Layout><RejectTimesheet /></Layout>:<TimesheetLogin/>} />
-          
+          <Route path='/employee/leavemanagement' element={<Layout><LeaveManagement /></Layout>} />
           <Route path='/employee/addtimesheet' element={isAuthenticated ? <Layout><AddTimesheet /></Layout>:<TimesheetLogin/>} />
           {/* admin */}
           <Route path='/admin' element={ isAuthenticated ? <Layout><AdminHome  /></Layout>:<TimesheetLogin/>} />

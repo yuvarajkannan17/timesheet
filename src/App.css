@@ -55,6 +55,7 @@
   .ti-background-clr{
     background-color:#F5FFD7 ;
     min-height: 100vh;
+    height: 100%;
     width: 100%;
     
 }
@@ -80,3 +81,6 @@
 .ti-lg-make-border-error{
   border: 2px solid rgba(228, 66, 66, 0.826);
 }
+
+/* for leave managemnt */
+

@@ -13,7 +13,7 @@ export const basicSchema = Yup.object().shape({
     .required('Last Name is required'),
   // address
   address: Yup.string()
-    .min(4, 'Address should have at least 4 characters')
+    .min(10, 'Address should have at least 10 characters')
     .required('Address is required'),
   // email
   email: Yup.string().matches(/^(?=.{1,50}$)[\w-]+(\.[\w-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$/
@@ -22,17 +22,17 @@ export const basicSchema = Yup.object().shape({
   phone: Yup.string()
     .matches(/^\d{10}$/
 
-    , 'The phone number should be 10 digits & numbers itself')
+      , 'The phone number should be 10 digits & numbers itself')
     .required('Phone number is required'),
   // aadhar
   aadhar: Yup.string()
-  .matches(/^\d{12}$/
-  , 'The aadhar number should be 12 digits & numbers itself')
+    .matches(/^\d{12}$/
+      , 'The aadhar number should be 12 digits & numbers itself')
     .required('aadhar number is required'),
   // pan
   pan: Yup.string()
     .matches(/[A-Z]{5}[0-9]{4}[A-Z]{1}/
-    , 'Please enter the vaild pan number')
+      , 'Please enter the vaild pan number')
     .required('Pan Number is required'),
   // checkboxes
   employeeAccess: Yup.object().shape({
@@ -45,7 +45,8 @@ export const basicSchema = Yup.object().shape({
     edit: Yup.boolean(),
     delete: Yup.boolean(),
   }),
- 
+  
+
 
 });
 
