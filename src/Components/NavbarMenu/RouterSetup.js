@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import CreateAdmin from '../SuperAdmin/CreateAdmin/CreateAdmin.js'
 import SearchAdmin from '../SuperAdmin/SearchAdmin/SearchAdmin.js'
 import AdminEdit from '../SuperAdmin/EditAdmin/AdminEdit.js';
-
 import AdminDetailsView from '../SuperAdmin/SearchAdmin/AdminDetailsView.js';
 import EditTimesheet from '../Supervisor/Approval/ModifyEmployeeTimesheet.js';
 import ApprovelBody from '../Supervisor/Approval/ApprovalPage.js';
@@ -16,8 +15,9 @@ import UploadEmployees from '../Admin/Employee/UploadEmployees.js';
 import SearchEmployee from '../Admin/Employee/SearchEmployee.js';
 import AdminHome from '../Admin/Home/AdminHome.js';
 import AdminAddTimesheet from '../Admin/AddTimesheet/AdminAddTimesheet.js';
-import AdminEditTimesheet from '../Admin/Edit/AdminEditTimesheet.js';
+import AdminEditTimesheet from '../Admin/EditTimesheet/AdminEditTimesheet.js';
 import AdminRejectTimesheet from '../Admin/RejectTimesheet/AdminRejectTimesheet.js';
+import AdminEditLeaveRequest from '../Admin/EditLeaveRequest/EditLeaveRequest.js'
 
 import EmployeeProfile from '../Admin/Employee/EmployeeProfile.js';
 import EditEmployee from '../Admin/Employee/EditEmployee.js';
@@ -79,6 +79,9 @@ function RouterSetup() {
           <Route path='/admin/employeedetails/:id' element={isAuthenticated ? <Layout><EmployeeDetails /></Layout>:<TimesheetLogin/>} />
           <Route path='/admin/createproject' element={isAuthenticated ? <Layout><CreateProject /></Layout>:<TimesheetLogin/>} />
           <Route path='/admin/updateprojectdetails' element={isAuthenticated ? <Layout><UpdateProjectDetails /></Layout>:<TimesheetLogin/>} />
+          <Route path='/admin/adminedittimesheet' element={ isAuthenticated ? <Layout><AdminEditTimesheet /></Layout>:<TimesheetLogin/>} />
+          <Route path='/admin/admineditleaverequest' element={ isAuthenticated ? <Layout><AdminEditLeaveRequest /></Layout>:<TimesheetLogin/>} />
+
 
           
 

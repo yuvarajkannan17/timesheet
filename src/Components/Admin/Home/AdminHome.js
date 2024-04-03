@@ -23,6 +23,9 @@ function AdminHome() {
   function goToCreateLeavePage() {
     navigate("/admin/createproject");
   }
+  function goToEditLeavePage() {
+    navigate("/admin/editleaverequest");
+  }
   function goToUploadEmployeesPage() {
     navigate("/admin/uploademployees");
   }
@@ -171,14 +174,21 @@ function AdminHome() {
                       className="btn p-2 select-btn"
                       onClick={goToCreateLeavePage}>Leave Request
                     </button>
+
+                    <div className="my-4">
+                    <button
+                      type="button"
+                      className="btn p-2 select-btn"
+                      onClick={goToEditLeavePage}>Edit Leave Request
+                    </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>          
         </div>
-        
         </div>
-      </div>
+        </div>
       </div>
       </div>
     </>
