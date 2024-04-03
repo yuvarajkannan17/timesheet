@@ -1,6 +1,7 @@
 
 
 import Timesheet from './Components/NavbarMenu/RouterSetup'
+import Sample from './Sample';
 
 import './App.css'
 
@@ -12,6 +13,8 @@ function App() {
        
 
           <Timesheet/>
+
+          {/* <Sample/> */}
           
 
 
