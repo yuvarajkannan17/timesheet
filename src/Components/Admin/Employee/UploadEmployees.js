@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useRef} from 'react'
 import XLSX from 'xlsx';
 import '../../css/style.css'
 import Modal from 'react-bootstrap/Modal';
@@ -17,6 +17,8 @@ export default function UploadEmployees() {
   const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);  
   const [SuccessConfirmation, setSuccessConfirmation] = useState(false);
 
+  const navigate = useNavigate()
+  const formRef = useRef(null);
 
   // submit state
   const [excelData, setExcelData] = useState(null);  
@@ -31,18 +33,21 @@ export default function UploadEmployees() {
     const allowedFileTypes = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'];
     if (!allowedFileTypes.includes(file.type)) {
       setTypeError('Invalid file type. Please upload an Excel file.');
+      setExcelFile(null); // Clear file state
       return;
     }
     
     if (file.size > maxSize) {
       setTypeError('File size exceeds the limit (20KB)');
+      setExcelFile(null); // Clear file state
        return;
+       
     }
     
-    setExcelData(file) 
+    setExcelFile(file) 
   }
   const handleUpload = () => {
-    if (!excelData) {
+    if (!excelFile) {
       setTypeError('Please select a file to upload.');
       return;
     }
@@ -58,40 +63,27 @@ export default function UploadEmployees() {
   const handleSuccessClick = () => {
     setSuccessModalOpen(false)
     setSuccessConfirmation(true)
-    // handleConfirmClose()
-    // setExcelFile(null)
-    setExcelData(null)
+   
+    formRef.current.reset();
+
+
   }
   const handleConfirmClose = () => {
     setSuccessConfirmation(false);
      setExcelFile(null)}
 
   
-  // const navigate = useNavigate()
   const ConfirmClose = () => {
     setSuccessConfirmation(false)
-    // window.location.reload()
     setExcelFile(null)
-    // navigate('/admin/uploademployees')
   }
-
-  
-    // setSuccessConfirmation(false); 
-   
-    
-    // Swal.fire({icon: 'success',
-    // title: 'Success!',
-    // text: 'File Uploaded Successfully', showConfirmButton: true}).then(()=> {window.location.reload()})  
- 
-
-
   return (
    <div className='background-clr'>
     <NavPages/>
     <div className="container employee-form">
       <h3>Upload & View Employee files</h3>
+      <form ref={formRef}>
          <div className='row'>
-{/* <form > */}
     <div className="col-md-8 form-group" >
     <input type="file" name='fileupload' className="form-control" required onChange={handleFile} 
     key={excelData ? excelData.name : 'default'}/> 
@@ -101,12 +93,12 @@ export default function UploadEmployees() {
    <div className='col-md-4'>
    <button type="button" className="btn btn-success btn-md" onClick={handleUpload} >UPLOAD</button>
    </div>
-   {/* </form> */}
    </div>
+
       {typeError&&(
     <p className="text-danger"> {typeError} </p>        
     )}  
-
+</form>
     
 
 

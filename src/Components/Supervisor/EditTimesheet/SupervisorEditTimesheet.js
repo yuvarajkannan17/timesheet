@@ -18,11 +18,6 @@ function SupervisorEditTimesheet() {
 
     const navigate = useNavigate();
 
-
-
-
-
-
     async function getEditTimesheet() {
         const response = await axios.get(employeeSheetUrl);
         const datas = response.data;

@@ -1,4 +1,4 @@
-  .ti-leave-management-container{
+.ti-leave-management-container{
     width: 70%;
     margin: 0 auto;  
      
@@ -29,3 +29,5 @@
     text-align: left; /* Align text content to the left */
     width: fit-content; /* Adjust width to content */
   }
+
+  

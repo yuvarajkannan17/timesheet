@@ -28,17 +28,10 @@
         
 
        async function onSubmit(){
-
-            const leaveData= await axios.post(leaveUrl,formik.values);
-            
+            const leaveData= await axios.post(leaveUrl,formik.values);            
             console.log(leaveData);
             formik.resetForm();
-
-        }
-
-        
-
-        
+        }        
 
         return (
             <>

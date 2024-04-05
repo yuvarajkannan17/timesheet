@@ -20,13 +20,11 @@ export default function EmployeeProfile() {
   const navigate = useNavigate()
 
     const handleSubmitClick = () => {
-      setSuccessConfirmation(true)
-      
+      setSuccessConfirmation(true)      
     }
     const ConfirmClose = () => {
       setSuccessConfirmation(false)
       navigate('/admin/createemployee')
-
     }
     const handleSuccessClick = () => {
       const LastEnteredEmployee = getLastEnteredEmployee();

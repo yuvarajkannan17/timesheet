@@ -1,11 +1,9 @@
 import React from 'react'
 
-const EditLeaveRequest = () => {
+export default function AdminRejectLeaveRequest() {
   return (
     <div>
       
     </div>
   )
 }
-
-export default EditLeaveRequest
