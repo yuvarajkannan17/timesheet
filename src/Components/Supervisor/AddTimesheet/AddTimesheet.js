@@ -106,11 +106,6 @@ async function addDataSubmitConfirmationFun() {
   setAddDataSubmitConfirmation(true);        
 } 
 
-  
-
-  
-
-  
 
   const handleCancel = () => {
     navigate('/supervisor'); // Navigate back to the home page

@@ -7,7 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { editTimesheetSuccessModal, editTimesheetRejectModal } from '../../features/modal';
 import employeeSheetUrl from "../../Api/employeeEdit";
-function ApprovalPage() {
+
+function AdminApprovalPage() {
   const [timesheetDatas, setTimesheetDatas] = useState([])
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [rejectReason, setRejectReason] = useState('Your timesheet has been rejected. Please reach out supervisor regarding your timesheet.');
@@ -75,7 +76,7 @@ function ApprovalPage() {
 
   // reset the timesheet
   function cancelsheetFun() {
-    navigate('/supervisor')
+    navigate('/admin')
   }
 
 
@@ -148,7 +149,7 @@ function ApprovalPage() {
       // Update the status of approved sheets and track their IDs
       const updates = rejectSheets.map(async (sheet) => {
         // Update the status of the sheet locally
-        const updatedSheet = { ...sheet, status: "Your timesheet has been rejected", rejectReason: rejectReason  };
+        const updatedSheet = { ...sheet, status: "Your timesheet has been rejected" };
 
         // Make a PUT request to update the status of the sheet in the API
         const response = await axios.put(`${employeeSheetUrl}/${updatedSheet.id}`, updatedSheet);
@@ -184,7 +185,7 @@ function ApprovalPage() {
 
     if (check) {
       console.log(id)
-      navigate('/supervisor/modifyEmployeeTimesheet/' + id)
+      navigate('/admin/modifySupervisorTimesheet/' + id)
     } else {
       setErrorMessage("Please select the timesheet you wish to edit!!!")
     }
@@ -340,4 +341,4 @@ function ApprovalPage() {
   )
 }
 
-export default ApprovalPage;
+export default AdminApprovalPage;

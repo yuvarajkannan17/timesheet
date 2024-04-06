@@ -11,6 +11,12 @@ function AdminHome() {
   function goToAdminViewRejectPage() {
     navigate("/admin/adminrejecttimesheet");
   }
+  function goToApproveTimesheetPage() {
+    navigate("/admin/approvalpage");
+  }
+  // function goToModifySupervisoTimesheetPage() {
+  //   navigate("/admin/modifysupervisortimesheet");
+  // }
   function goToCreateEmployeePage() {
     navigate("/admin/createemployee");
   }
@@ -20,8 +26,14 @@ function AdminHome() {
   function goToUpdateProjectDetailsPage() {
     navigate("/admin/updateprojectdetails");
   }
-  function goToCreateLeavePage() {
-    navigate("/admin/createproject");
+  function goToAddLeavePage() {
+    navigate("/admin/adminaddleaverequest");
+  }
+  function goToEditLeavePage() {
+    navigate("/admin/admineditleaverequest");
+  }
+  function goToRejectedLeavePage() {
+    navigate("/admin/adminrejectleaverequest");
   }
   function goToUploadEmployeesPage() {
     navigate("/admin/uploademployees");
@@ -104,6 +116,20 @@ function AdminHome() {
                     onClick={goToAdminViewRejectPage}>View Rejected Timesheet
                   </button>
                 </div>
+                <div className="my-4">
+                    <button
+                      type="button"
+                      className="btn p-2 select-btn"
+                      onClick={goToApproveTimesheetPage}>Approve Timesheet
+                    </button>
+                    </div>
+                    {/* <div className="my-4">
+                    <button
+                      type="button"
+                      className="btn p-2 select-btn"
+                      onClick={goToModifySupervisoTimesheetPage}>Modify Timesheet
+                    </button>
+                    </div> */}
               </div>
             </div>
 
@@ -169,16 +195,31 @@ function AdminHome() {
                     <button
                       type="button"
                       className="btn p-2 select-btn"
-                      onClick={goToCreateLeavePage}>Leave Request
+                      onClick={goToAddLeavePage}>Leave Request
                     </button>
+
+                    <div className="my-4">
+                    <button
+                      type="button"
+                      className="btn p-2 select-btn"
+                      onClick={goToEditLeavePage}>Edit Leave Request
+                    </button>
+                    </div>
+                    <div className="my-4">
+                    <button
+                      type="button"
+                      className="btn p-2 select-btn"
+                      onClick={goToRejectedLeavePage}>View Rejected Leave Request
+                    </button>
+                    </div>
+                    
                   </div>
                 </div>
               </div>
             </div>          
         </div>
-        
         </div>
-      </div>
+        </div>
       </div>
       </div>
     </>

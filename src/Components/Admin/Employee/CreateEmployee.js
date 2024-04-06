@@ -372,8 +372,6 @@ export default function CreateEmployee() {
                 Cancel
               </button>
             </div>
-
-
           </div>
         </form>
         

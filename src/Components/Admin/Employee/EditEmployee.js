@@ -23,9 +23,8 @@ export default function EditEmployee() {
  
   const navigate = useNavigate();
   const employeeData = getEmployeeData()   
-const userData = employeeData.find((employee) => employee.id === parseInt(id, 10));
-const [formValues, setFormValues] = useState(userData || {});
-
+  const userData = employeeData.find((employee) => employee.id === parseInt(id, 10));
+  const [formValues, setFormValues] = useState(userData || {});
   const [formErrors, setFormErrors] = useState({});
   const [isEditMode, setIsEditMode] = useState(false);
   const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
