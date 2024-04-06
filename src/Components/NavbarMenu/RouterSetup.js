@@ -30,8 +30,12 @@ import TimesheetLogin from '../Login/TimesheetLogin.js';
 import Layout from './Layout.js';
 import SupAddTimesheet from '../Supervisor/AddTimesheet/AddTimesheet.js';
 import SupRejectTimesheet from '../Supervisor/RejectTimesheet/RejectTimesheet.js';
-import { EmployeeLeaveRequest } from '../Employee/LeaveManagement/EmployeeLeaveRequest.js';
+import { EmployeeLeaveRequest } from '../Employee/LeaveRequest/EmployeeLeaveRequest.js';
 import { useSelector } from 'react-redux';
+
+import { SupervisorLeaveRequest } from '../Supervisor/LeaveRequest/SupervisorLeaveRequest.js';
+import SupervisorLeaveApproval from '../Supervisor/LeaveApproval/SupervisorLeaveApproval.js';
+import SupervisorLeaveDetails from '../Supervisor/LeaveApproval/SupervisorLeaveDetails.js';
 
 
 function RouterSetup() {
@@ -57,8 +61,9 @@ function RouterSetup() {
           <Route path='/supervisor/editTimesheet' element={isAuthenticated ? <Layout><SupervisorEditTimesheet /></Layout>:<TimesheetLogin/>} />
           <Route path='/supervisor/modifyEmployeeTimesheet/:id' element={isAuthenticated ? <Layout><EditTimesheet /></Layout>:<TimesheetLogin/>} />
           <Route path='/supervisor/rejecttimesheet' element={isAuthenticated ? <Layout><SupRejectTimesheet /></Layout>:<TimesheetLogin/>} />
-          
-         
+          <Route path='/supervisor/leaverequest' element={isAuthenticated ? <Layout><SupervisorLeaveRequest /></Layout>:<TimesheetLogin/>} />
+          <Route path='/supervisor/leaveapproval' element={isAuthenticated ? <Layout><SupervisorLeaveApproval /></Layout>:<TimesheetLogin/>} />
+          <Route path='/supervisor/leavedetails/:id' element={isAuthenticated ? <Layout><SupervisorLeaveDetails /></Layout>:<TimesheetLogin/>} />
           {/* employee */}
           <Route path='/employee' element={isAuthenticated ? <Layout><EmployeeHome /></Layout>:<TimesheetLogin/>} />
           <Route path='/employee/edittimesheet' element={isAuthenticated ? <Layout><EmployeeEditTimesheet /></Layout>:<TimesheetLogin/>} />

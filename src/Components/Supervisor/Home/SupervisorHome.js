@@ -22,6 +22,10 @@ function SupervisorHome() {
         navigate('/supervisor/rejecttimesheet')
     }
 
+    function goToApproveLeaveRequest(){
+       navigate('/supervisor/leaveapproval');
+    }
+
   
 
     return (
@@ -69,9 +73,32 @@ function SupervisorHome() {
                                     <button type='button' className='btn p-2 select-btn' onClick={goToRejectPage}>Reject Timesheet</button>
                                 </div>
                                
+                            </div>
+                        </div>
+
+                    </div>
+                    <div className="row text-center ti-home-content mt-2">
+                    <div className="col mx-5 my-2 p-2 ">
+                            <p className='p-2 title'>Approval</p>
+                            <div className='p-3 body'>
                                 <div className='my-4'>
                                     <button type='button' className='btn p-2 select-btn' onClick={goToApprovePage}>Approve Timesheet</button>
                                 </div>
+                                <div className='my-4'>
+                                    <button type='button' className='btn p-2 select-btn' onClick={goToApproveLeaveRequest}>Approve Leave Request</button>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        {/* navigation pages */}
+                        <div className="col mx-5 my-2 p-2 ">
+                            <p className='p-2 title'>Leave Management</p>
+                            <div className='p-3 body'>
+                                <div className='my-4 '>
+                                    <button type='button' className='btn p-2 select-btn ' onClick={()=>{navigate('/supervisor/leaverequest')}}>Leave Request</button>
+                                </div>
+                               
 
 
                             </div>

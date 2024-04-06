@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useFormik } from "formik";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -11,29 +11,43 @@ import { Modal,Button } from 'react-bootstrap';
 import successCheck from '../../Image/checked.png'
 export function EmployeeLeaveRequest() {
   const [leaveSuccessModal,setLeaveSuccessModal]=useState(false);
+  const [numberOfDays, setNumberOfDays] = useState(0); 
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
 
             startDate: new Date(),
             endDate: new Date(),
+            numberOfDays:0,
             leaveReason: "",
-            leaveComment: ""
+            leaveComment: "",
 
         },
         validationSchema: schemaLeave,
         onSubmit
     })
+    console.log(formik.values);
     // Calculate the last day of June
     const lastDayOfJune = new Date(new Date().getFullYear(), 5, 30); // Note: Month index is zero-based, so June is 5
 
-
+    useEffect(() => {
+        if (formik.values.endDate && formik.values.startDate) {
+          const start = new Date(formik.values.startDate);
+          const end = new Date(formik.values.endDate);
+          const difference = Math.max(end - start, 0); // Ensure no negative days
+          // Use Math.ceil to round up to the nearest whole number
+          const days = Math.ceil(difference / (1000 * 60 * 60 * 24)) + 1; // +1 to include the start date as a full day
+          setNumberOfDays(days);
+          formik.setFieldValue('numberOfDays', days);
+        }
+    }, [formik.values.startDate, formik.values.endDate]);
+    
 
     async function onSubmit() {
 
         const leaveData = await axios.post(leaveUrl, formik.values);
            setLeaveSuccessModal(true);
-        console.log(leaveData);
+        console.log("submitted");
         formik.resetForm();
 
     }
@@ -88,6 +102,11 @@ export function EmployeeLeaveRequest() {
                                         <div>
                                             {formik.errors.endDate ? <p className='text-danger small'>{formik.errors.endDate}</p> : ""}
                                         </div>
+                                        <div className="my-3 leave-row">
+                                            <label>No Of Days :</label>
+                                            <input type='text' readOnly className='w-25' value={numberOfDays} ></input>
+
+                                        </div>
 
                                         <div className="my-3 leave-row">
 
@@ -104,7 +123,7 @@ export function EmployeeLeaveRequest() {
 
                                         </div>
                                         <div>
-                                            {formik.errors.leaveReason ? <p className='text-danger small'>{formik.errors.leaveReason}</p> : ""}
+                                            {formik.touched.leaveReason && formik.errors.leaveReason ? <p className='text-danger small'>{formik.errors.leaveReason}</p> : ""}
                                         </div>
 
                                         <div className="my-3 leave-row">
@@ -112,7 +131,7 @@ export function EmployeeLeaveRequest() {
                                             <textarea type="text" id='leave-comment' name='leaveComment' onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.leaveComment}></textarea>
                                         </div>
                                         <div>
-                                            {formik.errors.leaveComment ? <p className='text-danger small'>{formik.errors.leaveComment}</p> : ""}
+                                            {formik.touched.leaveComment&&formik.errors.leaveComment ? <p className='text-danger small'>{formik.errors.leaveComment}</p> : ""}
                                         </div>
 
                                         <div className='my-5 text-end'>
