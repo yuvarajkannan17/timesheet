@@ -28,7 +28,7 @@ function SearchAdmin() {
     //   fetch the data from api
     async function getDataFromApi() {
         try {
-            let response = await axios.get(url)
+            let response = await axios.get("http://localhost:8080/admins/getadmins"); //getadmin backend url
             const array = response.data;
             setAdminList(array);
 

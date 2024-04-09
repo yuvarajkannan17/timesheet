@@ -34,7 +34,7 @@ function AdminEdit() {
     useEffect(() => {
         async function getDataFromApi() {
             try {
-                const response = await axios.get(`${url}/${id}`);
+                const response = await axios.get(`http://localhost:8080/admins/${id}`); // backend url fetch the admin
                 setEditAdminData(response.data);
             } catch (error) {
                 console.error('Error:', error);
@@ -49,7 +49,7 @@ function AdminEdit() {
 
         const fetchDataFromApi = async () => {
             try {
-                const response = await axios.get(url);
+                const response = await axios.get("http://localhost:8080/admins/getadmins");  //backend url
                 // Handle the response here if needed
                 const datas=response.data;
                 const filterData=datas.filter((data)=>data.id!==id)
@@ -129,7 +129,7 @@ function AdminEdit() {
                 setUserAlreadyExit("This user email is already exit ")
 
              }else{
-                await axios.put(`${url}/${id}`, values);
+                await axios.put(`http://localhost:8080/admins/${id}`, values);  //update admin backend url
 
                 dispatch(adminDetailsEdit(true));
                 dispatch(editSuccessModal(true));

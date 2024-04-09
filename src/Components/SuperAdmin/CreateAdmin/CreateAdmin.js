@@ -80,7 +80,7 @@ function CreateAdmin() {
             } else {
 
                 // Make the API call and wait for the response
-                await axios.post(url, values);
+                await axios.post("http://localhost:8080/admins/saveadmin", values); //saveadmin backend url
                 // If the API call is successful, proceed with the following actions
                 dispatch(successModal(true));
                 actions.resetForm();

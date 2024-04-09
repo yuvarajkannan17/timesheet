@@ -31,7 +31,7 @@ function AdminDetailsView() {
 
         try {
 
-            const response = await axios.get(`${url}/${id}`)
+            const response = await axios.get(`http://localhost:8080/admins/${id}`)  //to view admin details backend url
             dispatch(changeAdminDetails(response.data))
 
         } catch (error) {
@@ -73,7 +73,7 @@ function AdminDetailsView() {
             const response = await axios.get(`${url}/${removeAdminId}`);
             const deletedAdmin = response.data;
             archiveData(deletedAdmin);
-            await axios.delete(`${url}/${removeAdminId}`);
+            await axios.delete(`http://localhost:8080/admins/${removeAdminId}`);  //delete admin backend url
             dispatch(deleteSuccessModal(true));
             navigate('/superadmin/createadmin')
         } catch (error) {
