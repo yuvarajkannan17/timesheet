@@ -5,26 +5,35 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./AddLeaveRequest.css";
 import { schemaLeave } from "./LeaveSchema";
 import leaveUrl from "../../Api/leaveRequest";
+import { Modal } from 'react-bootstrap';
+import successCheck from '../../Image/checked.png'
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 function AdminAddLeaveRequest() {
+  const [leaveSuccessModal,setLeaveSuccessModal]=useState(false);
+
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       startDate: new Date(),
       endDate: new Date(),
+      numberOfDays: "",
       leaveReason: "",
       leaveComment: "",
-      numberOfDays: "",
+      
     },
     validationSchema: schemaLeave,
-    onSubmit,
+    onSubmit
   });
   // Calculate the last day of June
   const lastDayOfJune = new Date(new Date().getFullYear(), 5, 30); // Note: Month index is zero-based, so June is 5
 
   async function onSubmit() {
     const leaveData = await axios.post(leaveUrl, formik.values);
+    setLeaveSuccessModal(true);
+    console.log("Formik Values:", formik.values);
+
     console.log(leaveData);
     formik.resetForm();
   }
@@ -54,7 +63,7 @@ function AdminAddLeaveRequest() {
                     dateFormat="dd/MM/yyyy"
                     className="w-50"
                   />
-                   {" "}
+                   
                 </div>
                 <div>
                   {formik.errors.startDate ? (
@@ -65,7 +74,7 @@ function AdminAddLeaveRequest() {
                     ""
                   )}
                 </div>
-                  {" "}
+                  
               </div>
               <div class="row mb-3">
                 <label for="inputEmail3" class="col-sm-2 col-form-label">
@@ -84,7 +93,7 @@ function AdminAddLeaveRequest() {
                     dateFormat="dd/MM/yyyy"
                     className="w-50"
                   />
-                   {" "}
+                  
                 </div>
                 <div>
                   {formik.errors.endDate ? (
@@ -93,7 +102,7 @@ function AdminAddLeaveRequest() {
                     ""
                   )}
                 </div>
-                  {" "}
+                 
               </div>
 
               <div class="row mb-3">
@@ -109,7 +118,7 @@ function AdminAddLeaveRequest() {
                     onBlur={formik.handleBlur}
                     value={formik.values.numberOfDays}
                   ></input>
-                   {" "}
+                  
                 </div>
                 <div>
                   {formik.errors.numberOfDays ? (
@@ -120,7 +129,7 @@ function AdminAddLeaveRequest() {
                     ""
                   )}
                 </div>
-                  {" "}
+                 
               </div>
               <div class="row mb-3">
                 <label for="inputEmail3" class="col-sm-2 col-form-label">
@@ -141,7 +150,7 @@ function AdminAddLeaveRequest() {
                     <option value="maternity-leave">Maternity leave</option>
                     <option value="others-leave">Others</option>
                   </select>
-                   {" "}
+                  
                 </div>
                 <div>
                   {formik.errors.leaveReason ? (
@@ -152,7 +161,7 @@ function AdminAddLeaveRequest() {
                     ""
                   )}
                 </div>
-                  {" "}
+                
               </div>
               <div class="row mb-3">
                 <label for="inputEmail3" class="col-sm-2 col-form-label">
@@ -167,7 +176,7 @@ function AdminAddLeaveRequest() {
                     onBlur={formik.handleBlur}
                     value={formik.values.leaveComment}
                   ></textarea>
-                   {" "}
+                  
                 </div>
                 <div>
                   {formik.errors.leaveComment ? (
@@ -178,7 +187,7 @@ function AdminAddLeaveRequest() {
                     ""
                   )}
                 </div>
-                  {" "}
+                
               </div>
 
               <div className="my-5 text-end">
@@ -201,6 +210,15 @@ function AdminAddLeaveRequest() {
               </div>
             </form>
           </div>
+          <div>
+                    <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={leaveSuccessModal}  >
+                        <div className="d-flex flex-column modal-success p-4 align-items-center ">
+                            <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+                            <p className="mb-4 text-center"> Your Leave Request Submitted Successfully</p>
+                            <button className="btn  w-100 text-white" onClick={() => setLeaveSuccessModal(false)} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+                        </div>
+                    </Modal>
+                </div>
         </div>
       </div>
     </>

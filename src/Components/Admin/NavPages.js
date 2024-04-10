@@ -18,10 +18,7 @@ const NavPages = () => {
                     </li>
                     <li>
                         <NavLink to="/admin/uploademployees" activeClassName="active" className={activeClass} onClick={handleClick}>Upload Employees</NavLink>
-                    </li>
-                    {/* <li>
-                        <NavLink to="/admin/createproject" activeClassName="active" className={activeClass} onClick={handleClick}>Create Project</NavLink>
-                    </li> */}
+                    </li>                    
                     <li>
                         <NavLink to="/admin/searchemployee" activeClassName="active" className={activeClass} onClick={handleClick}>Search Employee</NavLink>
                     </li>

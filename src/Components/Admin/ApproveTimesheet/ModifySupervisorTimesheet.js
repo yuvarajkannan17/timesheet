@@ -8,7 +8,8 @@ import { Modal, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import '../ApproveTimesheet/approvalPage.css'
 import { editTimesheetSuccessModal, editTimesheetRejectModal } from '../../features/modal';
-function SupervisorEditTimesheet() {
+
+function SupervisorModifyTimesheet() {
     const [timesheetData, setTimesheetData] = useState('');
     const { id } = useParams();
     const navigate = useNavigate();
@@ -242,4 +243,4 @@ function SupervisorEditTimesheet() {
     );
 }
 
-export default SupervisorEditTimesheet;
+export default SupervisorModifyTimesheet;

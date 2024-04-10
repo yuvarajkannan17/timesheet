@@ -25,9 +25,6 @@ export default function CreateEmployee() {
     pannumber: "",
   });
 
-
-
-
   function Submit(e) {
     e.preventDefault();
     // axios.post(formValues)
@@ -38,7 +35,6 @@ export default function CreateEmployee() {
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [formErrors, setFormErrors] = useState({});
-
   const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
   const location = useLocation()
   // const history = useHistory();
