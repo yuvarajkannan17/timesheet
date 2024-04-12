@@ -46,6 +46,7 @@ function AdminAddLeaveRequest() {
             <h5 className="text-center py-2 text-primary">LEAVE REQUEST</h5>
 
             <form onSubmit={formik.handleSubmit}>
+            
               <div class="row mb-3">
                 <label for="inputEmail3" class="col-sm-2 col-form-label">
                   <span style={{ color: "red" }}>*</span> Start Date :
