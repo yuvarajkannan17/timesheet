@@ -7,12 +7,9 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { editTimesheetSuccessModal, editTimesheetRejectModal } from '../../features/modal';
 import employeeSheetUrl from "../../Api/employeeEdit";
-<<<<<<< HEAD:src/Components/Supervisor/Approval/ApproveTimesheet.js
-function ApproveTimesheet() {
-=======
 
-function ApprovalPage() {
->>>>>>> 2b22898635bf83f7a77c98ba3b999cf720829a47:src/Components/Supervisor/Approval/ApprovalPage.js
+function ApproveTimesheet() {
+
   const [timesheetDatas, setTimesheetDatas] = useState([])
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [rejectReason, setRejectReason] = useState('Your timesheet has been rejected. Please reach out supervisor regarding your timesheet.');
