@@ -7,7 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { editTimesheetSuccessModal, editTimesheetRejectModal } from '../../features/modal';
 import employeeSheetUrl from "../../Api/employeeEdit";
-function ApprovalPage() {
+import  SuperadminNav from'../Navbar/SuperAdminNav'
+function ApproveTimesheet() {
   const [timesheetDatas, setTimesheetDatas] = useState([])
   const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [rejectReason, setRejectReason] = useState('Your timesheet has been rejected. Please reach out supervisor regarding your timesheet.');
@@ -75,7 +76,7 @@ function ApprovalPage() {
 
   // reset the timesheet
   function cancelsheetFun() {
-    navigate('/supervisor')
+    navigate('/superadmin/createadmin')
   }
 
 
@@ -207,7 +208,7 @@ function ApprovalPage() {
 
   return (
     <>
-
+       <SuperadminNav/>
       <div className="ti-background-clr">
         <Container>
           <div className="py-3 ">
@@ -340,4 +341,4 @@ function ApprovalPage() {
   )
 }
 
-export default ApprovalPage;
+export default ApproveTimesheet;

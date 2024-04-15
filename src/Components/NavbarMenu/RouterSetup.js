@@ -4,7 +4,7 @@ import SearchAdmin from '../SuperAdmin/SearchAdmin/SearchAdmin.js'
 import AdminEdit from '../SuperAdmin/EditAdmin/AdminEdit.js';
 import AdminDetailsView from '../SuperAdmin/SearchAdmin/AdminDetailsView.js';
 import EditTimesheet from '../Supervisor/Approval/ModifyEmployeeTimesheet.js';
-import ApprovelBody from '../Supervisor/Approval/ApprovalPage.js';
+import ApproveTimesheet from '../Supervisor/Approval/ApproveTimesheet.js';
 import SupervisorHome from '../Supervisor/Home/SupervisorHome.js';
 import EmployeeEditTimesheet from '../Employee/Edit/EmployeeEditTimesheet.js';
 import SupervisorEditTimesheet from '../Supervisor/EditTimesheet/SupervisorEditTimesheet.js';
@@ -24,6 +24,7 @@ import EmployeeProfile from '../Admin/Employee/EmployeeProfile.js';
 import EditEmployee from '../Admin/Employee/EditEmployee.js';
 import EmployeeDetails from '../Admin/Employee/EmployeeDetails.js';
 import Approvalpage from '../Admin/ApproveTimesheet/ApprovalPage.js';
+import ApprovelBody from '../Admin/ApproveTimesheet/ApprovalPage.js';
 import ModifySupervisorTimesheet from '../Admin/ApproveTimesheet/ModifySupervisorTimesheet.js';
 import AddTimesheet from '../Employee/AddTimesheet/AddTimesheet.js';
 import CreateProject from '../Admin/Employee/CreateProject.js';
@@ -38,7 +39,10 @@ import { useSelector } from 'react-redux';
 import { SupervisorLeaveRequest } from '../Supervisor/LeaveRequest/SupervisorLeaveRequest.js';
 import SupervisorLeaveApproval from '../Supervisor/LeaveApproval/SupervisorLeaveApproval.js';
 import SupervisorLeaveDetails from '../Supervisor/LeaveApproval/SupervisorLeaveDetails.js';
-
+import SuperadminLeaveDetails from '../SuperAdmin/LeaveApproval/SuperadminLeaveDetails.js';
+import SuperadminLeaveApproval from '../SuperAdmin/LeaveApproval/SuperadminLeaveApproval.js';
+import SuperadminApproveTimesheet from '../SuperAdmin/TimesheetApproval/ApproveTimesheet.js';
+import SuperadminModifyAdminTimesheet from '../SuperAdmin/TimesheetApproval/ModifyEmployeeTimesheet.js';
 
 function RouterSetup() {
        const {isAuthenticated}=useSelector(state=>state.adminDetails.value);
@@ -56,10 +60,14 @@ function RouterSetup() {
           <Route path='/superadmin/searchadmin/admindetailsview/editadmin/:id' element={isAuthenticated ?<Layout><AdminEdit/></Layout>:<TimesheetLogin/>} />
           <Route path='/superadmin/searchadmin' element={isAuthenticated ? <Layout><SearchAdmin /></Layout>:<TimesheetLogin/>} />
           <Route path='/superadmin/searchadmin/admindetailsview/:id' element={isAuthenticated ? <Layout><AdminDetailsView /></Layout>:<TimesheetLogin/>} />
+          <Route path='/superadmin/leaveapproval' element={isAuthenticated ? <Layout><SuperadminLeaveApproval /></Layout>:<TimesheetLogin/>} />
+          <Route path='/superadmin/leavedetails' element={isAuthenticated ? <Layout><SuperadminLeaveDetails /></Layout>:<TimesheetLogin/>} />
+          <Route path='/superadmin/timesheetapproval' element={isAuthenticated ? <Layout><SuperadminApproveTimesheet /></Layout>:<TimesheetLogin/>} />
+          <Route path='/superadmin/leavedetails' element={isAuthenticated ? <Layout><SuperadminLeaveDetails /></Layout>:<TimesheetLogin/>} />
           
           <Route path='/supervisor' element={isAuthenticated ? <Layout><SupervisorHome /></Layout>:<TimesheetLogin/>} />
           <Route path='/supervisor/addtimesheet' element={isAuthenticated ? <Layout><SupAddTimesheet /></Layout>:<TimesheetLogin/>} />
-          <Route path='/supervisor/approvelList' element={isAuthenticated ? <Layout><ApprovelBody /></Layout>:<TimesheetLogin/>} />
+          <Route path='/supervisor/approvetimesheet' element={isAuthenticated ? <Layout><ApproveTimesheet /></Layout>:<TimesheetLogin/>} />
           <Route path='/supervisor/editTimesheet' element={isAuthenticated ? <Layout><SupervisorEditTimesheet /></Layout>:<TimesheetLogin/>} />
           <Route path='/supervisor/modifyEmployeeTimesheet/:id' element={isAuthenticated ? <Layout><EditTimesheet /></Layout>:<TimesheetLogin/>} />
           <Route path='/supervisor/rejecttimesheet' element={isAuthenticated ? <Layout><SupRejectTimesheet /></Layout>:<TimesheetLogin/>} />

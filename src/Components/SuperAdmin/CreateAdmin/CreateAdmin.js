@@ -19,6 +19,10 @@ function CreateAdmin() {
     let navigate = useNavigate();
     const [adminDatas, setAdminDatas] = useState(null);
     const [userAlreadyExit, setUserAlreadyExit] = useState('');
+    const [phoneError, setPhoneError] = useState('');
+    const [aadharError, setAadharError] = useState('');
+    const [panError, setPanError] = useState('');
+    
     const [createAdminError, setCreateAdminError] = useState('');
     // redux state 
     const modal = useSelector(state => state.modal.value)
@@ -28,7 +32,7 @@ function CreateAdmin() {
     useEffect(() => {
         const fetchDataFromApi = async () => {
             try {
-                const response = await axios.get(url);
+                const response = await axios.get("http://localhost:8080/admins/getadmins");
                 // Handle the response here if needed
                 setAdminDatas(response.data);
             } catch (error) {
@@ -67,37 +71,93 @@ function CreateAdmin() {
         onSubmit
     })
 
+    useEffect(() => {
+        if (values.phone && touched.phone) {
+            setPhoneError(''); // Clear custom phone error when input changes
+        }
+       
+    }, [values.phone]);
+
+    useEffect(() => {
+        if (values.pan && touched.pan) {
+            setPanError(''); // Clear custom phone error when input changes
+        }
+       
+    }, [values.pan]);
+
+    useEffect(() => {
+        if (values.aadhar&& touched.aadhar) {
+            setAadharError(''); // Clear custom phone error when input changes
+        }
+       
+    }, [values.aadhar]);
+
+    useEffect(() => {
+        if (values.email && touched.email) {
+            setUserAlreadyExit(''); // Clear custom phone error when input changes
+        }
+       
+    }, [values.email]);
+    
+
     // function for api call after form submission
 
     async function onSubmit(values, actions) {
+        let formHasErrors = false;
+
+        // Checking if the email is already in use
+        const emailExists = adminDatas.some(admin => admin.email === values.email);
+        if (emailExists) {
+            setUserAlreadyExit('Email already in use');
+            formHasErrors = true;
+        }
+
+        // Checking if the phone number is already in use
+        const phoneExists = adminDatas.some(admin => admin.phone === values.phone);
+        if (phoneExists) {
+            // Assuming you have a state setter for phone error
+            setPhoneError('Phone number already in use');
+            formHasErrors = true;
+        }
+
+        // Checking if the Aadhar number is already in use
+        const aadharExists = adminDatas.some(admin => admin.aadhar === values.aadhar);
+        if (aadharExists) {
+            // Assuming you have a state setter for Aadhar error
+            setAadharError('Aadhar number already in use');
+            formHasErrors = true;
+        }
+
+        // Checking if the PAN number is already in use
+        const panExists = adminDatas.some(admin => admin.pan === values.pan);
+        if (panExists) {
+            // Assuming you have a state setter for PAN error
+            setPanError('PAN number already in use');
+            formHasErrors = true;
+        }
+
+        if (formHasErrors) {
+            return; // Stop the form submission if there are errors
+        }
+
+        // Convert boolean values to string for API compatibility
+        values.employeeAccess = JSON.stringify(values.employeeAccess);
+        values.projectAccess = JSON.stringify(values.projectAccess);
 
         try {
-            // checking the email is already exit
-            const exitingAdmin = adminDatas.find((data) => data.email === values.email);
-
-            if (exitingAdmin) {
-                setUserAlreadyExit('This user email already exit');
-            } else {
-
-                // Make the API call and wait for the response
-                await axios.post("http://localhost:8080/admins/saveadmin", values); //saveadmin backend url
-                // If the API call is successful, proceed with the following actions
-                dispatch(successModal(true));
-                actions.resetForm();
-                navigate('/superadmin/searchadmin');
-            }
-
-
-
+            const response = await axios.post("http://localhost:8080/admins/saveadmin", values);
+            dispatch(successModal(true));
+            actions.resetForm();
+            navigate('/superadmin/searchadmin');
+            
         } catch (error) {
-
-            // Handle errors here
             setCreateAdminError(error.message);
             dispatch(failureModal(true));
-
-
         }
     }
+
+
+
 
     //    reset function for form field
     const handleCancel = () => {
@@ -108,7 +168,7 @@ function CreateAdmin() {
 
     return (
         <>
-         <SuperAdminNav/>
+            <SuperAdminNav />
             <div className="ti-background-clr">
                 <div className="sprAdmin-createAdmin">
                     <p className="sprAdmin-createAdmin-title ">Create Profile</p>
@@ -120,31 +180,32 @@ function CreateAdmin() {
                                 <div className="col-md-5" >
 
                                     <div className="mb-3">
-                                        <label htmlFor="firstName" className="form-label">First Name<span style={{color:'red'}}>*</span> </label>
+                                        <label htmlFor="firstName" className="form-label">First Name<span style={{ color: 'red' }}>*</span> </label>
                                         <input type="text" maxLength={50} className={`form-control  ${errors.fname && touched.fname ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="fname" id="firstName" onChange={handleChange} onBlur={handleBlur} value={values.fname} ></input>
                                         {errors.fname && touched.fname && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.fname}</p>}
                                     </div>
 
                                     <div className="mb-3">
-                                        <label htmlFor="lastName" className="form-label">Last Name<span style={{color:'red'}}>*</span> </label>
+                                        <label htmlFor="lastName" className="form-label">Last Name<span style={{ color: 'red' }}>*</span> </label>
                                         <input type="text" maxLength={50} className={`form-control  ${errors.lname && touched.lname ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="lname" id="lastName" onChange={handleChange} onBlur={handleBlur} value={values.lname} ></input>
                                         {errors.lname && touched.lname && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.lname}</p>}
                                     </div>
                                     <div className="mb-3">
-                                        <label htmlFor="address" className="form-label">Address<span style={{color:'red'}}>*</span>  </label>
+                                        <label htmlFor="address" className="form-label">Address<span style={{ color: 'red' }}>*</span>  </label>
                                         <textarea maxLength={100} className={`form-control sprAdmin-createAdmin-address  ${errors.address && touched.address ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="address" id="address" onChange={handleChange} onBlur={handleBlur} value={values.address}></textarea>
                                         {errors.address && touched.address && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.address}</p>}
                                     </div>
                                     <div className="mb-3">
-                                        <label htmlFor="email" className="form-label">Email Id<span style={{color:'red'}}>*</span>  </label>
+                                        <label htmlFor="email" className="form-label">Email Id<span style={{ color: 'red' }}>*</span>  </label>
                                         <input type="email" maxLength={100} className={`form-control  ${errors.email && touched.email ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="email" id="email" onChange={handleChange} onBlur={handleBlur} value={values.email} ></input>
-                                        {errors.email && touched.email && <p className="error-message small mt-1">{errors.email}</p>}
+                                        {errors.email && touched.email && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.email}</p>}
                                         {userAlreadyExit && <p className="sprAdmin-createAdmin-error-message small mt-1">{userAlreadyExit}</p>}
                                     </div>
                                     <div className="mb-3">
-                                        <label htmlFor="phone" className="form-label">Phone Number<span style={{color:'red'}}>*</span> </label>
+                                        <label htmlFor="phone" className="form-label">Phone Number<span style={{ color: 'red' }}>*</span> </label>
                                         <input type="text" maxLength={10} className={`form-control  ${errors.phone && touched.phone ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="phone" id="phone" onChange={handleChange} onBlur={handleBlur} value={values.phone} ></input>
-                                        {errors.phone && touched.phone && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.phone}</p>}
+                                       {errors.phone && touched.phone && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.phone}</p>}
+                                       {phoneError && <p className="sprAdmin-createAdmin-error-message small mt-1">{phoneError}</p>}
                                     </div>
                                 </div>
                                 {/* Skip the next 1 columns */}
@@ -154,14 +215,16 @@ function CreateAdmin() {
                                 {/* col-5 under the row */}
                                 <div className="col-md-5" >
                                     <div className="mb-3">
-                                        <label htmlFor="aadharNumber" className="form-label">Aadhar Number<span style={{color:'red'}}>*</span> </label>
+                                        <label htmlFor="aadharNumber" className="form-label">Aadhar Number<span style={{ color: 'red' }}>*</span> </label>
                                         <input type="text" maxLength={12} className={`form-control  ${errors.aadhar && touched.aadhar ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="aadhar" id="aadharNumber" onChange={handleChange} onBlur={handleBlur} value={values.aadhar} ></input>
                                         {errors.aadhar && touched.aadhar && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.aadhar}</p>}
+                                        {aadharError && <p className="sprAdmin-createAdmin-error-message small mt-1">{aadharError}</p>}
                                     </div>
                                     <div className="mb-3">
-                                        <label htmlFor="panNumber" className="form-label">Pan Number<span style={{color:'red'}}>*</span> </label>
+                                        <label htmlFor="panNumber" className="form-label">Pan Number<span style={{ color: 'red' }}>*</span> </label>
                                         <input type="text" maxLength={10} className={`form-control  ${errors.pan && touched.pan ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="pan" id="panNumber" onChange={handleChange} onBlur={handleBlur} value={values.pan} ></input>
                                         {errors.pan && touched.pan && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.pan}</p>}
+                                        {panError && <p className="sprAdmin-createAdmin-error-message small mt-1">{panError}</p>}
                                     </div>
                                     {/* checkboxes */}
                                     <div className="form-group">
