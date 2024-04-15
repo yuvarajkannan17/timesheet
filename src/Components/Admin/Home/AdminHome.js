@@ -32,6 +32,9 @@ function AdminHome() {
   function goToEditLeavePage() {
     navigate("/admin/admineditleaverequest");
   }
+  function goToApproveLeavePage() {
+    navigate("/admin/adminapproveleaverequest");
+  }
   function goToRejectedLeavePage() {
     navigate("/admin/adminrejectleaverequest");
   }
@@ -210,6 +213,13 @@ function AdminHome() {
                       type="button"
                       className="btn p-2 select-btn"
                       onClick={goToRejectedLeavePage}>View Rejected Leave Request
+                    </button>
+                    </div>
+                    <div className="my-4">
+                    <button
+                      type="button"
+                      className="btn p-2 select-btn"
+                      onClick={goToApproveLeavePage}>Approve Leave Request
                     </button>
                     </div>
                     

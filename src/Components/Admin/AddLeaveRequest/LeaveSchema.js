@@ -8,6 +8,7 @@ export const schemaLeave=Yup.object().shape({
     return startDate ? Yup.date().min(startDate, 'End date must be after start date').isValidSync(value) : true;
 }),
   leaveReason: Yup.string().required('Reason is required'),
-  leaveComment: Yup.string().required('Comments are required') .min(10, 'Comments should have at least 10 characters')
+  leaveComment: Yup.string().required('Comments are required') .min(10, 'Comments should have at least 10 characters'),
+  numberOfDays: Yup.string().required('Number of days required')
 
 })

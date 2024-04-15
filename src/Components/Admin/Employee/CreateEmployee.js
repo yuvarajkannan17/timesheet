@@ -8,7 +8,6 @@ import { getEmployeeData, addEmployeeData, getLastEnteredEmployee } from "../Emp
 import { useLocation } from "react-router-dom"
 import NavPages from "../NavPages";
 import '../../css/style.css'
-// import { useHistory } from 'react-router';
 
 
 export default function CreateEmployee() {
@@ -25,23 +24,13 @@ export default function CreateEmployee() {
     pannumber: "",
   });
 
-
-
-
-  function Submit(e) {
-    e.preventDefault();
-    // axios.post(formValues)
-    // .then(res=>{
-    //   console.log(res.formValues)
-    // })
-  }
+  
+  const projectOptions = ["CTPL00001", "CTPL00002", "CTPL00003", "CTPL00004"];
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [formErrors, setFormErrors] = useState({});
-
   const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
   const location = useLocation()
-  // const history = useHistory();
 
   useEffect(() => {
     const lastEnteredEmployee = getLastEnteredEmployee();
@@ -82,7 +71,6 @@ export default function CreateEmployee() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // setNewItem({ ...newItem, [name]: value });
     setFormValues((prevData) => ({
       ...prevData,
       [name]: value,
@@ -99,23 +87,42 @@ export default function CreateEmployee() {
     const validationError = validate(formValues);
     if (Object.keys(validationError).length > 0) {
       setFormErrors(validationError);
-      return;      
-    }
+      return;
+    }  
+    // Check if  already exists in session storage
+  const existingMobile = getEmployeeData().find(employee => employee.mobilenumber === formValues.mobilenumber);
+  const existingEmail = getEmployeeData().find(employee => employee.emailid === formValues.emailid);
+  const existingAadhar = getEmployeeData().find(employee => employee.aadharnumber === formValues.aadharnumber);
+  const existingPan = getEmployeeData().find(employee => employee.pannumber === formValues.pannumber);
+  const errors = {};
+  
+  if (existingMobile) {
+    errors.mobilenumber = "Mobile number already exists";
+  }
 
-    // else{
-    // alert("Form submitted successfully")
+  if (existingEmail) {
+errors.emailid = "Email address already exists";
     
-    setSuccessModalOpen(true)
+  }
 
+  if (existingAadhar) {
+    errors.aadharnumber = "Aadhar number already exists";    
+  }
+
+  if (existingPan) {
+    errors.pannumber = "PAN number already exists";    
+  }
+if (Object.keys(errors).length > 0) {
+  setFormErrors(errors);
+  return;
+}  
+   
+    setSuccessModalOpen(true)
     console.log(formValues);
   }
-  // employeeData.push({ id: employeeData.length + 1, ...formValues });
-  // setNewItem({ name: '', description: '' });
-  // addNewItem(formValues);     
-  // };
+  
 
-
-
+  
   const validate = (values) => {
 
     const errors = {};
@@ -142,6 +149,8 @@ export default function CreateEmployee() {
       errors.mobilenumber = "Mobile Number is required!";
     } else if (values.mobilenumber < 10) {
       errors.mobilenumber = "Mobile Number should be 10 characters";
+    } else if (getEmployeeData().some(employee => employee.mobilenumber === formValues.mobilenumber)) {
+      setFormErrors(prevErrors => ({ ...prevErrors, mobilenumber: "Mobile number already exists" }));
     }
 
     if (!values.emailid) {
@@ -149,6 +158,8 @@ export default function CreateEmployee() {
     } else if (!isValidEmail(values.emailid)) {
       errors.emailid = "This is not a valid email format";
     }
+    
+  
 
     if (!values.projectid) {
       errors.projectid = "Project Id is required!";
@@ -161,15 +172,17 @@ export default function CreateEmployee() {
     } else if (values.aadharnumber < 12) {
       errors.aadharnumber =
         "Aadhar Number should be  12 characters";
-    }
+    } 
+    
 
     if (!values.pannumber) {
       errors.pannumber = "Pan Number is required!";
     } else if (!isValidPan(values.pannumber)) {
       errors.pannumber = "This is not a valid Pan Number";
     }
+    
 
-
+    
     return errors;
 
   };
@@ -189,8 +202,7 @@ export default function CreateEmployee() {
     return projectRegex.test(project);
   };
 
-  // const handleModel = () => setSuccessModalOpen(true);
-  // const handleClose = () => { setSuccessModalOpen(false); window.location.reload() }
+  
   const navigate = useNavigate()
   const handleSuccess = () => {
     const lastEnteredEmployee = getLastEnteredEmployee();
@@ -223,10 +235,16 @@ export default function CreateEmployee() {
     });
     setSuccessModalOpen(false)
     navigate('/admin/employeeprofile')
-    // history.push('/admin/employeeprofile');
+    
   }
   function handleClose(){
+    
+    setSuccessModalOpen(false)
+  }
+
+  function handleCancel(){
     navigate('/admin')
+    // setSuccessModalOpen(false)
   }
 
   return (
@@ -317,18 +335,22 @@ export default function CreateEmployee() {
                   />
                   <p className="text-danger"> {formErrors.employeeid} </p>
                 </div>
-                {/* <div className="row"> */}
+                
                   <div className="col-md-6 form-group">
-                    <label className="label">Project Id</label>
-                    <input
-                      type="text"
-                      name="projectid"
-                      className="form-control"
-                      value={formValues.projectid}
-                      onChange={handleChange}
-                    />
-                    {/* <p className="text-danger"> {formErrors.projectid} </p> */}
-                  </div>
+  <label className="label">Project Id</label>
+  <select
+    name="projectid"
+    className="form-control"
+    value={formValues.projectid}
+    onChange={handleChange}
+  >
+    <option value="">Select Project ID</option>
+    {projectOptions.map((projectId) => (
+      <option key={projectId} value={projectId}>{projectId}</option>
+    ))}
+  </select>
+  
+</div>
                   <div className="col-md-6 form-group">
                     Aadhar Number<span class="required">*</span>
                     <input
@@ -341,10 +363,7 @@ export default function CreateEmployee() {
                       onChange={handleChange}
                     />
                      <p className="text-danger"> {formErrors.aadharnumber} </p>
-                    {/* <div className="form-group">
-                      <label className="label"> Aadhar Card  </label>
-                      <input type="file" name="aadharcard" className="form-control-file1" />
-                    </div>                     */}
+                    
                     Pan Number<span class="required">*</span>
                     <input
                       type="text"
@@ -355,11 +374,7 @@ export default function CreateEmployee() {
                       onChange={handleChange}
                     />
                     <p className="text-danger"> {formErrors.pannumber} </p>
-                    {/* <div className="form-group">
-                      <label className="label"> Pan Card  </label>
-                      <input type="file" name="pancard" className="form-control-file2" />
-                    </div> */}
-                  {/* </div> */}
+                    
                 </div>
               </div>
             </div>
@@ -368,7 +383,7 @@ export default function CreateEmployee() {
               <button type="submit" className="btn-submit btn-sm" >
                 Save
               </button>
-              <button type="button" className="btn-cancel btn-sm" onClick={handleClose} >
+              <button type="button" className="btn-cancel btn-sm" onClick={handleCancel} >
                 Cancel
               </button>
             </div>
