@@ -33,8 +33,8 @@ function SupervisorHome() {
                             </button>
                             {isOpenLeaveManagement && (
                                 <div className="collapse-content ">
-                                    <ul><Link to={'/employee/leaverequest'}>Add Leave Request</Link></ul>
-                                    <ul><Link to={''}>Edit Leave Request</Link></ul>
+                                    <ul><Link to={'/supervisor/leaverequest'}>Add Leave Request</Link></ul>
+                                    <ul><Link to={'/supervisor/editleaverequest'}>Edit Leave Request</Link></ul>
                                     <ul><Link to={''}>Reject Leave Request</Link></ul>
                                     <ul><Link to={''}>Approve Leave Request</Link></ul>
                                 </div>
