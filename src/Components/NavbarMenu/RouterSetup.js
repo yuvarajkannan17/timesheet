@@ -7,6 +7,7 @@ import EditTimesheet from '../Supervisor/Approval/ModifyEmployeeTimesheet.js';
 import ApprovelBody from '../Supervisor/Approval/ApprovalPage.js';
 import SupervisorHome from '../Supervisor/Home/SupervisorHome.js';
 import EmployeeEditTimesheet from '../Employee/Edit/EmployeeEditTimesheet.js';
+import EmployeeEditLeaveRequest from '../Employee/EditLeaveRequest/EmployeeEditLeaveRequest.js'
 import SupervisorEditTimesheet from '../Supervisor/EditTimesheet/SupervisorEditTimesheet.js';
 import EmployeeHome from '../Employee/Home/EmployeeHome.js';
 import RejectTimesheet from '../Employee/RejectTimesheet/RejectTimesheet.js';
@@ -73,6 +74,8 @@ function RouterSetup() {
           <Route path='/employee/edittimesheet' element={isAuthenticated ? <Layout><EmployeeEditTimesheet /></Layout>:<TimesheetLogin/>} />
           <Route path='/employee/rejecttimesheet' element={isAuthenticated ? <Layout><RejectTimesheet /></Layout>:<TimesheetLogin/>} />
           <Route path='/employee/leaverequest' element={isAuthenticated ? <Layout><EmployeeLeaveRequest /></Layout>:<TimesheetLogin/>} />
+          <Route path='/employee/editleaverequest' element={isAuthenticated ? <Layout><EmployeeEditLeaveRequest /></Layout>:<TimesheetLogin/>} />
+
           <Route path='/employee/addtimesheet' element={isAuthenticated ? <Layout><AddTimesheet /></Layout>:<TimesheetLogin/>} />
           {/* admin */}
           <Route path='/admin' element={ isAuthenticated ? <Layout><AdminHome  /></Layout>:<TimesheetLogin/>} />
