@@ -185,7 +185,7 @@ function ApproveTimesheet() {
 
     if (check) {
       console.log(id)
-      navigate('/supervisor/modifyEmployeeTimesheet/' + id)
+      navigate('/superadmin/timesheetapproval/modifytimesheet/' + id)
     } else {
       setErrorMessage("Please select the timesheet you wish to edit!!!")
     }

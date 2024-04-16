@@ -35,7 +35,7 @@ function ModifyAdminTimesheet() {
             await axios.put(`${employeeSheetUrl}/${id}`, timesheetData);
             setTimesheetData({ ...timesheetData, status: "Your timesheet has been approved" })
             dispatch(editTimesheetSuccessModal(true));
-            navigate('/supervisor/approvelList');
+            
         } catch (error) {
             console.log(error)
         }
@@ -58,7 +58,7 @@ function ModifyAdminTimesheet() {
             await axios.put(`${employeeSheetUrl}/${id}`, timesheetData);
             setTimesheetData({ ...timesheetData, status: "Your timesheet has been rejected" })
             dispatch(editTimesheetRejectModal(true));
-            navigate('/supervisor')
+            
         } catch (error) {
             console.log(error)
         }
