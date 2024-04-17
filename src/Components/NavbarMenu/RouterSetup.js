@@ -69,6 +69,7 @@ function RouterSetup() {
           <Route path='/superadmin/leavedetails' element={isAuthenticated ? <Layout><SuperadminLeaveDetails /></Layout>:<TimesheetLogin/>} />
           <Route path='/superadmin/timesheetapproval' element={isAuthenticated ? <Layout><SuperadminApproveTimesheet /></Layout>:<TimesheetLogin/>} />
           <Route path='/superadmin/leavedetails' element={isAuthenticated ? <Layout><SuperadminLeaveDetails /></Layout>:<TimesheetLogin/>} />
+          <Route path='/superadmin/timesheetapproval/modifytimesheet/:id' element={isAuthenticated ? <Layout><SuperadminModifyAdminTimesheet /></Layout>:<TimesheetLogin/>} />
           
           <Route path='/supervisor' element={isAuthenticated ? <Layout><SupervisorHome /></Layout>:<TimesheetLogin/>} />
           <Route path='/supervisor/addtimesheet' element={isAuthenticated ? <Layout><SupAddTimesheet /></Layout>:<TimesheetLogin/>} />

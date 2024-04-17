@@ -32,7 +32,10 @@ function AdminDetailsView() {
         try {
 
             const response = await axios.get(`http://localhost:8080/admins/${id}`)  //to view admin details backend url
+            
+            
             dispatch(changeAdminDetails(response.data))
+       
 
         } catch (error) {
             console.log(error)
@@ -70,12 +73,12 @@ function AdminDetailsView() {
     async function deleteSaveChanges() {
         try {
             setConfirmationForDelete(false);
-            const response = await axios.get(`${url}/${removeAdminId}`);
-            const deletedAdmin = response.data;
-            archiveData(deletedAdmin);
+            // const response = await axios.get(`${url}/${removeAdminId}`);
+            // const deletedAdmin = response.data;
+            // archiveData(deletedAdmin);
             await axios.delete(`http://localhost:8080/admins/${removeAdminId}`);  //delete admin backend url
             dispatch(deleteSuccessModal(true));
-            navigate('/superadmin/createadmin')
+            navigate('/superadmin/searchadmin')
         } catch (error) {
             console.error('Error deleting admin:', error);
         }
@@ -115,7 +118,7 @@ function AdminDetailsView() {
 
                                 <div className='row mb-2'>
                                     <div className='col-md-6'>Admin Id</div>
-                                    <div className='col-md-6 text-secondary'>CTPLAD00{adminDetails.id}</div>
+                                    <div className='col-md-6 text-secondary'>{adminDetails.id}</div>
                                 </div>
                                 <div className='row mb-2'>
                                     <div className='col-md-6'>First Name</div>
@@ -156,7 +159,7 @@ function AdminDetailsView() {
                                         Create
                                     </div>
                                     <div className='col-md-6 text-secondary'>
-                                        {adminDetails.employeeAccess.create.toString()}
+                                    {adminDetails.employeeAccess && JSON.parse(adminDetails.employeeAccess).create.toString()}
                                     </div>
                                 </div>
                                 <div className='row mb-2'>
@@ -164,7 +167,7 @@ function AdminDetailsView() {
                                         Edit
                                     </div>
                                     <div className='col-md-6 text-secondary'>
-                                        {adminDetails.employeeAccess.edit.toString()}
+                                    {adminDetails.employeeAccess && JSON.parse(adminDetails.employeeAccess).edit.toString()}
                                     </div>
                                 </div>
                                 <div className='row mb-2'>
@@ -172,7 +175,7 @@ function AdminDetailsView() {
                                         Delete
                                     </div>
                                     <div className='col-md-6 text-secondary'>
-                                        {adminDetails.employeeAccess.delete.toString()}
+                                    {adminDetails.employeeAccess && JSON.parse(adminDetails.employeeAccess).delete.toString()}
                                     </div>
                                 </div>
                                 <div className='row mb-2'>
@@ -183,7 +186,7 @@ function AdminDetailsView() {
                                         Create
                                     </div>
                                     <div className='col-md-6 text-secondary'>
-                                        {adminDetails.projectAccess.create.toString()}
+                                    {adminDetails.projectAccess && JSON.parse(adminDetails.projectAccess).create.toString()}
                                     </div>
                                 </div>
                                 <div className='row mb-2'>
@@ -191,7 +194,7 @@ function AdminDetailsView() {
                                         Edit
                                     </div>
                                     <div className='col-md-6 text-secondary'>
-                                        {adminDetails.projectAccess.edit.toString()}
+                                    {adminDetails.projectAccess && JSON.parse(adminDetails.projectAccess).edit.toString()}
                                     </div>
                                 </div>
                                 <div className='row mb-2'>
@@ -199,7 +202,7 @@ function AdminDetailsView() {
                                         Delete
                                     </div>
                                     <div className='col-md-6 text-secondary'>
-                                        {adminDetails.projectAccess.delete.toString()}
+                                    {adminDetails.projectAccess && JSON.parse(adminDetails.projectAccess).delete.toString()}
                                     </div>
                                 </div>
                             </div>
