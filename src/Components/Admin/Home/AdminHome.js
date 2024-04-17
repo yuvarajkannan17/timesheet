@@ -1,55 +1,115 @@
-import { useNavigate } from "react-router-dom";
-function AdminHome() {
-  const navigate = useNavigate();
+import { useState } from "react";
+import {  Link } from 'react-router-dom';
 
-  function goToAdminAddTimesheetPage() {
-    navigate("/admin/adminaddtimesheet");
-  }
-  function goToAdminEditPage() {
-    navigate("/admin/admineditTimesheet");
-  }
-  function goToAdminViewRejectPage() {
-    navigate("/admin/adminrejecttimesheet");
-  }
-  function goToApproveTimesheetPage() {
-    navigate("/admin/approvalpage");
-  }
+function AdminHome() {
+  const [isOpenTimesheet, setIsOpenTimesheet] = useState(true);
+    const [isOpenLeaveManagement, setIsOpenLeaveManagement] = useState(true);
+  // const navigate = useNavigate();
+
+  // function goToAdminAddTimesheetPage() {
+  //   navigate("/admin/adminaddtimesheet");
+  // }
+  // function goToAdminEditPage() {
+  //   navigate("/admin/admineditTimesheet");
+  // }
+  // function goToAdminViewRejectPage() {
+  //   navigate("/admin/adminrejecttimesheet");
+  // }
+  // function goToApproveTimesheetPage() {
+  //   navigate("/admin/approvalpage");
+  // }
   // function goToModifySupervisoTimesheetPage() {
   //   navigate("/admin/modifysupervisortimesheet");
   // }
-  function goToCreateEmployeePage() {
-    navigate("/admin/createemployee");
-  }
-  function goToCreateProjectPage() {
-    navigate("/admin/createproject");
-  }
-  function goToUpdateProjectDetailsPage() {
-    navigate("/admin/updateprojectdetails");
-  }
-  function goToAddLeavePage() {
-    navigate("/admin/adminaddleaverequest");
-  }
-  function goToEditLeavePage() {
-    navigate("/admin/admineditleaverequest");
-  }
-  function goToApproveLeavePage() {
-    navigate("/admin/adminapproveleaverequest");
-  }
-  function goToRejectedLeavePage() {
-    navigate("/admin/adminrejectleaverequest");
-  }
-  function goToUploadEmployeesPage() {
-    navigate("/admin/uploademployees");
-  }
-  function goToSearchEmployeePage() {
-    navigate("/admin/searchemployee");
-  }
+  // function goToCreateEmployeePage() {
+  //   navigate("/admin/createemployee");
+  // }
+  // function goToCreateProjectPage() {
+  //   navigate("/admin/createproject");
+  // }
+  // function goToUpdateProjectDetailsPage() {
+  //   navigate("/admin/updateprojectdetails");
+  // }
+  // function goToAddLeavePage() {
+  //   navigate("/admin/adminaddleaverequest");
+  // }
+  // function goToEditLeavePage() {
+  //   navigate("/admin/admineditleaverequest");
+  // }
+  // function goToApproveLeavePage() {
+  //   navigate("/admin/adminapproveleaverequest");
+  // }
+  // function goToRejectedLeavePage() {
+  //   navigate("/admin/adminrejectleaverequest");
+  // }
+  // function goToUploadEmployeesPage() {
+  //   navigate("/admin/uploademployees");
+  // }
+  // function goToSearchEmployeePage() {
+  //   navigate("/admin/searchemployee");
+  // }
 
   return (
     <>
       <div className="ti-background-clr">
         <div className="ti-home-container">
-          {/* notification about timesheet */}
+          
+
+          <div className='left-navigation'>
+          <div className={`collapse-container mb-3 ${isOpenLeaveManagement ? 'active' : ''}`}>
+                            <button onClick={() => setIsOpenLeaveManagement(!isOpenLeaveManagement)} className="collapse-toggle btn fw-bold">
+                                Employee Management
+                            </button>
+                            {isOpenLeaveManagement && (
+                                <div className="collapse-content ">
+                                    <ul><Link to={'createemployee'}>Create Employee</Link></ul>
+                                    <ul><Link to={'uploademployees'}>Upload Employees</Link></ul>  
+                                    <ul><Link to={'searchemployee'}>Search Employee</Link></ul>                                  
+                                </div>
+                            )}
+                        </div>
+                        <div className={`collapse-container mb-3 ${isOpenTimesheet ? 'active' : ''}`}>
+                            <button onClick={() => setIsOpenTimesheet(!isOpenTimesheet)} className="collapse-toggle btn fw-bold">
+                                Timesheet Management
+                            </button>
+                            {isOpenTimesheet && (
+                                <div className="collapse-content ">
+                                    <ul><Link to={'/admin/adminaddtimesheet'}>Add Timesheet</Link></ul>
+                                    <ul><Link to={'/admin/adminedittimesheet'}>Edit Timesheet</Link></ul>
+                                    <ul><Link to={'/admin/adminrejecttimesheet'}>Reject Timesheet</Link></ul>
+                                    <ul><Link to={'/admin/approvalpage'}>Approve Timesheet</Link></ul>
+
+                                </div>
+                            )}
+                        </div>
+                        <div className={`collapse-container mb-3 ${isOpenLeaveManagement ? 'active' : ''}`}>
+                            <button onClick={() => setIsOpenLeaveManagement(!isOpenLeaveManagement)} className="collapse-toggle btn fw-bold">
+                                Leave Management
+                            </button>
+                            {isOpenLeaveManagement && (
+                                <div className="collapse-content ">
+                                    <ul><Link to={'/admin/adminaddleaverequest'}>Add Leave Request</Link></ul>
+                                    <ul><Link to={'/admin/admineditleaverequest'}>Edit Leave Request</Link></ul>
+                                    <ul><Link to={''}>View Rejected Leave Request</Link></ul>
+                                    <ul><Link to={'adminapproveleaverequest'}>Approve Leave Request</Link></ul>
+                                </div>
+                            )}
+                        </div>
+                        <div className={`collapse-container mb-3 ${isOpenLeaveManagement ? 'active' : ''}`}>
+                            <button onClick={() => setIsOpenLeaveManagement(!isOpenLeaveManagement)} className="collapse-toggle btn fw-bold">
+                                Project Management
+                            </button>
+                            {isOpenLeaveManagement && (
+                                <div className="collapse-content ">
+                                    <ul><Link to={'createproject'}>Add Project</Link></ul>
+                                    <ul><Link to={'updateprojectdetails'}>Update Project</Link></ul>                                    
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+
+          <div className='right-details'>
           <div className="row text-center ti-home-notification">
             <div className="col   mx-5 my-2 p-2 ">Timesheet to be approved :</div>
             <div className="col  mx-5  my-2 p-2  ">Rejected Timesheets :</div>
@@ -61,6 +121,7 @@ function AdminHome() {
             <div className="col  mx-5  my-2 p-2  ">Rejected Leave Request :</div>
           </div>
 
+          {/* <div className='right-details'> */}
           {/* timesheet content */}
           <div className="row text-center ti-home-content mt-2">
             {/* timesheet status */}
@@ -93,39 +154,39 @@ function AdminHome() {
             </div>
             {/* navigation pages */}
 
-            <div className="row text-center ti-home-content mt-2">
+            {/* <div className="row text-center ti-home-content mt-2"> */}
 
-            <div className="col mx-5 my-2 p-2 ">
+            {/* <div className="col mx-5 my-2 p-2 ">
               <p className="p-2 title">Timesheet Management</p>
-              <div className="p-3 body">
-                <div className="my-4 ">
+              <div className="p-3 body"> */}
+                {/* <div className="my-4 ">
                   <button
                     type="button"
                     className="btn p-2 select-btn "
                     onClick={goToAdminAddTimesheetPage}>Add Timesheet
                   </button>
-                </div>
-                <div className="my-4">
+                </div> */}
+                {/* <div className="my-4">
                   <button
                     type="button"
                     className="btn p-2 select-btn"
                     onClick={goToAdminEditPage}>Edit Timesheet
                   </button>
-                </div>
-                <div className="my-4">
+                </div> */}
+                {/* <div className="my-4">
                   <button
                     type="button"
                     className="btn p-2 select-btn"
                     onClick={goToAdminViewRejectPage}>View Rejected Timesheet
                   </button>
-                </div>
-                <div className="my-4">
+                </div> */}
+                {/* <div className="my-4">
                     <button
                       type="button"
                       className="btn p-2 select-btn"
                       onClick={goToApproveTimesheetPage}>Approve Timesheet
                     </button>
-                    </div>
+                    </div> */}
                     {/* <div className="my-4">
                     <button
                       type="button"
@@ -133,39 +194,39 @@ function AdminHome() {
                       onClick={goToModifySupervisoTimesheetPage}>Modify Timesheet
                     </button>
                     </div> */}
-              </div>
-            </div>
+              {/* </div>
+            </div> */}
 
-              <div className="col mx-5 my-2 p-2 ">
+              {/* <div className="col mx-5 my-2 p-2 ">
                 <p className="p-2 title">Employee Management</p>
                 <div className="p-3 body">
-                  <div className="my-4 ">
-                    <div className="my-4">
+                  <div className="my-4 "> */}
+                    {/* <div className="my-4">
                       <button
                         type="button"
                         className="btn p-2 select-btn"
                         onClick={goToCreateEmployeePage}>Create Employee
                       </button>
-                    </div>
-                    <div className="my-4">
+                    </div> */}
+                    {/* <div className="my-4">
                       <button
                         type="button"
                         className="btn p-2 select-btn"
                         onClick={goToUploadEmployeesPage}>Upload Employees
                       </button>
-                    </div>                    
-                    <div className="my-4">
+                    </div>                     */}
+                    {/* <div className="my-4">
                       <button
                         type="button"
                         className="btn p-2 select-btn"
                         onClick={goToSearchEmployeePage}>Search Employee
                       </button>
-                    </div>
-                  </div>
-                </div>
-                </div>
+                    </div> */}
+                  {/* </div> */}
+                {/* </div> */}
+                {/* </div> */}
 
-        <div className="row text-center ti-home-content mt-2">
+        {/* <div className="row text-center ti-home-content mt-2">
               <div className="col mx-5 my-2 p-2 ">
                 <p className="p-2 title">Project Management</p>
                 <div className="p-3 body">
@@ -176,21 +237,21 @@ function AdminHome() {
                         className="btn p-2 select-btn"
                         onClick={goToCreateProjectPage}>Create Project
                       </button>
-                    </div>
+                    </div> */}
 
-                    <div className="my-4">
+                    {/* <div className="my-4">
                       <button
                         type="button"
                         className="btn p-2 select-btn"
                         onClick={goToUpdateProjectDetailsPage}>Update Project
                       </button>
-                    </div>
+                    </div> */}
                   </div>
-                </div>
+                {/* </div> */}
               </div> 
             
 
-            <div className="col mx-5 my-2 p-2 ">
+            {/* <div className="col mx-5 my-2 p-2 ">
               <p className="p-2 title">Leave Management</p>
               <div className="p-3 body">
                 <div className="my-4 ">
@@ -199,39 +260,39 @@ function AdminHome() {
                       type="button"
                       className="btn p-2 select-btn"
                       onClick={goToAddLeavePage}>Leave Request
-                    </button>
+                    </button> */}
 
-                    <div className="my-4">
+                    {/* <div className="my-4">
                     <button
                       type="button"
                       className="btn p-2 select-btn"
                       onClick={goToEditLeavePage}>Edit Leave Request
                     </button>
-                    </div>
-                    <div className="my-4">
+                    </div> */}
+                    {/* <div className="my-4">
                     <button
                       type="button"
                       className="btn p-2 select-btn"
                       onClick={goToRejectedLeavePage}>View Rejected Leave Request
                     </button>
-                    </div>
-                    <div className="my-4">
+                    </div> */}
+                    {/* <div className="my-4">
                     <button
                       type="button"
                       className="btn p-2 select-btn"
                       onClick={goToApproveLeavePage}>Approve Leave Request
                     </button>
                     </div>
-                    
-                  </div>
+                     */}
+                  {/* </div> */}
                 </div>
               </div>
-            </div>          
-        </div>
-        </div>
-        </div>
-      </div>
-      </div>
+            {/* </div>           */}
+        {/* </div> */}
+        {/* </div> */}
+        {/* </div> */}
+      {/* </div> */}
+      {/* </div> */}
     </>
   );
 }

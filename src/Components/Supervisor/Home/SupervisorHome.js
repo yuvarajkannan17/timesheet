@@ -9,7 +9,6 @@ function SupervisorHome() {
     return (
         <>
             <div className="ti-background-clr">
-
                 <div className='ti-home-container'>
 
                     <div className='left-navigation'>
@@ -85,18 +84,9 @@ function SupervisorHome() {
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
-
-
                     </div>
-
-
-
                 </div>
-
-
             </div>
 
         </>

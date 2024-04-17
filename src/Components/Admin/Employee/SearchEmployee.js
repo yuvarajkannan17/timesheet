@@ -47,6 +47,9 @@ export default function SearchEmployee() {
     setResult(false)
    }
   // const [searchQuery,setSearchQuery] = useState([])
+  const handleCancel = () => {
+    navigate('/admin')
+  }
 
   useEffect(() =>{
     setItems(getEmployeeData());
@@ -81,7 +84,6 @@ export default function SearchEmployee() {
   // };
 
   return (
-
           
    <div className='background-clr'>
 
@@ -119,23 +121,24 @@ export default function SearchEmployee() {
               <td>
               {/* <Link to={'/employeedetails${d.id.toString()} '}>{d.id}</Link> */}
               <Link key={d.id} to={`/admin/employeedetails/${d.id}`}>{d.id}</Link>
-       </td>
+              </td>
               <td>{d.firstname}</td>            
-             </tr>
-             
+             </tr>             
                 // ))): (<p>No records found</p>)}
-              ))}
-
-           
+              ))}           
           </tbody>
-
-       </table> 
-              )}    
+          </table> 
+              )} 
+              
       </div>
+     
       </div>  
     </div>    
     </div>
-   
+                 <div className='buttons'>
+                 <button type="button" className="btn-cancel btn-sm" onClick={handleCancel} >Cancel</button>
+                 </div>
+                 
    </div>
 
   ) 
