@@ -77,8 +77,9 @@ function AdminDetailsView() {
             // const deletedAdmin = response.data;
             // archiveData(deletedAdmin);
             await axios.delete(`http://localhost:8080/admins/${removeAdminId}`);  //delete admin backend url
-            dispatch(deleteSuccessModal(true));
+             dispatch(deleteSuccessModal(true));
             navigate('/superadmin/searchadmin')
+           
         } catch (error) {
             console.error('Error deleting admin:', error);
         }

@@ -103,7 +103,7 @@ function AdminEdit() {
         validationSchema: basicSchema,
         onSubmit
     })
-
+   console.log(errors)
     
 
 
@@ -286,6 +286,7 @@ function AdminEdit() {
                                                 <label htmlFor="phone" className="form-label">Phone Number<span style={{ color: 'red' }}>*</span> </label>
                                                 <input type="text" maxLength={10} className={`form-control  ${errors.phone && touched.phone ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="phone" id="phone" onChange={handleChange} onBlur={handleBlur} value={values.phone} ></input>
                                                 {errors.phone && touched.phone && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.phone}</p>}
+                                                {phoneError && <p className="sprAdmin-createAdmin-error-message small mt-1">{phoneError}</p>}
                                             </div>
                                         </div>
                                         {/* Skip the next 1 columns */}
@@ -298,11 +299,13 @@ function AdminEdit() {
                                                 <label htmlFor="aadharNumber" className="form-label">Aadhar Number<span style={{ color: 'red' }}>*</span> </label>
                                                 <input type="text" maxLength={12} className={`form-control  ${errors.aadhar && touched.aadhar ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="aadhar" id="aadharNumber" onChange={handleChange} onBlur={handleBlur} value={values.aadhar} ></input>
                                                 {errors.aadhar && touched.aadhar && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.aadhar}</p>}
+                                                {aadharError && <p className="sprAdmin-createAdmin-error-message small mt-1">{aadharError}</p>}
                                             </div>
                                             <div className="mb-3">
                                                 <label htmlFor="panNumber" className="form-label">Pan Number<span style={{ color: 'red' }}>*</span> </label>
                                                 <input type="text" maxLength={10} className={`form-control  ${errors.pan && touched.pan ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="pan" id="panNumber" onChange={handleChange} onBlur={handleBlur} value={values.pan} ></input>
                                                 {errors.pan && touched.pan && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.pan}</p>}
+                                                {panError && <p className="sprAdmin-createAdmin-error-message small mt-1">{panError}</p>}
                                             </div>
                                             {/* checkboxes */}
                                             <div className="form-group">
