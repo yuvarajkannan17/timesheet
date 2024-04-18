@@ -30,6 +30,10 @@ export default function EditEmployee() {
   const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
   const [isCancelModalOpen, setCancelModalOpen] = useState(false);
   const [SuccessConfirmation, setSuccessConfirmation] = useState(false);
+  const [initialFormValues, setInitialFormValues] = useState({});
+  useEffect(() => {
+    setInitialFormValues(userData || {});
+  }, [userData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,16 +54,53 @@ export default function EditEmployee() {
     if (Object.keys(validationError).length > 0) {
       setFormErrors(validationError);
       return;
+    } 
+    
+    // Check for duplicate mobile number, PAN number, Aadhar number, and email ID
+  const existingEmployee = getEmployeeData().find(employee => (
+    employee.id !== formValues.id && (
+      employee.mobilenumber === formValues.mobilenumber ||
+      employee.pannumber === formValues.pannumber ||
+      employee.aadharnumber === formValues.aadharnumber ||
+      employee.emailid === formValues.emailid
+    )
+  ));
+
+  // Accumulate errors for duplicate fields
+  const duplicateErrors = {};
+  if (existingEmployee) {
+    if (existingEmployee.mobilenumber === formValues.mobilenumber) {
+      duplicateErrors.mobilenumber = "Mobile number already exists";
     }
-    else  {
+    if (existingEmployee.pannumber === formValues.pannumber) {
+      duplicateErrors.pannumber = "PAN number already exists";
+    }
+    if (existingEmployee.aadharnumber === formValues.aadharnumber) {
+      duplicateErrors.aadharnumber = "Aadhar number already exists";
+    }
+    if (existingEmployee.emailid === formValues.emailid) {
+      duplicateErrors.emailid = "Email ID already exists";
+    }
+  }
+
+  // If there are duplicate errors, merge them with the validation errors and set them all at once
+  if (Object.keys(duplicateErrors).length > 0) {
+    setFormErrors(prevErrors => ({
+      ...prevErrors,
+      ...duplicateErrors,
+    }));
+    return;
+  }
+  
+
+    // else {
       // Handle update logic
       // You can update the employee data in the mock data or any other data store
       // For now, let's just log the updated values
       addEmployeeData(formValues);
-      setSuccessModalOpen(true)
+      setSuccessConfirmation(true);
       console.log("Updated employee data:", formValues);
-    }
-    
+//     }   
     
   };
 
@@ -140,20 +181,41 @@ export default function EditEmployee() {
   // const handleModel = () => setSuccessModalOpen(true);
   // const navigate = useNavigate()
   const handleClose = () => {setSuccessModalOpen(false); window.location.reload()}
-  const handleConfirmClose = () => {setCancelModalOpen(true); }
+  const handleConfirmClose = () => {
+    if (isFormChanged()) {
+     
+    } else {
+       setCancelModalOpen(true);
+      navigate('admin/searchemployee');
+    }
+    // setCancelModalOpen(false); 
+  }
   const handleCancelSuccess = () => {setCancelModalOpen(false); 
     navigate('admin/searchemployee')}
      
     const handleSubmitClick = () => {
-      setSuccessConfirmation(true)
+      setSuccessConfirmation(false)
       // navigate('/admin/searchemployee')
     }
 
-    const ConfirmClose = () => {
-      setSuccessConfirmation(false)
+    const handleConfirmCancel = () => {
       navigate('/admin/searchemployee')
-
     }
+    
+  
+    const isFormChanged = () => {
+      // return JSON.stringify(initialFormValues) !== JSON.stringify(formValues);
+      return (
+        initialFormValues.firstname !== formValues.firstname ||
+        initialFormValues.lastname !== formValues.lastname ||
+        initialFormValues.address !== formValues.address ||
+        initialFormValues.mobilenumber !== formValues.mobilenumber ||
+        initialFormValues.emailid !== formValues.emailid ||
+        initialFormValues.projectid !== formValues.projectid ||
+        initialFormValues.aadharnumber !== formValues.aadharnumber ||
+        initialFormValues.pannumber !== formValues.pannumber
+      );
+    };
 
   return (
     <div className="background-clr">
@@ -282,7 +344,7 @@ export default function EditEmployee() {
               <button type="submit" className="btn-submit btn-sm" onClick={handleSubmitClick}>                
                 Submit
               </button>
-              <button type="button" className="btn-cancel btn-sm" onClick={handleConfirmClose}>                
+              <button type="button" className="btn-cancel btn-sm" onClick={handleConfirmCancel}>                
                 Cancel
               </button>
             </div>
@@ -320,7 +382,7 @@ export default function EditEmployee() {
           <div className="d-flex flex-column modal-success p-4 align-items-center ">
             <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />                        
             <p className="mb-4 text-center">Employee Profile Updated Successfully</p>
-            <button className="btn  w-100 text-white" onClick =  {ConfirmClose} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+            <button className="btn  w-100 text-white" onClick =  {handleConfirmClose} style={{ backgroundColor: '#5EAC24' }}>Close</button>
           </div>
         </Modal.Body>
       </Modal>

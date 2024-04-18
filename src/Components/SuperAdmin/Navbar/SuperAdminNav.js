@@ -16,6 +16,12 @@ function SuperAdminNav() {
                             <li className='nav-item'>
                                 <NavLink to={'/superadmin/searchadmin'} className='nav-link superadmin-navigation-link' activeclassname='active'>Search Admin User</NavLink>
                             </li>
+                            <li className='nav-item'>
+                                <NavLink to={'/superadmin/timesheetapproval'} className='nav-link superadmin-navigation-link' activeclassname='active'>Approve Admin Timesheet</NavLink>
+                            </li>
+                            <li className='nav-item'>
+                                <NavLink to={'/superadmin/leaveapproval'} className='nav-link superadmin-navigation-link' activeclassname='active'>Approve Leave Request</NavLink>
+                            </li>
                         </ul>
                     </div>
                 </Container>

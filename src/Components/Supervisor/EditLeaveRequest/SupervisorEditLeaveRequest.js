@@ -9,7 +9,7 @@ import successCheck from "../../Image/checked.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function AdminEditLeaveRequest() {
+function SupervisorEditLeaveRequest() {
   const [leaveData, setLeaveData] = useState(null);
   const [editId, setEditId] = useState(null);
   const [confirmationModal, setConfirmationModal] = useState(false);
@@ -62,8 +62,8 @@ function AdminEditLeaveRequest() {
     }
   }
 
-  function goToAdminHome() {
-    navigate("/admin");
+  function goToSupervisorHome() {
+    navigate("/supervisor");
   }
   // Calculate the last day of June
   const lastDayOfJune = new Date(new Date().getFullYear(), 5, 30);
@@ -184,7 +184,7 @@ function AdminEditLeaveRequest() {
                   </button>
                   <button
                     className="btn btn-secondary m-3 w-5"
-                    onClick={goToAdminHome}
+                    onClick={goToSupervisorHome}
                   >
                     Cancel
                   </button>
@@ -242,4 +242,4 @@ function AdminEditLeaveRequest() {
   );
 }
 
-export default AdminEditLeaveRequest;
+export default SupervisorEditLeaveRequest;

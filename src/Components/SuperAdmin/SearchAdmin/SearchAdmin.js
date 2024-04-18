@@ -32,6 +32,8 @@ function SearchAdmin() {
             const array = response.data;
             setAdminList(array);
 
+            
+
         } catch (error) {
 
             console.log(error.message)
@@ -49,6 +51,7 @@ function SearchAdmin() {
     function handleAdminClick(admin) {
         setActiveRow(admin.id);
         navigate('/superadmin/searchadmin/admindetailsview/' + admin.id)
+        console.log(admin.id);
     }
 
 
@@ -96,7 +99,7 @@ function SearchAdmin() {
 
                                     {filteredAdminList&&filteredAdminList.map((d) => (
                                         <tr key={d.id} className={`text-center adminList-column ${activeRow === d.id ? 'table-active' : ''} `} onClick={() => handleAdminClick(d)}>
-                                            <td>CTPLAD00{d.id}</td>
+                                            <td>{d.id}</td>
                                             <td>{d.fname}</td>
                                             <td>{d.email}</td>
 

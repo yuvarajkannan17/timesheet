@@ -57,6 +57,10 @@ export default function UploadEmployees() {
     }
     setSuccessModalOpen(true)
   }
+
+  const handleCancel = () => {
+    navigate('/admin')
+  }
   
 
   const handleClose = () => {setSuccessModalOpen(false); }
@@ -91,7 +95,9 @@ export default function UploadEmployees() {
     </div>
 
    <div className='col-md-4'>
-   <button type="button" className="btn btn-success btn-md" onClick={handleUpload} >UPLOAD</button>
+   <button type="button" className="btn-submit btn-sm" onClick={handleUpload} >Upload</button>
+   <button type="button" className="btn-cancel btn-sm" onClick={handleCancel} >Cancel</button>
+
    </div>
    </div>
 
