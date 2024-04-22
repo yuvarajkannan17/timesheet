@@ -113,6 +113,7 @@ function SuperadminLeaveDetails() {
             const response = await axios.put(`${leaveUrl}/${id}`, updatedLeave);
             console.log(response.data)
             setLeaveEmp(updatedLeave);
+            setSuccessModalForReject(true);
         } catch (error) {
             console.log(error);
         }
@@ -196,7 +197,7 @@ function SuperadminLeaveDetails() {
                                             <div className='my-5 text-end'>
                                                 <button type='button' className='btn btn-success mx-2' onClick={approveLeaveFun}>Approve</button>
                                                 <button type='button' className='btn btn-danger mx-2' onClick={rejectLeaveFun} >Reject</button>
-                                                <button type='button' className='btn btn-secondary mx-2' onClick={() => { navigate('/supervisor/leaveapproval') }} >Cancel</button>
+                                                <button type='button' className='btn btn-secondary mx-2' onClick={() => { navigate('/superadmin/leaveapproval') }} >Cancel</button>
                                             </div>
 
                                         </form>

@@ -6,34 +6,19 @@ import { useParams, useNavigate } from "react-router-dom"
 import '../../css/style.css'
 import successCheck from '../../Image/checked.png'
 
-
 export default function EditEmployee() {
-  // const [formValues, setFormValues] = useState({
-  //   firstname: "",
-  //   lastname: "",
-  //   address: "",
-  //   mobilenumber: "",
-  //   emailid: "",
-  //   projectid: "",
-  //   aadharnumber: "",
-  //   pannumber: "",
-  // });
-
   const { id } = useParams(); // Get the employee id from the route parameters
- 
   const navigate = useNavigate();
-  const employeeData = getEmployeeData()   
+  const employeeData = getEmployeeData();   
   const userData = employeeData.find((employee) => employee.id === parseInt(id, 10));
   const [formValues, setFormValues] = useState(userData || {});
   const [formErrors, setFormErrors] = useState({});
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
-  const [isCancelModalOpen, setCancelModalOpen] = useState(false);
   const [SuccessConfirmation, setSuccessConfirmation] = useState(false);
   const [initialFormValues, setInitialFormValues] = useState({});
+
   useEffect(() => {
     setInitialFormValues(userData || {});
-  }, [userData]);
+  }, [userData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -55,80 +40,72 @@ export default function EditEmployee() {
       setFormErrors(validationError);
       return;
     } 
-    
+
     // Check for duplicate mobile number, PAN number, Aadhar number, and email ID
-  const existingEmployee = getEmployeeData().find(employee => (
-    employee.id !== formValues.id && (
-      employee.mobilenumber === formValues.mobilenumber ||
-      employee.pannumber === formValues.pannumber ||
-      employee.aadharnumber === formValues.aadharnumber ||
-      employee.emailid === formValues.emailid
-    )
-  ));
+    const existingEmployee = getEmployeeData().find(employee => (
+      employee.id !== formValues.id && (
+        employee.mobilenumber === formValues.mobilenumber ||
+        employee.pannumber === formValues.pannumber ||
+        employee.aadharnumber === formValues.aadharnumber ||
+        employee.emailid === formValues.emailid
+      )
+    ));
 
-  // Accumulate errors for duplicate fields
-  const duplicateErrors = {};
-  if (existingEmployee) {
-    if (existingEmployee.mobilenumber === formValues.mobilenumber) {
-      duplicateErrors.mobilenumber = "Mobile number already exists";
+    // Accumulate errors for duplicate fields
+    const duplicateErrors = {};
+    if (existingEmployee) {
+      if (existingEmployee.mobilenumber === formValues.mobilenumber) {
+        duplicateErrors.mobilenumber = "Mobile number already exists";
+      }
+      if (existingEmployee.pannumber === formValues.pannumber) {
+        duplicateErrors.pannumber = "PAN number already exists";
+      }
+      if (existingEmployee.aadharnumber === formValues.aadharnumber) {
+        duplicateErrors.aadharnumber = "Aadhar number already exists";
+      }
+      if (existingEmployee.emailid === formValues.emailid) {
+        duplicateErrors.emailid = "Email ID already exists";
+      }
     }
-    if (existingEmployee.pannumber === formValues.pannumber) {
-      duplicateErrors.pannumber = "PAN number already exists";
-    }
-    if (existingEmployee.aadharnumber === formValues.aadharnumber) {
-      duplicateErrors.aadharnumber = "Aadhar number already exists";
-    }
-    if (existingEmployee.emailid === formValues.emailid) {
-      duplicateErrors.emailid = "Email ID already exists";
-    }
-  }
 
-  // If there are duplicate errors, merge them with the validation errors and set them all at once
-  if (Object.keys(duplicateErrors).length > 0) {
-    setFormErrors(prevErrors => ({
-      ...prevErrors,
-      ...duplicateErrors,
-    }));
-    return;
-  }
-  
+    // If there are duplicate errors, merge them with the validation errors and set them all at once
+    if (Object.keys(duplicateErrors).length > 0) {
+      setFormErrors(prevErrors => ({
+        ...prevErrors,
+        ...duplicateErrors,
+      }));
+      return;
+    }
 
-    // else {
-      // Handle update logic
-      // You can update the employee data in the mock data or any other data store
-      // For now, let's just log the updated values
-      addEmployeeData(formValues);
-      setSuccessConfirmation(true);
-      console.log("Updated employee data:", formValues);
-//     }   
-    
+    // Update the employee data
+    addEmployeeData(formValues);
+    setSuccessConfirmation(true);
   };
 
   const validate = (values) => {
-
     const errors = {};
    
     if (!values.firstname) {
       errors.firstname = "Firstname is required!";
-    } else if (values.firstname > 50) {
+    } else if (values.firstname.length > 50) {
       errors.firstname = "Firstname cannot exceed more than 50 characters";
     }
 
     if (!values.lastname) {
       errors.lastname = "Lastname is required!";
-    } else if (values.lastname > 50) {
+    } else if (values.lastname.length > 50) {
       errors.lastname = "Lastname cannot exceed more than 50 characters";
     }
 
     if (!values.address) {
       errors.address = "Address is required!";
-    } else if (values.address > 100) {
+    } else if (values.address.length > 100) {
       errors.address = "Address cannot exceed more than 100 characters";
     }
 
     if (!values.mobilenumber) {
       errors.mobilenumber = "Mobile Number is required!";
-    } else if (values.mobilenumber < 10) {
+    } else if (values.mobilenumber.length !== 10) {
       errors.mobilenumber = "Mobile Number should be 10 characters";
     }
 
@@ -146,9 +123,8 @@ export default function EditEmployee() {
 
     if (!values.aadharnumber) {
       errors.aadharnumber = "Aadhar Number is required!";
-    } else if (values.aadharnumber < 12) {
-      errors.aadharnumber =
-        "Aadhar Number should be  12 characters";
+    } else if (values.aadharnumber.length !== 12) {
+      errors.aadharnumber = "Aadhar Number should be 12 characters";
     }
 
     if (!values.pannumber) {
@@ -157,77 +133,64 @@ export default function EditEmployee() {
       errors.pannumber = "This is not a valid Pan Number";
     }
 
-
     return errors;
-    
   };
+
   const isValidEmail = (email) => {
-    // Basic email validation (you may want to use a library or a more complex regex)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+
   const isValidPan = (pan) => {
-    // Basic email validation (you may want to use a library or a more complex regex)
     const panRegex = /[A-Z]{5}[0-9]{4}[A-Z]{1}/;
     return panRegex.test(pan);
   };
+
   const isValidProject = (project) => {
-    // Basic email validation (you may want to use a library or a more complex regex)
     const projectRegex = /^CTPL\d{5}$/;
     return projectRegex.test(project);
   };
 
-  
-  // const handleModel = () => setSuccessModalOpen(true);
-  // const navigate = useNavigate()
-  const handleClose = () => {setSuccessModalOpen(false); window.location.reload()}
   const handleConfirmClose = () => {
     if (isFormChanged()) {
-     
+      setFormValues(initialFormValues);
     } else {
-       setCancelModalOpen(true);
-      navigate('admin/searchemployee');
+      navigate('/admin/searchemployee');
     }
-    // setCancelModalOpen(false); 
-  }
-  const handleCancelSuccess = () => {setCancelModalOpen(false); 
-    navigate('admin/searchemployee')}
-     
-    const handleSubmitClick = () => {
-      setSuccessConfirmation(false)
-      // navigate('/admin/searchemployee')
-    }
+  };
 
-    const handleConfirmCancel = () => {
-      navigate('/admin/searchemployee')
-    }
-    
-  
-    const isFormChanged = () => {
-      // return JSON.stringify(initialFormValues) !== JSON.stringify(formValues);
-      return (
-        initialFormValues.firstname !== formValues.firstname ||
-        initialFormValues.lastname !== formValues.lastname ||
-        initialFormValues.address !== formValues.address ||
-        initialFormValues.mobilenumber !== formValues.mobilenumber ||
-        initialFormValues.emailid !== formValues.emailid ||
-        initialFormValues.projectid !== formValues.projectid ||
-        initialFormValues.aadharnumber !== formValues.aadharnumber ||
-        initialFormValues.pannumber !== formValues.pannumber
-      );
-    };
+  const handleCancelSuccess = () => {
+    navigate('/admin/searchemployee');
+  };
+
+  const handleSubmitClick = () => {
+    setSuccessConfirmation(false);
+  };
+
+  const handleConfirmCancel = () => {
+    navigate('/admin/searchemployee');
+  };
+
+  const isFormChanged = () => {
+    return (
+      initialFormValues.firstname !== formValues.firstname ||
+      initialFormValues.lastname !== formValues.lastname ||
+      initialFormValues.address !== formValues.address ||
+      initialFormValues.mobilenumber !== formValues.mobilenumber ||
+      initialFormValues.emailid !== formValues.emailid ||
+      initialFormValues.projectid !== formValues.projectid ||
+      initialFormValues.aadharnumber !== formValues.aadharnumber ||
+      initialFormValues.pannumber !== formValues.pannumber
+    );
+  };
 
   return (
     <div className="background-clr">
       <form onSubmit={handleSubmit}>
-      <div>
-        <h3> Edit Employee Details </h3>
-
-        <div className="container employee-form">
-          
+        <div>
+          <h3> Edit Employee Details </h3>
+          <div className="container employee-form">
             <div className="row">
-              
-              
               <div className="col-md-6 form-group">
                 <label className="label"> Firstname: </label>
                 <input
@@ -267,8 +230,6 @@ export default function EditEmployee() {
                   type="text"
                   name="mobilenumber"
                   className="form-control"
-                  minLength={10}
-                  maxLength={10}
                   value={formValues.mobilenumber}
                   onChange={handleChange}/>
                 <p className="text-danger"> {formErrors.mobilenumber} </p>
@@ -286,96 +247,47 @@ export default function EditEmployee() {
                 <p className="text-danger"> {formErrors.emailid} </p>
               </div>
               <div className="col-md-6 form-group">
-                <label className="label"> Employee Id: </label>
+                <label className="label"> Project Id: </label>
                 <input
-                  disabled="disabled"
                   type="text"
-                  name="employeeid"
+                  name="projectid"
                   className="form-control"
-                  value={formValues.employeeid}
+                  value={formValues.projectid}
                   onChange={handleChange}/>
-                <p className="text-danger"> {formErrors.employeeid} </p>
+                {/* <p className="text-danger"> {formErrors.projectid} </p> */}
               </div>
-              <div className="row">
-                <div className="col-md-6 form-group">
-                  <label className="label"> Project Id: </label>
-                  <input
-                    type="text"
-                    name="projectid"
-                    className="form-control"
-                    value={formValues.projectid}
-                    onChange={handleChange}/>
-                  {/* <p className="text-danger"> {formErrors.projectid} </p> */}
-                </div>
-                <div className="col-md-6 form-group">
-                  Aadhar Number:
-                  <input
-                    type="text"
-                    name="aadharnumber"
-                    className="form-control"
-                    minLength={12}
-                    maxLength={12}
-                    value={formValues.aadharnumber}
-                    onChange={handleChange}/>
-                  <p className="text-danger"> {formErrors.aadharnumber} </p>
-                  {/* <div className="form-group">
-                    <label className="label"> Aadhar Card  </label>
-                    <input type="file" name="aadharcard" className="form-control-file1" />
-                  </div> */}
-                  Pan Number:
-                  <input
-                    type="text"
-                    name="pannumber"
-                    className="form-control"
-                    maxLength={10}
-                    value={formValues.pannumber}
-                    onChange={handleChange}/>
-                  <p className="text-danger"> {formErrors.pannumber} </p>
-                  {/* <div className="form-group">
-                    <label className="label"> Pan Card  </label>
-                    <input type="file" name="pancard" className="form-control-file2" />
-                  </div> */}
-                </div>
+              <div className="col-md-6 form-group">
+                <label className="label"> Aadhar Number: </label>
+                <input
+                  type="text"
+                  name="aadharnumber"
+                  className="form-control"
+                  value={formValues.aadharnumber}
+                  onChange={handleChange}/>
+                <p className="text-danger"> {formErrors.aadharnumber} </p>
+              </div>
+              <div className="col-md-6 form-group">
+                <label className="label"> Pan Number: </label>
+                <input
+                  type="text"
+                  name="pannumber"
+                  className="form-control"
+                  value={formValues.pannumber}
+                  onChange={handleChange}/>
+                <p className="text-danger"> {formErrors.pannumber} </p>
               </div>
             </div>
-            </div>
-            
-            <div className="buttons">              
-              <button type="submit" className="btn-submit btn-sm" onClick={handleSubmitClick}>                
-                Submit
-              </button>
-              <button type="button" className="btn-cancel btn-sm" onClick={handleConfirmCancel}>                
-                Cancel
-              </button>
-            </div>
-          
-      
-      </div>
+          </div>
+          <div className="buttons">              
+            <button type="submit" className="btn-submit btn-sm" onClick={handleSubmitClick}>                
+              Submit
+            </button>
+            <button type="button" className="btn-cancel btn-sm" onClick={handleConfirmCancel}>                
+              Cancel
+            </button>
+          </div>
+        </div>
       </form>
-
-      {/* <Modal show={isSuccessModalOpen} onHide={handleClose}>        
-        <Modal.Body>Do you want to Submit</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleSuccess}>
-            Submit
-          </Button>
-        </Modal.Footer>
-      </Modal> */}
-
-      <Modal show={isCancelModalOpen} onHide={handleConfirmClose}>        
-        <Modal.Body>Would you like to discard the changes</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleConfirmClose}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleCancelSuccess}>
-            Yes 
-          </Button>
-        </Modal.Footer>
-      </Modal>
 
       <Modal centered size='sm' show={SuccessConfirmation} onHide={handleConfirmClose}>          
         <Modal.Body>
@@ -386,7 +298,6 @@ export default function EditEmployee() {
           </div>
         </Modal.Body>
       </Modal>
-
-    </div>
-  );
+    </div>
+  );
 }

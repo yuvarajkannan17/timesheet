@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import  { getEmployeeData, addEmployeeData, deleteEmployeeData } from './mockempdetails';
+import  { getEmployeeData, addEmployeeData, deleteEmployeeData } from './EmployeeService';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../../css/style.css'
 import successCheck from '../../Image/checked.png'
+
 
 export default function EmployeeDetails() {
 
@@ -15,13 +16,14 @@ export default function EmployeeDetails() {
   const navigate = useNavigate();
   const employeeData = getEmployeeData()  
   const [empData, setEmpData] = useState() 
-  const userData = employeeData.find((employee) => employee.id === parseInt(id, 10));
+  // const userData = employeeData.find((employee) => employee.id === parseInt(id, 10));
+  const userData = getEmployeeData(id); // Get employee data by id
   const [editedEmployee, setEditedEmployee] = useState(userData || {});
-  const DeleteEmployee = employeeData[employeeData.length - 1];
+  // const DeleteEmployee = employeeData[employeeData.length - 1];
 
 
   const handleEdit = () => {
-    addEmployeeData(editedEmployee);
+    addEmployeeData(editedEmployee, id);
     navigate("/admin/searchemployee");
   };
 
@@ -53,17 +55,12 @@ export default function EmployeeDetails() {
     const handleDeleteClose = () =>
      {setDeleteModalOpen(false);
     }
-    const handleDeleteSuccess = () =>
+    const handleDeleteSuccess = async () =>
      {setDeleteModalOpen(false);
       //  const updatedEmployeeData = deleteEmployeeData(userData.id);
-      deleteEmployeeData(userData.id);
+      // deleteEmployeeData(userData.id);
         // console.log("Updated Session Storage Data:", sessionStorage.getItem('employeedatas'));
-        const updatedEmployeeData = employeeData.filter((employee) => employee.id !== userData.id);
-        console.log("Updated Employee Data:", updatedEmployeeData);
-        const newEmployeeData = getEmployeeData();
-
-        // updatedEmployeeData(newEmployeeData);
-        setEmpData(updatedEmployeeData);
+        await deleteEmployeeData(id); // Pass id to delete employee data
         setSuccessConfirmation(true)    
     }
 

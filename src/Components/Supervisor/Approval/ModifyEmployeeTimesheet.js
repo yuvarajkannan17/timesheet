@@ -8,6 +8,7 @@ import { Modal, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import '../Approval/approvalPage.css'
 import { editTimesheetSuccessModal, editTimesheetRejectModal } from '../../features/modal';
+import successCheck from '../../Image/checked.png'
 function EmployeeEditTimesheet() {
     const [timesheetData, setTimesheetData] = useState('');
     const { id } = useParams();
@@ -17,7 +18,8 @@ function EmployeeEditTimesheet() {
     const [editApproveConfirmationModal, setEditApproveConfirmationModal] = useState(false);
     const [editRejectConfirmationModal, setEditRejectConfirmationModal] = useState(false);
     const [rejectReason, setRejectReason] = useState('Please reach out supervisor regarding your timesheet.');
-
+    const editTimesheetSuccessModalValue = useSelector(state => state.modal.value.editTimesheetSuccessModalValue);
+    const editTimesheetRejectModalValue = useSelector(state => state.modal.value.editTimesheetRejectModalValue);
 
 
     function editTimesheetApproveConfirmation() {
@@ -35,7 +37,7 @@ function EmployeeEditTimesheet() {
             await axios.put(`${employeeSheetUrl}/${id}`, timesheetData);
             setTimesheetData({ ...timesheetData, status: "Your timesheet has been approved" })
             dispatch(editTimesheetSuccessModal(true));
-            navigate('/supervisor/approvelList');
+
         } catch (error) {
             console.log(error)
         }
@@ -58,7 +60,7 @@ function EmployeeEditTimesheet() {
             await axios.put(`${employeeSheetUrl}/${id}`, timesheetData);
             setTimesheetData({ ...timesheetData, status: "Your timesheet has been rejected" })
             dispatch(editTimesheetRejectModal(true));
-            navigate('/supervisor')
+            
         } catch (error) {
             console.log(error)
         }
@@ -87,19 +89,19 @@ function EmployeeEditTimesheet() {
 
     };
     const handleWorkHoursChange = (index, value) => {
-        if(!isNaN(value)){
+        if (!isNaN(value)) {
             if (value < 0 || value > 12) {
                 // If the value is less than 0 or greater than 12, we don't need to do anything
-                
-              }else{
+
+            } else {
                 const newWorkHour = [...timesheetData.timesheetData];
                 newWorkHour[index].hoursWorked = Number(value); // Update the hoursWorked property at the specified index
                 setTimesheetData(prevState => ({
                     ...prevState,
                     timesheetData: newWorkHour // Update the timesheetData state with the modified array
-    
+
                 }));
-              }
+            }
         }
 
     };
@@ -122,7 +124,7 @@ function EmployeeEditTimesheet() {
 
 
     function goToHomePage() {
-        navigate('/supervisor')
+        navigate('/supervisor/approvetimesheet')
     }
 
 
@@ -235,7 +237,23 @@ function EmployeeEditTimesheet() {
                             </Button>
                         </Modal.Footer>
                     </Modal>
+                    {/* modal for editTimesheetsuccess approvel */}
+                    <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={editTimesheetSuccessModalValue}  >
+                        <div className="d-flex flex-column modal-success p-4 align-items-center ">
+                            <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+                            <p className="mb-4 text-center">Timesheet have been approved.</p>
+                            <button className="btn  w-100 text-white" onClick={() => { dispatch(editTimesheetSuccessModal(false)) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+                        </div>
+                    </Modal>
 
+                    {/* modal for editTimesheet reject */}
+                    <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={editTimesheetRejectModalValue}  >
+                        <div className="d-flex flex-column modal-success p-4 align-items-center ">
+                            <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+                            <p className="mb-4 text-center">Timesheet have been rejected.</p>
+                            <button className="btn  w-100 text-white" onClick={() => { dispatch(editTimesheetRejectModal(false)) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+                        </div>
+                    </Modal>
                 </div>
             </div>)}
         </>

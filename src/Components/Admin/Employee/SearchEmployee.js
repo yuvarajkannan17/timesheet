@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import {getEmployeeData} from './mockempdetails';
+import {getEmployeeData} from './EmployeeService';
 import { useNavigate } from "react-router-dom";
 // import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom'
@@ -20,41 +20,52 @@ export default function SearchEmployee() {
   
   // const { id } = useParams();
  
-   
-
-  const handleFilter = () => {
-    const allEmployees = getEmployeeData();
-    const filteredEmployees = allEmployees.filter(employee =>
-      employee.firstname.toLowerCase().includes(searchtext.toLowerCase()) ||
-      employee.lastname.toLowerCase().includes(searchtext.toLowerCase())
-      // Add other fields as needed
-    );
-    if(filteredEmployees.length > 0){
-      // <p>No record found</p>
-      setItems(filteredEmployees)
-      setResult(false)
-    }
-    else {
-      setItems([])
-      setResult(true)
-    }
-
-    // setItems(filteredEmployees);
+  const handleFilter = async () => {
+    try {
+      const allEmployees = await getEmployeeData();
+      const filteredEmployees = allEmployees.filter(
+        (employee) =>
+          employee.firstname.toLowerCase().includes(searchtext.toLowerCase()) ||
+          employee.lastname.toLowerCase().includes(searchtext.toLowerCase())
+        // Add other fields as needed
+      );
+      if (filteredEmployees.length > 0) {
+        setItems(filteredEmployees);
+        setResult(false);
+      } else {
+        setItems([]);
+        setResult(true);
+      }
+    } catch (error) {
+      console.error('Error filtering employee data:', error);
+    }
   };
-  const handleClear = () => {   
-    setSearchText("")
-    setItems([]);
-    setResult(false)
-   }
-  // const [searchQuery,setSearchQuery] = useState([])
-  const handleCancel = () => {
-    navigate('/admin')
-  }
+useEffect(() => {
+  handleFilter();
+}, [searchtext]); // Trigger filtering when searchtext changes
 
-  useEffect(() =>{
-    setItems(getEmployeeData());
-  },[])
-  const employeeData = items.length > 0 ? items : getEmployeeData();
+const handleClear = () => {
+  setSearchText('');
+};
+
+const handleCancel = () => {
+  navigate('/admin');
+  };
+  
+  // const handleClear = () => {   
+  //   setSearchText("")
+  //   setItems([]);
+  //   setResult(false)
+  //  }
+  // const [searchQuery,setSearchQuery] = useState([])
+  // const handleCancel = () => {
+  //   navigate('/admin')
+  // }
+
+  // useEffect(() =>{
+  //   setItems(getEmployeeData());
+  // },[])
+  // const employeeData = items.length > 0 ? items : getEmployeeData();
 
   const handleKeyDown = (e) => {
     if (e.key === 'Backspace') {
@@ -115,7 +126,7 @@ export default function SearchEmployee() {
           </thead>
           <tbody>
             
-            {employeeData.map((d) => (
+            {items.map((d) => (
              
              <tr key={d.id} >
               <td>

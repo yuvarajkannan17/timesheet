@@ -268,7 +268,7 @@ function AdminApproveLeaveRequest() {
                     <td>{sheet.name}</td>
                     <td>{sheet.numberOfDays}</td>
 
-                    <td><button className="btn btn-primary" onClick={() => { goToLeaveDetails(sheet.id, sheet.checked) }}>View</button></td>
+                    <td><button className="btn btn-primary" onClick={() => { goToLeaveDetails(sheet.id, sheet.checked) }}>Edit</button></td>
 
                   </tr>
                 )) : ""}

@@ -2,8 +2,10 @@ import { useState } from "react";
 import {  Link } from 'react-router-dom';
 
 function AdminHome() {
-  const [isOpenTimesheet, setIsOpenTimesheet] = useState(true);
-    const [isOpenLeaveManagement, setIsOpenLeaveManagement] = useState(true);  
+  const [isOpenTimesheet, setIsOpenTimesheet] = useState(false);
+    const [isOpenLeaveManagement, setIsOpenLeaveManagement] = useState(false);  
+const [isOpenEmployeeManagement, setIsOpenEmployeeManagement] = useState(false);
+const [isOpenProjectManagement, setIsOpenProjectManagement] = useState(false);
 
   return (
     <>
@@ -12,11 +14,11 @@ function AdminHome() {
           
 
           <div className='left-navigation'>
-          <div className={`collapse-container mb-3 ${isOpenLeaveManagement ? 'active' : ''}`}>
-                            <button onClick={() => setIsOpenLeaveManagement(!isOpenLeaveManagement)} className="collapse-toggle btn fw-bold">
+          <div className={`collapse-container mb-3 ${isOpenEmployeeManagement ? 'active' : ''}`}>
+                            <button onClick={() => setIsOpenEmployeeManagement(!isOpenEmployeeManagement)} className="collapse-toggle btn fw-bold">
                                 Employee Management
                             </button>
-                            {isOpenLeaveManagement && (
+                            {isOpenEmployeeManagement && (
                                 <div className="collapse-content ">
                                     <ul><Link to={'createemployee'}>Create Employee</Link></ul>
                                     <ul><Link to={'uploademployees'}>Upload Employees</Link></ul>  
@@ -51,12 +53,12 @@ function AdminHome() {
                                 </div>
                             )}
                         </div>
-                        <div className={`collapse-container mb-3 ${isOpenLeaveManagement ? 'active' : ''}`}>
-                            <button onClick={() => setIsOpenLeaveManagement(!isOpenLeaveManagement)} className="collapse-toggle btn fw-bold">
+                        <div className={`collapse-container mb-3 ${isOpenProjectManagement ? 'active' : ''}`}>
+                            <button onClick={() => setIsOpenProjectManagement(!isOpenProjectManagement)} className="collapse-toggle btn fw-bold">
                                 Project Management
                             </button>
-                            {isOpenLeaveManagement && (
-                                <div className="collapse-content ">
+                            {isOpenProjectManagement && (
+                                <div className="collapse-content">
                                     <ul><Link to={'createproject'}>Add Project</Link></ul>
                                     <ul><Link to={'updateprojectdetails'}>Update Project</Link></ul>                                    
                                 </div>
