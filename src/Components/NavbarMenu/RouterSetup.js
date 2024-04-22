@@ -48,6 +48,8 @@ import SuperadminLeaveDetails from '../SuperAdmin/LeaveApproval/SuperadminLeaveD
 import SuperadminLeaveApproval from '../SuperAdmin/LeaveApproval/SuperadminLeaveApproval.js';
 import SuperadminApproveTimesheet from '../SuperAdmin/TimesheetApproval/ApproveTimesheet.js';
 import SuperadminModifyAdminTimesheet from '../SuperAdmin/TimesheetApproval/ModifyEmployeeTimesheet.js';import ViewRejectedLeaveRequests from '../Employee/LeaveRequest/RejectLeaveRequest/EmployeeViewRejectedLeaveRequest.js';
+import AdminViewRejectedLeaveRequests from '../Admin/ViewRejectedLeaveRequests/AdminViewRejectedLeaveRequests.js';
+import SupervisorViewRejectedLeaveRequests from '../Supervisor/ViewRejectedLeaveRequest/SupervisorViewRejectedLeaveRequests.js';
 
 
 function RouterSetup() {
@@ -83,6 +85,7 @@ function RouterSetup() {
 
           <Route path='/supervisor/leaveapproval' element={isAuthenticated ? <Layout><SupervisorLeaveApproval /></Layout>:<TimesheetLogin/>} />
           <Route path='/supervisor/leavedetails/:id' element={isAuthenticated ? <Layout><SupervisorLeaveDetails /></Layout>:<TimesheetLogin/>} />
+          <Route path='/supervisor/viewrejectedleaverequests' element={isAuthenticated ? <Layout><SupervisorViewRejectedLeaveRequests /></Layout>:<TimesheetLogin/>} />
           {/* employee */}
           <Route path='/employee' element={isAuthenticated ? <Layout><EmployeeHome /></Layout>:<TimesheetLogin/>} />
           <Route path='/employee/edittimesheet' element={isAuthenticated ? <Layout><EmployeeEditTimesheet /></Layout>:<TimesheetLogin/>} />
@@ -115,7 +118,8 @@ function RouterSetup() {
           <Route path='/admin/adminaddleaverequest' element={ isAuthenticated ? <Layout><AdminAddLeaveRequest /></Layout>:<TimesheetLogin/>} />
           <Route path='/admin/adminrejectleaverequest' element={ isAuthenticated ? <Layout><AdminRejectLeaveRequest /></Layout>:<TimesheetLogin/>} />        
           <Route path='/admin/adminapproveleaverequest' element={ isAuthenticated ? <Layout><AdminApproveLeaveRequest /></Layout>:<TimesheetLogin/>} />        
-          <Route path='/admin/adminapprovedetails/:id' element={ isAuthenticated ? <Layout><AdminApproveDetails /></Layout>:<TimesheetLogin/>} />        
+          <Route path='/admin/adminapprovedetails/:id' element={ isAuthenticated ? <Layout><AdminApproveDetails /></Layout>:<TimesheetLogin/>} />
+          <Route path='/admin/adminviewrejectedleaverequests' element={ isAuthenticated ? <Layout><AdminViewRejectedLeaveRequests/></Layout>:<TimesheetLogin/>} />        
 
         </Routes>
       </Router>

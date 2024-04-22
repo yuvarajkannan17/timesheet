@@ -46,7 +46,7 @@ function AdminHome() {
                                 <div className="collapse-content ">
                                     <ul><Link to={'/admin/adminaddleaverequest'}>Add Leave Request</Link></ul>
                                     <ul><Link to={'/admin/admineditleaverequest'}>Edit Leave Request</Link></ul>
-                                    <ul><Link to={''}>View Rejected Leave Request</Link></ul>
+                                    <ul><Link to={'/admin/adminviewrejectedleaverequests'}>View Rejected Leave Request</Link></ul>
                                     <ul><Link to={'adminapproveleaverequest'}>Approve Leave Request</Link></ul>
                                 </div>
                             )}
