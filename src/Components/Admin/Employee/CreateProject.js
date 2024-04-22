@@ -129,7 +129,7 @@ const CreateProject = () => {
 
   const handleCancel = () => {
     // Navigate to '/admin/updateprojectdetails'
-    navigate('/admin/updateprojectdetails');
+    navigate('/admin');
   };
 
   const handleConfirmationCancel = () => {
