@@ -115,8 +115,6 @@ function SupervisorModifyTimesheet() {
         }
         return 0; // Return 0 if timesheetData.timesheetData is not available
     }
-
-
     useEffect(() => {
         calculateTotalWorkHours();
     }, [timesheetData.timesheetData])
@@ -125,10 +123,6 @@ function SupervisorModifyTimesheet() {
     function goToHomePage() {
         navigate('/admin')
     }
-
-
-
-
     return (
         <>
             {timesheetData && (<div className="ti-background-clr">
@@ -170,7 +164,6 @@ function SupervisorModifyTimesheet() {
                                         <div>
                                             <Select
                                                 options={timesheetData.projectOptions}
-
                                                 value={timesheetData.workingProject}
                                                 onChange={handleChange}
                                                 placeholder="choose the project"

@@ -1,10 +1,8 @@
 import React, {useState, useRef} from 'react'
-import XLSX from 'xlsx';
 import '../../css/style.css'
 import Modal from 'react-bootstrap/Modal';
 import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
-import Swal from 'sweetalert2';
 import NavPages from '../NavPages';
 import successCheck from '../../Image/checked.png'
 
@@ -85,7 +83,7 @@ export default function UploadEmployees() {
    <div className='background-clr'>
     <NavPages/>
     <div className="container employee-form">
-      <h3>Upload & View Employee files</h3>
+      <h3>Upload Employees file</h3>
       <form ref={formRef}>
          <div className='row'>
     <div className="col-md-8 form-group" >
