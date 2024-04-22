@@ -5,7 +5,7 @@ import { Modal, Button } from 'react-bootstrap';
 import successCheck from '../../Image/checked.png'
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { editTimesheetSuccessModal, editTimesheetRejectModal } from '../../features/modal';
+
 import employeeSheetUrl from "../../Api/employeeEdit";
 
 function ApproveTimesheet() {
@@ -19,8 +19,7 @@ function ApproveTimesheet() {
   const [successModalForReject, setSuccessModalForReject] = useState(false)
   const [atLeastOneChecked, setAtLeastOneChecked] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const editTimesheetSuccessModalValue = useSelector(state => state.modal.value.editTimesheetSuccessModalValue);
-  const editTimesheetRejectModalValue = useSelector(state => state.modal.value.editTimesheetRejectModalValue);
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // console.log(timesheetDatas)
@@ -315,25 +314,17 @@ function ApproveTimesheet() {
               </Button>
             </Modal.Footer>
           </Modal>
-
-
-          {/* modal for editTimesheetsuccess approvel */}
-          <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={editTimesheetSuccessModalValue}  >
+           
+           {/* modal for success approvel */}
+          <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForReject}  >
             <div className="d-flex flex-column modal-success p-4 align-items-center ">
               <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
-              <p className="mb-4 text-center">Timesheet have been approved.</p>
-              <button className="btn  w-100 text-white" onClick={() => { dispatch(editTimesheetSuccessModal(false)) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+              <p className="mb-4 text-center">Timesheets have been rejected.</p>
+              <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForReject(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
             </div>
           </Modal>
 
-          {/* modal for editTimesheet reject */}
-          <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={editTimesheetRejectModalValue}  >
-            <div className="d-flex flex-column modal-success p-4 align-items-center ">
-              <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
-              <p className="mb-4 text-center">Timesheet have been rejected.</p>
-              <button className="btn  w-100 text-white" onClick={() => { dispatch(editTimesheetRejectModal(false)) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
-            </div>
-          </Modal>
+         
 
         </div>
       </div>

@@ -92,7 +92,7 @@ function SuperadminLeaveApproval() {
 
   // reset the timesheet
   function cancelLeaveFun() {
-    navigate('/supervisor')
+    navigate('/superadmin/createadmin')
   }
 
 
@@ -211,7 +211,7 @@ function SuperadminLeaveApproval() {
 
     if (check) {
       console.log(id)
-      navigate('/supervisor/leavedetails/' + id)
+      navigate('/superadmin/leavedetails/' + id)
     } else {
       setErrorMessage("Please select the person you wish to view !!!")
     }

@@ -4,16 +4,17 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useDispatch ,useSelector} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { successModal} from '../../features/modal';
+import { successModal,deleteSuccessModal} from '../../features/modal';
 import { Modal,Button } from 'react-bootstrap';
 import successCheck from '../../Image/checked.png'
 import SuperAdminNav from '../Navbar/SuperAdminNav';
+
 function SearchAdmin() {
     // admin List
     const [adminList, setAdminList] = useState([]);
     // for search adminlist
     const [searchQuery, setSearchQuery] = useState("");
-
+    
     // active row
     const [activeRow, setActiveRow] = useState(null);
     const navigate = useNavigate();
@@ -22,6 +23,7 @@ function SearchAdmin() {
      // create admin success modal
      const modal = useSelector(state => state.modal.value)
      const showModal = modal.showSuccessModal;
+     const deleteSuccessModalValue = modal.deleteSuccessModalValue;
 
       
 
@@ -123,6 +125,14 @@ function SearchAdmin() {
                         <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
                         <p className="mb-4 text-center">Admin User Profile Created Successfully</p>
                         <button className="btn  w-100 text-white" onClick={() => { dispatch(successModal(false)) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+                    </div>
+                </Modal>
+
+                 {/* admin delete success modal */}
+                 <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={deleteSuccessModalValue}  >
+                    <div className="d-flex flex-column modal-success p-4 align-items-center ">
+                        <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />                         <p className="mb-4 text-center">Admin User Profile Deleted Successfully</p>
+                        <button className="btn  w-100 text-white" onClick={() => { dispatch(deleteSuccessModal(false)) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
                     </div>
                 </Modal>
             </div>

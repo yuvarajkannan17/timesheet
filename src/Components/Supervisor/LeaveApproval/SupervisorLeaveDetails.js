@@ -51,7 +51,7 @@ function SupervisorLeaveDetails() {
     function approveLeaveFun() {
 
         setAskConfirmationForApprove(true);
-        console.log('approve')
+        
     }
 
     function rejectLeaveFun() {
@@ -113,6 +113,7 @@ function SupervisorLeaveDetails() {
             const response = await axios.put(`${leaveUrl}/${id}`, updatedLeave);
             console.log(response.data)
             setLeaveEmp(updatedLeave);
+            setSuccessModalForReject(true);
         } catch (error) {
             console.log(error);
         }
