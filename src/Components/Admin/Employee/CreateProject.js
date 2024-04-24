@@ -118,8 +118,8 @@ const CreateProject = () => {
 
       console.log('API Response:', response.data);
       setShowSuccessModal(true); // Show success modal when form is successfully submitted
-      // Navigate back to '/admin/updateprojectdetails' after successful submission
-      navigate('/admin/updateprojectdetails');
+      // Navigate back to Home'/admin' after successful submission
+      navigate('/admin');
     } catch (error) {
       console.error('Error creating project:', error.message);
       alert('Error creating project. Please try again.');
@@ -128,7 +128,7 @@ const CreateProject = () => {
   };
 
   const handleCancel = () => {
-    // Navigate to '/admin/updateprojectdetails'
+    // Navigate to '/admin'
     navigate('/admin');
   };
 

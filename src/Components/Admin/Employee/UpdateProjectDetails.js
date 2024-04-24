@@ -45,8 +45,8 @@ const UpdateProjectDetails = () => {
     console.log('Search Result:', searchResult);
   };
 
-  const handleCreateNewProject = () => {
-    navigate('/admin/createproject');
+  const handleNavigateAdminHome = () => {
+    navigate('/admin');
   };
 
   const handleTeamMemberChange = (index, field, value) => {
@@ -316,7 +316,7 @@ const UpdateProjectDetails = () => {
         <div className="row mt-4">
           <div className="col-md-12 text-center">
             {!editing && (
-              <button type="button" className="btn btn-primary" onClick={handleCreateNewProject}>Create New Project</button>
+              <button type="button" className="btn btn-primary" onClick={handleNavigateAdminHome}>Cancel</button>
             )}
           </div>
         </div>
