@@ -34,7 +34,6 @@ function SupervisorHome() {
                                 <div className="collapse-content ">
                                     <ul><Link to={'/supervisor/leaverequest'}>Add Leave Request</Link></ul>
                                     <ul><Link to={'/supervisor/editleaverequest'}>Edit Leave Request</Link></ul>
-                                    <ul><Link to={''}>Reject Leave Request</Link></ul>
                                     <ul><Link to={'/supervisor/leaveapproval'}>Approve Leave Request</Link></ul>
                                     <ul><Link to={'/supervisor/viewrejectedleaverequests'}>View Rejected Leave Requests</Link></ul>
                                 </div>

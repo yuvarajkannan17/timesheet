@@ -34,7 +34,7 @@ function EmployeeHome() {
                                 <div className="collapse-content ">
                                     <ul><Link to={'/employee/leaverequest'}>Add Leave Request</Link></ul>
                                     <ul><Link to={'/employee/editleaverequest'}>Edit Leave Request</Link></ul>
-                                    <ul><Link to={'/employee/rejectedleaverequests'}>Reject Leave Request</Link></ul>
+                                    <ul><Link to={'/employee/rejectedleaverequests'}>View Rejected Leave Requests</Link></ul>
                                 </div>
                             )}
                         </div>
