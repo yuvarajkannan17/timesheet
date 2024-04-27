@@ -59,10 +59,10 @@ export function SupervisorLeaveRequest() {
     return (
         <>
             <div className="ti-background-clr">
-
-                <div className="ti-leave-management-container p-5 ">
+            <h5 className="text-center pt-4">LEAVE REQUEST</h5>
+                <div className="ti-leave-management-container  ">
                     <div className='bg-white  '>
-                        <h5 className="text-center py-2 text-primary">LEAVE REQUEST</h5>
+                        
                         <div className="row ">
 
                             <div className="col " >

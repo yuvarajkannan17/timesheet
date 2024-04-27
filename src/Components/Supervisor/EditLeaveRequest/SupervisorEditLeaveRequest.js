@@ -72,11 +72,12 @@ function SupervisorEditLeaveRequest() {
     <>
       {leaveData && (
         <div className="ti-background-clr">
-          <div className="ti-leave-management-container p-5 ">
-            <div className="bg-white p-5 ">
-              <h5 className="text-center py-2 text-primary">
+           <h5 className="text-center pt-4">
                 EDIT LEAVE REQUEST
               </h5>
+          <div className="ti-leave-management-container ">
+            <div className="bg-white p-5 ">
+             
 
               <div className="ti-data-field-container pt-4">
                 {/* Form for editing leave request */}

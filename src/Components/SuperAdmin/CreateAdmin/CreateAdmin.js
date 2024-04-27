@@ -27,7 +27,7 @@ function CreateAdmin() {
     // redux state 
     const modal = useSelector(state => state.modal.value)
     const showFailureModal = modal.failureModal;
-    const deleteSuccessModalValue = modal.deleteSuccessModalValue;
+   
     const dispatch = useDispatch();
     useEffect(() => {
         const fetchDataFromApi = async () => {
@@ -286,13 +286,7 @@ function CreateAdmin() {
                     </div>
                 </Modal>
 
-                {/* admin delete success modal */}
-                <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={deleteSuccessModalValue}  >
-                    <div className="d-flex flex-column modal-success p-4 align-items-center ">
-                        <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />                         <p className="mb-4 text-center">Admin User Profile Deleted Successfully</p>
-                        <button className="btn  w-100 text-white" onClick={() => { dispatch(deleteSuccessModal(false)) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
-                    </div>
-                </Modal>
+               
             </div>
 
 
