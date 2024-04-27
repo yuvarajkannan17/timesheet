@@ -77,10 +77,6 @@ function AdminApproveDetails() {
     }
   }
 
-  
-
-
-
 function approveLeaveFun() {
     editLeaveRequest();
     setAskConfirmationForApprove(true);

@@ -99,7 +99,7 @@ const handleCancel = () => {
    <div className='background-clr'>
 
     <NavPages/>
-
+    <h3> Search Employee </h3>
     <div className='container employee-form '>
       <div className='d-flex justify-content-end   py-2' style={{ backgroundColor: "rgb(251, 250, 250)" }}  >
          <span className='me-2'>EMPLOYEE</span>

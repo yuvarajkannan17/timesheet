@@ -13,7 +13,7 @@ const NavPages = () => {
 
             <div className='nav-links admin-menus pt-4'>
                 <ul>
-                    <li>
+                    {/* <li>
                         <NavLink exact to="/admin/createemployee" activeClassName="active" className={activeClass} onClick={handleClick}>Create Employee</NavLink>
                     </li>
                     <li>
@@ -21,7 +21,7 @@ const NavPages = () => {
                     </li>                    
                     <li>
                         <NavLink to="/admin/searchemployee" activeClassName="active" className={activeClass} onClick={handleClick}>Search Employee</NavLink>
-                    </li>
+                    </li> */}
                 </ul>
             </div>
 

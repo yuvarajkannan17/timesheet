@@ -17,7 +17,8 @@ function AdminApproveLeaveRequest() {
   const [successModalForReject, setSuccessModalForReject] = useState(false)
   const [atLeastOneChecked, setAtLeastOneChecked] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  
+ 
+
   const navigate = useNavigate();
   useEffect(() => {
 
@@ -27,11 +28,8 @@ function AdminApproveLeaveRequest() {
       setleaveDatas(leaveList.map((leave) => ({
         ...leave,
         checked: false,
-
       })));
     }
-
-
     getLeaveData();
   }, [])
 
@@ -64,15 +62,11 @@ function AdminApproveLeaveRequest() {
 
   // ask confirmation or trigger alert
   function approveLeaveFun() {
-
     if (atLeastOneChecked) {
       setAskConfirmationForApprove(true);
     } else {
       setErrorMessage("Please select at least one Leave Request!!")
     }
-
-
-
   }
   // ask confirmation or trigger alert
   function rejectLeaveFun() {
@@ -81,9 +75,6 @@ function AdminApproveLeaveRequest() {
     } else {
       setErrorMessage("Please select at least one Leave Request!!")
     }
-
-
-
   }
 
   // reset the timesheet
@@ -94,7 +85,6 @@ function AdminApproveLeaveRequest() {
 
   // update the timesheetCheckBox
   function handleCheckboxChange(id) {
-
     setleaveDatas((prevData) =>
       prevData.map((sheet) =>
         sheet.id === id ? { ...sheet, checked: !sheet.checked } : sheet
