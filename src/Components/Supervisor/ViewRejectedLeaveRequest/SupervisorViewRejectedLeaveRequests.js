@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { Container } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 import leaveUrl from "../../Api/leaveRequest";
 
 function SupervisorViewRejectedLeaveRequests() {
     const [rejectedLeaveRequests, setRejectedLeaveRequests] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         async function getRejectedLeaveRequests() {
@@ -20,6 +23,10 @@ function SupervisorViewRejectedLeaveRequests() {
         }
         getRejectedLeaveRequests();
     }, []);
+
+    const handleCancel = () => {
+        navigate("/supervisor");
+    }
 
     return (
         <div className="ti-background-clr">
@@ -53,6 +60,9 @@ function SupervisorViewRejectedLeaveRequests() {
                             ))}
                         </tbody>
                     </table>
+                </div>
+                <div className="d-flex justify-content-center mt-3">
+                    <button className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
                 </div>
             </Container>
         </div>
