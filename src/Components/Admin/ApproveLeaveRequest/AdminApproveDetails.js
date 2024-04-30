@@ -35,29 +35,28 @@ function AdminApproveDetails() {
     onSubmit: editLeaveRequest,
   });
 
-  useEffect(() => {
-    
+  useEffect(() => {    
     fetchLeaveData();
   }, []);
 
   async function fetchLeaveData() {
     try {
-      const response = await axios.get(leaveUrl);
+      const response = await axios.get(`${leaveUrl}/${id}`);
       const leaveRequest = response.data;
     //   const leaveData = res.data;
-    // setLeaveEmp(leaveData);
-      if (leaveRequest.length > 0) {
-        const lastRequest = leaveRequest[leaveRequest.length - 1];
-        setLeaveEmp(lastRequest);
-        setEditId(lastRequest.id);
+    setLeaveEmp(leaveRequest);
+      // if (leaveRequest) {
+      //   // const lastRequest = leaveRequest[leaveRequest.length - 1];
+      //   setLeaveEmp(leaveRequest);
+      //   setEditId(leaveRequest.id);
         formik.setValues({
-          startDate: new Date(lastRequest.startDate),
-          endDate: new Date(lastRequest.endDate),
-          numberOfDays: lastRequest.numberOfDays,
-          leaveReason: lastRequest.leaveReason,
-          leaveComment: lastRequest.leaveComment,
+          startDate: new Date(leaveRequest.startDate),
+          endDate: new Date(leaveRequest.endDate),
+          numberOfDays: leaveRequest.numberOfDays,
+          leaveReason: leaveRequest.leaveReason,
+          leaveComment: leaveRequest.leaveComment,
         });
-      }
+      // }
     } catch (error) {
       console.error("Error fetching leave request:", error);
     }

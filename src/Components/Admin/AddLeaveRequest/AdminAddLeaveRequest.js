@@ -40,10 +40,11 @@ function AdminAddLeaveRequest() {
 
   return (
     <>
+     <h5 className="text-center py-2 ">LEAVE REQUEST</h5>
       <div className="ti-background-clr">
         <div className="ti-leave-management-container p-5 ">
           <div className="bg-white p-5 ">
-            <h5 className="text-center py-2 text-primary">LEAVE REQUEST</h5>
+           
 
             <form onSubmit={formik.handleSubmit}>
             
