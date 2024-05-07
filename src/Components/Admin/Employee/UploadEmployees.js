@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import NavPages from '../NavPages';
 import successCheck from '../../Image/checked.png'
-
+import axios from 'axios';
 
 export default function UploadEmployees() {
 
@@ -20,6 +20,32 @@ export default function UploadEmployees() {
 
   // submit state
   const [excelData, setExcelData] = useState(null);  
+
+
+
+  const uploadFile = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // Make a POST request to the server to upload the file
+    const response = await axios.post('http://localhost:8081/employee/import-excel', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+
+    // If the request is successful, return the response data
+    return response.data;
+  } catch (error) {
+    // If an error occurs during the request, handle it here
+    console.error('Error uploading file:', error);
+    throw error; // Optionally, re-throw the error to handle it in the component
+  }
+};
+
+// export default uploadFile;
+
 
   // onchange event
   const handleFile=(e)=>{
@@ -62,14 +88,39 @@ export default function UploadEmployees() {
   
 
   const handleClose = () => {setSuccessModalOpen(false); }
-  const handleSuccessClick = () => {
-    setSuccessModalOpen(false)
-    setSuccessConfirmation(true)
+  // const handleSuccessClick = () => {
+  //   setSuccessModalOpen(false)
+  //   setSuccessConfirmation(true)
    
-    formRef.current.reset();
+  //   formRef.current.reset();
 
 
-  }
+  // }
+  const handleSuccessClick = async () => {
+    try {
+      if (!excelFile) {
+        setTypeError('Please select a file to upload.');
+        return;
+      }
+  
+      if (typeError) {
+        setTypeError(typeError);
+        return;
+      }
+  
+      // Call the uploadFile function to upload the file
+      await uploadFile(excelFile);
+  
+      // If the upload is successful, show the success modal
+      setSuccessModalOpen(true);
+    } catch (error) {
+      // Handle any errors that occur during the file upload
+      console.error('Error uploading file:', error);
+      // Optionally, set an error message to display to the user
+      setTypeError('An error occurred while uploading the file. Please try again.');
+    }
+  };
+  
   const handleConfirmClose = () => {
     setSuccessConfirmation(false);
      setExcelFile(null)}

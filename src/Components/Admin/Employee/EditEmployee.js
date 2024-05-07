@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import { getEmployeeData, addEmployeeData  } from "./mockempdetails";
+import { getEmployeeData, addEmployeeData  } from "../Employee/EmployeeService";
 import { useParams, useNavigate } from "react-router-dom"
 import '../../css/style.css'
 import successCheck from '../../Image/checked.png'

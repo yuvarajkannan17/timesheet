@@ -8,7 +8,7 @@ import { useLocation } from "react-router-dom";
 import NavPages from "../NavPages";
 import '../../css/style.css';
 
-export default function CreateEmployee() {
+export default function AddEmployeeData() {
   const [formValues, setFormValues] = useState({
     firstname: "",
     lastname: "",
@@ -80,7 +80,7 @@ export default function CreateEmployee() {
     }
 
     try {
-      const { data: existingData } = await axios.get(`http://localhost:8081/employee/saveemplyee?mobile=${formValues.mobilenumber}&email=${formValues.emailid}&aadhar=${formValues.aadharnumber}&pan=${formValues.pannumber}`);
+      const { data: existingData } = await axios.get(`http://localhost:8081/employee/getemployees?mobile=${formValues.mobilenumber}&email=${formValues.emailid}&aadhar=${formValues.aadharnumber}&pan=${formValues.pannumber}`);
       const errors = {};
 
       if (existingData.mobile) {
@@ -184,10 +184,10 @@ export default function CreateEmployee() {
   const handleSuccess = async () => {
     try {
       if (isEditMode) {
-        await axios.put(`http://localhost:8081/employee/${lastEnteredEmployee.id}`, formValues);
+        await axios.put(`http://localhost:8081/employee/{employeeId}${lastEnteredEmployee.id}`, formValues);
         // Handle success update
       } else {
-        await axios.post("http://localhost:8081/employee", formValues);
+        await axios.post('http://localhost:8081/employee/saveemployee', formValues);
         // Handle success creation
       }
 
@@ -288,7 +288,7 @@ export default function CreateEmployee() {
                   <p className="text-danger"> {formErrors.emailid} </p>
                 </div>
                 <div className="col-md-6 form-group">
-                  <label className="label">Employee Id<span className="required">*</span></label>
+                  <label className="label">Employee Id</label>
                   <input
                     disabled="disabled"
                     type="text"
@@ -297,7 +297,7 @@ export default function CreateEmployee() {
                     value={formValues.employeeid}
                     onChange={handleChange}
                   />
-                  <p className="text-danger"> {formErrors.employeeid} </p>
+                  {/* <p className="text-danger"> {formErrors.employeeid} </p> */}
                 </div>
                 <div className="col-md-6 form-group">
                   <label className="label">Project Id</label>
@@ -312,7 +312,7 @@ export default function CreateEmployee() {
                       <option key={projectId} value={projectId}>{projectId}</option>
                     ))}
                   </select>
-                  <p className="text-danger"> {formErrors.projectid} </p>
+                  {/* <p className="text-danger"> {formErrors.projectid} </p> */}
                 </div>
                 <div className="col-md-6 form-group">
                   <label className="label">Aadhar Number<span className="required">*</span></label>

@@ -57,6 +57,7 @@ function AdminEditLeaveRequest() {
     try {
       await axios.put(`${leaveUrl}/${editId}`, formik.values);
       setSuccessModal(true);
+      
     } catch (error) {
       console.error("Error updating leave request:", error);
     }

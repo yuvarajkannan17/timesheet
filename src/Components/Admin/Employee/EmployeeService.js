@@ -10,9 +10,9 @@ export const getEmployeeData = async () => {
   }
 };
 //create employee
-export const addEmployeeData = async (newData) => {
+export const addEmployeeData = async (formValues) => {
     try {
-      const response = await axios.post('http://localhost:8081/employee/saveemplyee', newData);
+      const response = await axios.post('http://localhost:8081/employee/saveemployee', formValues);
       // Assuming the response contains the newly created employee data
       const createdEmployee = response.data;
       // You can handle the response as needed
@@ -25,7 +25,7 @@ export const addEmployeeData = async (newData) => {
 //last entered  employee
   export const getLastEnteredEmployee = async () => {
     try {
-        const response = await axios.get('http://localhost:8081/employee/getAllemployee');
+        const response = await axios.get('http://localhost:8081/employee/{employeeId}${lastEnteredEmployee.id}');
         const allEmployees = response.data;
     
         if (allEmployees.length === 0) {
