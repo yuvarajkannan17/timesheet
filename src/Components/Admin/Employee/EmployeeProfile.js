@@ -96,10 +96,10 @@ export default function EmployeeProfile() {
         ) : (<></>)}
           <div className="buttons">
             
-            <button type="submit" className="btn-edit btn-sm" onClick={handleEditConfirm}>              
+            <button type="submit" className="btn btn-edit mx-2" onClick={handleEditConfirm}>              
               Back
             </button>
-            <button type="button" className="btn-submit btn-sm" onClick={handleSubmitClick}>              
+            <button type="button" className="btn btn-success mx-2" onClick={handleSubmitClick}>              
               Submit
             </button>
           </div>

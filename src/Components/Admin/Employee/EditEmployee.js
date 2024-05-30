@@ -279,10 +279,10 @@ export default function EditEmployee() {
             </div>
           </div>
           <div className="buttons">              
-            <button type="submit" className="btn-submit btn-sm" onClick={handleSubmitClick}>                
+            <button type="submit" className="btn btn-success mx-2" onClick={handleSubmitClick}>                
               Submit
             </button>
-            <button type="button" className="btn-cancel btn-sm" onClick={handleConfirmCancel}>                
+            <button type="button" className="btn btn-secondary mx-2" onClick={handleConfirmCancel}>                
               Cancel
             </button>
           </div>
