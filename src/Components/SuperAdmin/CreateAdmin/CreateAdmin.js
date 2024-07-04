@@ -47,7 +47,7 @@ function CreateAdmin() {
 
     const { values, isSubmitting, handleChange, handleBlur, errors, handleSubmit, touched, resetForm } = useFormik({
         initialValues: {
-            fname: "",
+            firstName: "",
             lname: "",
             address: "",
             phone: "",
