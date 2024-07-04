@@ -64,7 +64,7 @@ function SearchAdmin() {
 
     // searching admin based on name and id
     const filteredAdminList = adminList.filter((admin) =>
-        admin.fname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        admin.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         admin.id.toString().includes(searchQuery)
             
     );
@@ -100,10 +100,10 @@ function SearchAdmin() {
                                 <tbody>
 
                                     {filteredAdminList&&filteredAdminList.map((d) => (
-                                        <tr key={d.id} className={`text-center adminList-column ${activeRow === d.id ? 'table-active' : ''} `} onClick={() => handleAdminClick(d)}>
-                                            <td>{d.id}</td>
-                                            <td>{d.fname}</td>
-                                            <td>{d.email}</td>
+                                        <tr key={d.adminId} className={`text-center adminList-column ${activeRow === d.id ? 'table-active' : ''} `} onClick={() => handleAdminClick(d)}>
+                                            <td>{d.adminId}</td>
+                                            <td>{d.firstName}</td>
+                                            <td>{d.emailId}</td>
 
                                         </tr>
                                     ))}
