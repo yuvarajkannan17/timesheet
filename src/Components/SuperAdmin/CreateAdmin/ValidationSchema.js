@@ -19,32 +19,41 @@ export const basicSchema = Yup.object().shape({
   emailId: Yup.string().matches(/^(?=.{1,50}$)[\w-]+(\.[\w-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$/
     , "Please enter the valid email id").required('Email is required'),
   // phone
-  mobileNumber: Yup.string()
-    .matches(/^\d{10}$/
-
-      , 'The phone number should be 10 digits & numbers itself')
-    .required('Phone number is required'),
+  mobileNumber: Yup.number()
+  .typeError('The phone number should be a number')
+  .integer('The phone number should be a number without decimals')
+  .positive('The phone number should be a positive number')
+  .test(
+      'len',
+      'The phone number should be exactly 10 digits',
+      val => val && val.toString().length === 10
+  )
+  .required('Phone number is required'),
   // aadhar
-  aadharNumber: Yup.string()
-    .matches(/^\d{12}$/
-      , 'The aadhar number should be 12 digits & numbers itself')
-    .required('aadhar number is required'),
+  aadharNumber: Yup.number()
+        .typeError('The Aadhar number should be a number')
+        .test(
+            'len',
+            'The Aadhar number should be exactly 12 digits',
+            val => val && val.toString().length === 12
+        )
+        .required('Aadhar number is required'),
   // pan
   panNumber: Yup.string()
     .matches(/[A-Z]{5}[0-9]{4}[A-Z]{1}/
       , 'Please enter the vaild pan number')
     .required('Pan Number is required'),
   // checkboxes
-  employeeAccess: Yup.object().shape({
-    create: Yup.boolean(),
-    edit: Yup.boolean(),
-    delete: Yup.boolean(),
-  }),
-  projectAccess: Yup.object().shape({
-    create: Yup.boolean(),
-    edit: Yup.boolean(),
-    delete: Yup.boolean(),
-  }),
+  // employeeAccess: Yup.object().shape({
+  //   create: Yup.boolean(),
+  //   edit: Yup.boolean(),
+  //   delete: Yup.boolean(),
+  // }),
+  // projectAccess: Yup.object().shape({
+  //   create: Yup.boolean(),
+  //   edit: Yup.boolean(),
+  //   delete: Yup.boolean(),
+  // }),
   
 
 

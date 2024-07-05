@@ -17,7 +17,7 @@ function CreateAdmin() {
 
     // for navigation 
     let navigate = useNavigate();
-    const [adminDatas, setAdminDatas] = useState(null);
+    const [adminDatas, setAdminDatas] = useState([]);
     const [userAlreadyExit, setUserAlreadyExit] = useState('');
     const [phoneError, setPhoneError] = useState('');
     const [aadharError, setAadharError] = useState('');
@@ -35,6 +35,7 @@ function CreateAdmin() {
                 const response = await axios.get("http://localhost:8080/admins/getadmins");
                 // Handle the response here if needed
                 setAdminDatas(response.data);
+                console.log(response.data)
             } catch (error) {
                 // Handle errors here
                 console.error('Error fetching data:', error);
@@ -71,6 +72,9 @@ function CreateAdmin() {
         onSubmit
     })
 
+    
+    
+
     useEffect(() => {
         if (values.mobileNumber && touched.mobileNumber) {
             setPhoneError(''); // Clear custom phone error when input changes
@@ -83,7 +87,7 @@ function CreateAdmin() {
             setPanError(''); // Clear custom phone error when input changes
         }
        
-    }, [values.pan]);
+    }, [values.panNumber]);
 
     useEffect(() => {
         if (values.aadharNumber&& touched.aadharNumber) {
@@ -104,35 +108,40 @@ function CreateAdmin() {
 
     async function onSubmit(values, actions) {
         let formHasErrors = false;
-
+           
         // Checking if the email is already in use
-        const emailExists = adminDatas.some(admin => admin.email === values.emailId);
+        const emailExists = adminDatas.some(admin => admin.emailId === values.emailId);
         if (emailExists) {
             setUserAlreadyExit('Email already in use');
+            console.log(userAlreadyExit)
             formHasErrors = true;
         }
 
         // Checking if the phone number is already in use
-        const phoneExists = adminDatas.some(admin => admin.phone === values.mobileNumber);
+        const phoneExists = adminDatas.some(admin => admin.mobileNumber == values.mobileNumber);
         if (phoneExists) {
             // Assuming you have a state setter for phone error
-            setPhoneError('Phone number already in use');
+            setPhoneError('Mobile number already in use');
+
+            console.log(phoneError)
             formHasErrors = true;
         }
 
         // Checking if the Aadhar number is already in use
-        const aadharExists = adminDatas.some(admin => admin.aadhar === values.aadharNumber);
+        const aadharExists = adminDatas.some(admin => admin.aadharNumber == values.aadharNumber);
         if (aadharExists) {
             // Assuming you have a state setter for Aadhar error
             setAadharError('Aadhar number already in use');
+            console.log(aadharError)
             formHasErrors = true;
         }
 
         // Checking if the PAN number is already in use
-        const panExists = adminDatas.some(admin => admin.pan === values.panNumber);
+        const panExists = adminDatas.some(admin => admin.panNumber === values.panNumber);
         if (panExists) {
             // Assuming you have a state setter for PAN error
             setPanError('PAN number already in use');
+            console.log(panError)
             formHasErrors = true;
         }
 
@@ -149,7 +158,7 @@ function CreateAdmin() {
             dispatch(successModal(true));
             actions.resetForm();
             navigate('/superadmin/searchadmin');
-            console.log("some")
+            console.log(values)
             
         } catch (error) {
             setCreateAdminError(error.message);
@@ -203,7 +212,7 @@ function CreateAdmin() {
                                         {userAlreadyExit && <p className="sprAdmin-createAdmin-error-message small mt-1">{userAlreadyExit}</p>}
                                     </div>
                                     <div className="mb-3">
-                                        <label htmlFor="mobileNumber" className="form-label">Phone Number<span style={{ color: 'red' }}>*</span> </label>
+                                        <label htmlFor="mobileNumber" className="form-label">Mobile Number<span style={{ color: 'red' }}>*</span> </label>
                                         <input type="text" maxLength={10} className={`form-control  ${errors.mobileNumber && touched.mobileNumber ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="mobileNumber" id="mobileNumber" onChange={handleChange} onBlur={handleBlur} value={values.mobileNumber} ></input>
                                        {errors.mobileNumber && touched.mobileNumber && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.mobileNumber}</p>}
                                        {phoneError && <p className="sprAdmin-createAdmin-error-message small mt-1">{phoneError}</p>}
