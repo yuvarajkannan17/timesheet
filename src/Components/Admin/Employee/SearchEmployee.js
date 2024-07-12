@@ -146,8 +146,8 @@ const handleCancel = () => {
       </div>  
     </div>    
     </div>
-                 <div className='buttons'>
-                 <button type="button" className="btn btn-secondary mx-2" onClick={handleCancel} >Cancel</button>
+                 <div className='d-flex justify-content-center'>
+                 <button type="button" className="btn btn-secondary m-3 w-5" onClick={handleCancel} style={{ width: '100px' }}>Cancel</button>
                  </div>
                  
    </div>

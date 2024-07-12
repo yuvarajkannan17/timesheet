@@ -44,13 +44,13 @@ export default function EmployeeProfile() {
             
             
             <div className="col-md-6 form-group">
-              <label className="label col-md-4"> Firstname  : </label>
-              <label className="label col-md-8"> {userData.firstname} </label>
+              <label className="label col-md-4"> firstName  : </label>
+              <label className="label col-md-8"> {userData.firstName} </label>
             </div>
 
             <div className="col-md-6 form-group">
-              <label className="label col-md-4"> Lastname  : </label>
-              <label className="label col-md-8"> {userData.lastname} </label>              
+              <label className="label col-md-4"> lastName  : </label>
+              <label className="label col-md-8"> {userData.lastName} </label>              
             </div>
 
           

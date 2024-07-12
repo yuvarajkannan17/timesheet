@@ -144,8 +144,8 @@ export default function UploadEmployees() {
     </div>
 
    <div className='col-md-4'>
-   <button type="button" className="btn btn-success mx-2" onClick={handleUpload} >Upload</button>
-   <button type="button" className="btn btn-secondary mx-2" onClick={handleCancel} >Cancel</button>
+   <button className="btn btn-success mx-2" onClick={handleUpload} style={{ width: '100px' }}>Upload</button>
+   <button className="btn btn-secondary mx-2" onClick={handleCancel} style={{ width: '100px' }}>Cancel</button>
 
    </div>
    </div>

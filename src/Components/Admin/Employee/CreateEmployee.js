@@ -10,8 +10,8 @@ import '../../css/style.css';
 
 export default function AddEmployeeData() {
   const [formValues, setFormValues] = useState({
-    firstname: "",
-    lastname: "",
+    firstName: "",
+    lastName: "",
     address: "",
     mobilenumber: "",
     emailid: "",
@@ -33,8 +33,8 @@ export default function AddEmployeeData() {
     setIsEditMode(location.search.includes("editMode=true"));
     if (lastEnteredEmployee && location.search.includes("editMode=true")) {
       setFormValues({
-        firstname: lastEnteredEmployee.firstname,
-        lastname: lastEnteredEmployee.lastname,
+        firstName: lastEnteredEmployee.firstName,
+        lastName: lastEnteredEmployee.lastName,
         address: lastEnteredEmployee.address,
         mobilenumber: lastEnteredEmployee.mobilenumber,
         emailid: lastEnteredEmployee.emailid,
@@ -46,8 +46,8 @@ export default function AddEmployeeData() {
       setIsEditMode(true);
     } else {
       setFormValues({
-        firstname: '',
-        lastname: '',
+        firstName: '',
+        lastName: '',
         address: '',
         mobilenumber: '',
         emailid: '',
@@ -113,16 +113,16 @@ export default function AddEmployeeData() {
   const validate = (values) => {
     const errors = {};
 
-    if (!values.firstname) {
-      errors.firstname = "Firstname is required!";
-    } else if (values.firstname.length > 50) {
-      errors.firstname = "Firstname cannot exceed more than 50 characters";
+    if (!values.firstName) {
+      errors.firstName = "firstName is required!";
+    } else if (values.firstName.length > 50) {
+      errors.firstName = "firstName cannot exceed more than 50 characters";
     }
 
-    if (!values.lastname) {
-      errors.lastname = "Lastname is required!";
-    } else if (values.lastname.length > 50) {
-      errors.lastname = "Lastname cannot exceed more than 50 characters";
+    if (!values.lastName) {
+      errors.lastName = "lastName is required!";
+    } else if (values.lastName.length > 50) {
+      errors.lastName = "lastName cannot exceed more than 50 characters";
     }
 
     if (!values.address) {
@@ -192,8 +192,8 @@ export default function AddEmployeeData() {
       }
 
       setFormValues({
-        firstname: "",
-        lastname: "",
+        firstName: "",
+        lastName: "",
         address: "",
         mobilenumber: "",
         emailid: "",
@@ -226,26 +226,26 @@ export default function AddEmployeeData() {
             <div className="container employee-form">
               <div className="row">
                 <div className="col-md-6 form-group ">
-                  <label className="label">Firstname<span className="required">*</span></label>
+                  <label className="label">firstName<span className="required">*</span></label>
                   <input
                     type="text"
-                    name="firstname"
+                    name="firstName"
                     className="form-control"
-                    value={formValues.firstname}
+                    value={formValues.firstName}
                     onChange={handleChange}
                   />
-                  <p className="text-danger"> {formErrors.firstname} </p>
+                  <p className="text-danger"> {formErrors.firstName} </p>
                 </div>
                 <div className="col-md-6 form-group">
-                  <label className="label">Lastname<span className="required">*</span></label>
+                  <label className="label">lastName<span className="required">*</span></label>
                   <input
                     type="text"
-                    name="lastname"
+                    name="lastName"
                     className="form-control"
-                    value={formValues.lastname}
+                    value={formValues.lastName}
                     onChange={handleChange}
                   />
-                  <p className="text-danger"> {formErrors.lastname} </p>
+                  <p className="text-danger"> {formErrors.lastName} </p>
                 </div>
               </div>
               <div className="row">
@@ -339,9 +339,9 @@ export default function AddEmployeeData() {
                 </div>
               </div>
             </div>
-            <div className="buttons">
-              <button type="submit" className="btn btn-success mx-2">Save</button>
-              <button type="button" className="btn btn-secondary mx-2" onClick={handleCancel}>Cancel</button>
+            <div className="d-flex justify-content-center">
+              <button type="submit" className="btn btn-primary m-3 w-5" onClick={handleSuccess} style={{ width: '100px' }}>Save</button>
+              <button type="button" className="btn btn-secondary m-3 w-5" onClick={handleCancel} style={{ width: '100px' }}>Cancel</button>
             </div>
           </div>
         </form>
