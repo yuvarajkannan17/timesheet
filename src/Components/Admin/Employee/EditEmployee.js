@@ -1,24 +1,37 @@
 import React, { useState, useEffect } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import { getEmployeeData, addEmployeeData  } from "../Employee/EmployeeService";
+import { getEmployeeData, getEmployeeDetails, updateEmployeeData, addEmployeeData  } from "../Employee/EmployeeService";
 import { useParams, useNavigate } from "react-router-dom"
 import '../../css/style.css'
 import successCheck from '../../Image/checked.png'
+import axios from 'axios';
 
 export default function EditEmployee() {
   const { id } = useParams(); // Get the employee id from the route parameters
+ 
   const navigate = useNavigate();
-  const employeeData = getEmployeeData();   
-  const userData = employeeData.find((employee) => employee.id === parseInt(id, 10));
-  const [formValues, setFormValues] = useState(userData || {});
+  // const employeeData = getEmployeeDetails();   
+  // const userData = employeeData.find((employee) => employee.id === parseInt(id, 10));
+  const [formValues, setFormValues] = useState({});
   const [formErrors, setFormErrors] = useState({});
   const [SuccessConfirmation, setSuccessConfirmation] = useState(false);
   const [initialFormValues, setInitialFormValues] = useState({});
 
+  // 
   useEffect(() => {
-    setInitialFormValues(userData || {});
-  }, [userData]);
+    const fetchEmployeeDetails = async () => {
+      try {
+        const userData = await getEmployeeDetails(id);
+        setFormValues(userData);
+        setInitialFormValues(userData);
+      } catch (error) {
+        console.error("Error fetching employee details:", error);
+        // Handle error as needed
+      }
+    };
+    fetchEmployeeDetails();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,8 +46,11 @@ export default function EditEmployee() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    // e.preventDefault();
     e.preventDefault();
+  console.log("Submitting form with data:", formValues); // Log the form values being submitted
+  try {
     const validationError = validate(formValues);
     if (Object.keys(validationError).length > 0) {
       setFormErrors(validationError);
@@ -44,27 +60,27 @@ export default function EditEmployee() {
     // Check for duplicate mobile number, PAN number, Aadhar number, and email ID
     const existingEmployee = getEmployeeData().find(employee => (
       employee.id !== formValues.id && (
-        employee.mobilenumber === formValues.mobilenumber ||
-        employee.pannumber === formValues.pannumber ||
-        employee.aadharnumber === formValues.aadharnumber ||
-        employee.emailid === formValues.emailid
+        employee.mobileNumber === formValues.mobileNumber ||
+        employee.panNumber === formValues.panNumber ||
+        employee.aadharNumber === formValues.aadharNumber ||
+        employee.emailId === formValues.emailId
       )
     ));
 
     // Accumulate errors for duplicate fields
     const duplicateErrors = {};
     if (existingEmployee) {
-      if (existingEmployee.mobilenumber === formValues.mobilenumber) {
-        duplicateErrors.mobilenumber = "Mobile number already exists";
+      if (existingEmployee.mobileNumber === formValues.mobileNumber) {
+        duplicateErrors.mobileNumber = "Mobile number already exists";
       }
-      if (existingEmployee.pannumber === formValues.pannumber) {
-        duplicateErrors.pannumber = "PAN number already exists";
+      if (existingEmployee.panNumber === formValues.panNumber) {
+        duplicateErrors.panNumber = "PAN number already exists";
       }
-      if (existingEmployee.aadharnumber === formValues.aadharnumber) {
-        duplicateErrors.aadharnumber = "Aadhar number already exists";
+      if (existingEmployee.aadharNumber === formValues.aadharNumber) {
+        duplicateErrors.aadharNumber = "Aadhar number already exists";
       }
-      if (existingEmployee.emailid === formValues.emailid) {
-        duplicateErrors.emailid = "Email ID already exists";
+      if (existingEmployee.emailId === formValues.emailId) {
+        duplicateErrors.emailId = "Email ID already exists";
       }
     }
 
@@ -78,23 +94,34 @@ export default function EditEmployee() {
     }
 
     // Update the employee data
-    addEmployeeData(formValues);
-    setSuccessConfirmation(true);
+    // updateEmployeeData(id, formValues);
+    // setSuccessConfirmation(true);
+    
+      // Update the employee data
+      addEmployeeData(formValues)
+      const updatedEmployee = await updateEmployeeData(formValues.id, formValues); // Pass the updated formValues to the API
+
+    console.log("Employee data updated successfully with API:", updatedEmployee);
+      setSuccessConfirmation(true);
+    } catch (error) {
+      // Handle error as needed
+      console.error('Error updating employee:', error);
+    }
   };
 
   const validate = (values) => {
     const errors = {};
    
-    if (!values.firstname) {
-      errors.firstname = "Firstname is required!";
-    } else if (values.firstname.length > 50) {
-      errors.firstname = "Firstname cannot exceed more than 50 characters";
+    if (!values.firstName) {
+      errors.firstName = "firstName is required!";
+    } else if (values.firstName.length > 50) {
+      errors.firstName = "firstName cannot exceed more than 50 characters";
     }
 
-    if (!values.lastname) {
-      errors.lastname = "Lastname is required!";
-    } else if (values.lastname.length > 50) {
-      errors.lastname = "Lastname cannot exceed more than 50 characters";
+    if (!values.lastName) {
+      errors.lastName = "lastName is required!";
+    } else if (values.lastName.length > 50) {
+      errors.lastName = "lastName cannot exceed more than 50 characters";
     }
 
     if (!values.address) {
@@ -103,16 +130,16 @@ export default function EditEmployee() {
       errors.address = "Address cannot exceed more than 100 characters";
     }
 
-    if (!values.mobilenumber) {
-      errors.mobilenumber = "Mobile Number is required!";
-    } else if (values.mobilenumber.length !== 10) {
-      errors.mobilenumber = "Mobile Number should be 10 characters";
+    if (!values.mobileNumber) {
+      errors.mobileNumber = "Mobile Number is required!";
+    } else if (values.mobileNumber.length < 10) {
+      errors.mobileNumber = "Mobile Number should be 10 characters";
     }
 
-    if (!values.emailid) {
-      errors.emailid = "Email Id is required!";
-    } else if (!isValidEmail(values.emailid)) {
-      errors.emailid = "This is not a valid email format";
+    if (!values.emailId) {
+      errors.emailId = "Email Id is required!";
+    } else if (!isValidEmail(values.emailId)) {
+      errors.emailId = "This is not a valid email format";
     }
 
     if (!values.projectid) {
@@ -121,16 +148,16 @@ export default function EditEmployee() {
       errors.projectid = "This is not a valid Project Id";
     }
 
-    if (!values.aadharnumber) {
-      errors.aadharnumber = "Aadhar Number is required!";
-    } else if (values.aadharnumber.length !== 12) {
-      errors.aadharnumber = "Aadhar Number should be 12 characters";
+    if (!values.aadharNumber) {
+      errors.aadharNumber = "Aadhar Number is required!";
+    } else if (values.aadharNumber.length < 12) {
+      errors.aadharNumber = "Aadhar Number should be 12 characters";
     }
 
-    if (!values.pannumber) {
-      errors.pannumber = "Pan Number is required!";
-    } else if (!isValidPan(values.pannumber)) {
-      errors.pannumber = "This is not a valid Pan Number";
+    if (!values.panNumber) {
+      errors.panNumber = "Pan Number is required!";
+    } else if (!isValidPan(values.panNumber)) {
+      errors.panNumber = "This is not a valid Pan Number";
     }
 
     return errors;
@@ -164,7 +191,9 @@ export default function EditEmployee() {
   };
 
   const handleSubmitClick = () => {
-    setSuccessConfirmation(false);
+    
+    setSuccessConfirmation(true);
+    console.log(formValues)
   };
 
   const handleConfirmCancel = () => {
@@ -173,14 +202,14 @@ export default function EditEmployee() {
 
   const isFormChanged = () => {
     return (
-      initialFormValues.firstname !== formValues.firstname ||
-      initialFormValues.lastname !== formValues.lastname ||
+      initialFormValues.firstName !== formValues.firstName ||
+      initialFormValues.lastName !== formValues.lastName ||
       initialFormValues.address !== formValues.address ||
-      initialFormValues.mobilenumber !== formValues.mobilenumber ||
-      initialFormValues.emailid !== formValues.emailid ||
+      initialFormValues.mobileNumber !== formValues.mobileNumber ||
+      initialFormValues.emailId !== formValues.emailId ||
       initialFormValues.projectid !== formValues.projectid ||
-      initialFormValues.aadharnumber !== formValues.aadharnumber ||
-      initialFormValues.pannumber !== formValues.pannumber
+      initialFormValues.aadharNumber !== formValues.aadharNumber ||
+      initialFormValues.panNumber !== formValues.panNumber
     );
   };
 
@@ -192,24 +221,24 @@ export default function EditEmployee() {
           <div className="container employee-form">
             <div className="row">
               <div className="col-md-6 form-group">
-                <label className="label"> Firstname: </label>
+                <label className="label"> firstName: </label>
                 <input
                   type="text"
-                  name="firstname"
+                  name="firstName"
                   className="form-control"
-                  value={formValues.firstname}
+                  value={formValues.firstName}
                   onChange={handleChange}/>
-                <p className="text-danger"> {formErrors.firstname} </p>
+                <p className="text-danger"> {formErrors.firstName} </p>
               </div>
               <div className="col-md-6 form-group">
-                <label className="label"> Lastname: </label>
+                <label className="label"> lastName: </label>
                 <input
                   type="text"
-                  name="lastname"
+                  name="lastName"
                   className="form-control"
-                  value={formValues.lastname}
+                  value={formValues.lastName}
                   onChange={handleChange}/>
-                <p className="text-danger"> {formErrors.lastname} </p>
+                <p className="text-danger"> {formErrors.lastName} </p>
               </div>
             </div>
             <div className="row">
@@ -228,11 +257,11 @@ export default function EditEmployee() {
                 <label className="label"> Mobile Number: </label>
                 <input
                   type="text"
-                  name="mobilenumber"
-                  className="form-control"
-                  value={formValues.mobilenumber}
+                  name="mobileNumber"
+                  className="form-control" maxLength={10}
+                  value={formValues.mobileNumber}
                   onChange={handleChange}/>
-                <p className="text-danger"> {formErrors.mobilenumber} </p>
+                <p className="text-danger"> {formErrors.mobileNumber} </p>
               </div>
             </div>
             <div className="row">
@@ -240,11 +269,11 @@ export default function EditEmployee() {
                 <label className="label"> Email Id: </label>
                 <input
                   type="text"
-                  name="emailid"
+                  name="emailId"
                   className="form-control"
-                  value={formValues.emailid}
+                  value={formValues.emailId}
                   onChange={handleChange}/>
-                <p className="text-danger"> {formErrors.emailid} </p>
+                <p className="text-danger"> {formErrors.emailId} </p>
               </div>
               <div className="col-md-6 form-group">
                 <label className="label"> Project Id: </label>
@@ -260,21 +289,21 @@ export default function EditEmployee() {
                 <label className="label"> Aadhar Number: </label>
                 <input
                   type="text"
-                  name="aadharnumber"
-                  className="form-control"
-                  value={formValues.aadharnumber}
+                  name="aadharNumber"
+                  className="form-control" maxLength={12}
+                  value={formValues.aadharNumber}
                   onChange={handleChange}/>
-                <p className="text-danger"> {formErrors.aadharnumber} </p>
+                <p className="text-danger"> {formErrors.aadharNumber} </p>
               </div>
               <div className="col-md-6 form-group">
                 <label className="label"> Pan Number: </label>
                 <input
                   type="text"
-                  name="pannumber"
+                  name="panNumber"
                   className="form-control"
-                  value={formValues.pannumber}
+                  value={formValues.panNumber}
                   onChange={handleChange}/>
-                <p className="text-danger"> {formErrors.pannumber} </p>
+                <p className="text-danger"> {formErrors.panNumber} </p>
               </div>
             </div>
           </div>
@@ -301,3 +330,4 @@ export default function EditEmployee() {
     </div>
   );
 }
+

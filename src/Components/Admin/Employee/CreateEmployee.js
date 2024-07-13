@@ -3,7 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { getEmployeeData, getLastEnteredEmployee, addEmployeeData } from "../Employee/EmployeeService";
+import { getLastEnteredEmployee, addEmployeeData } from "../Employee/EmployeeService";
 import { useLocation } from "react-router-dom";
 import NavPages from "../NavPages";
 import '../../css/style.css';
@@ -13,47 +13,43 @@ export default function AddEmployeeData() {
     firstName: "",
     lastName: "",
     address: "",
-    mobilenumber: "",
-    emailid: "",
-    projectid: "",
-    aadharnumber: "",
-    pannumber: "",
+    mobileNumber: "",
+    emailId: "",
+    aadharNumber: "",
+    panNumber: "",
   });
-  const [lastEnteredEmployee, setLastEnteredEmployee] = useState(null); // Lifted state up
-  const projectOptions = ["CTPL00001", "CTPL00002", "CTPL00003", "CTPL00004"];
-
+  const [lastEnteredEmployee, setLastEnteredEmployee] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [formErrors, setFormErrors] = useState({});
   const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
-  useEffect(() => {
+   useEffect(() => {
     const lastEntered = getLastEnteredEmployee();
-    setLastEnteredEmployee(lastEntered); // Update state with last entered employee data
+    setLastEnteredEmployee(lastEntered);
     setIsEditMode(location.search.includes("editMode=true"));
-    if (lastEnteredEmployee && location.search.includes("editMode=true")) {
+    
+    if (lastEntered && location.search.includes("editMode=true")) {
       setFormValues({
-        firstName: lastEnteredEmployee.firstName,
-        lastName: lastEnteredEmployee.lastName,
-        address: lastEnteredEmployee.address,
-        mobilenumber: lastEnteredEmployee.mobilenumber,
-        emailid: lastEnteredEmployee.emailid,
-        projectid: lastEnteredEmployee.projectid,
-        aadharnumber: lastEnteredEmployee.aadharnumber,
-        pannumber: lastEnteredEmployee.pannumber,
+        firstName: lastEntered.firstName,
+        lastName: lastEntered.lastName,
+        address: lastEntered.address,
+        mobileNumber: lastEntered.mobileNumber,
+        emailId: lastEntered.emailId,
+        aadharNumber: lastEntered.aadharNumber,
+        panNumber: lastEntered.panNumber,
       });
-
       setIsEditMode(true);
     } else {
       setFormValues({
         firstName: '',
         lastName: '',
         address: '',
-        mobilenumber: '',
-        emailid: '',
-        projectid: '',
-        aadharnumber: '',
-        pannumber: '',
+        mobileNumber: '',
+        emailId: '',
+        aadharNumber: '',
+        panNumber: '',
       });
       setIsEditMode(false);
     }
@@ -79,24 +75,25 @@ export default function AddEmployeeData() {
       return;
     }
 
+    
     try {
-      const { data: existingData } = await axios.get(`http://localhost:8081/employee/getemployees?mobile=${formValues.mobilenumber}&email=${formValues.emailid}&aadhar=${formValues.aadharnumber}&pan=${formValues.pannumber}`);
+      const { data: existingData } = await axios.get(`http://localhost:8081/employee/getemployees?mobile=${formValues.mobileNumber}&email=${formValues.emailId}&aadhar=${formValues.aadharNumber}&pan=${formValues.panNumber}`);
       const errors = {};
 
-      if (existingData.mobile) {
-        errors.mobilenumber = "Mobile number already exists";
+      if (existingData.mobileNumber) {
+        errors.mobileNumber = "Mobile number already exists";
       }
 
-      if (existingData.email) {
-        errors.emailid = "Email address already exists";
+      if (existingData.emailId) {
+        errors.emailId = "Email address already exists";
       }
 
-      if (existingData.aadhar) {
-        errors.aadharnumber = "Aadhar number already exists";
+      if (existingData.aadharNumber) {
+        errors.aadharNumber = "Aadhar number already exists";
       }
 
-      if (existingData.pan) {
-        errors.pannumber = "PAN number already exists";
+      if (existingData.panNumber) {
+        errors.panNumber = "PAN number already exists";
       }
 
       if (Object.keys(errors).length > 0) {
@@ -114,15 +111,15 @@ export default function AddEmployeeData() {
     const errors = {};
 
     if (!values.firstName) {
-      errors.firstName = "firstName is required!";
+      errors.firstName = "Firstname is required!";
     } else if (values.firstName.length > 50) {
-      errors.firstName = "firstName cannot exceed more than 50 characters";
+      errors.firstName = "Firstname cannot exceed more than 50 characters";
     }
 
     if (!values.lastName) {
-      errors.lastName = "lastName is required!";
+      errors.lastName = "Lastname is required!";
     } else if (values.lastName.length > 50) {
-      errors.lastName = "lastName cannot exceed more than 50 characters";
+      errors.lastName = "Lastname cannot exceed more than 50 characters";
     }
 
     if (!values.address) {
@@ -131,63 +128,63 @@ export default function AddEmployeeData() {
       errors.address = "Address cannot exceed more than 100 characters";
     }
 
-    if (!values.mobilenumber) {
-      errors.mobilenumber = "Mobile Number is required!";
-    } else if (values.mobilenumber.length !== 10) {
-      errors.mobilenumber = "Mobile Number should be 10 characters";
+    if (!values.mobileNumber) {
+      errors.mobileNumber = "Mobile Number is required!";
+    } else if (values.mobileNumber.length !== 10) {
+      errors.mobileNumber = "Mobile Number should be 10 characters";
     }
 
-    if (!values.emailid) {
-      errors.emailid = "Email Id is required!";
-    } else if (!isValidEmail(values.emailid)) {
-      errors.emailid = "This is not a valid email format";
+    if (!values.emailId) {
+      errors.emailId = "Email Id is required!";
+    } else if (!isValidEmail(values.emailId)) {
+      errors.emailId = "This is not a valid email format";
     }
 
-    if (!values.projectid) {
-      errors.projectid = "Project Id is required!";
-    } else if (!isValidProject(values.projectid)) {
-      errors.projectid = "This is not a valid Project Id";
+    // if (!values.projectid) {
+    //   errors.projectid = "Project Id is required!";
+    // } else if (!isValidProject(values.projectid)) {
+    //   errors.projectid = "This is not a valid Project Id";
+    // }
+
+    if (!values.aadharNumber) {
+      errors.aadharNumber = "Aadhar Number is required!";
+    } else if (values.aadharNumber.length !== 12) {
+      errors.aadharNumber = "Aadhar Number should be 12 characters";
     }
 
-    if (!values.aadharnumber) {
-      errors.aadharnumber = "Aadhar Number is required!";
-    } else if (values.aadharnumber.length !== 12) {
-      errors.aadharnumber = "Aadhar Number should be 12 characters";
-    }
-
-    if (!values.pannumber) {
-      errors.pannumber = "Pan Number is required!";
-    } else if (!isValidPan(values.pannumber)) {
-      errors.pannumber = "This is not a valid Pan Number";
+    if (!values.panNumber) {
+      errors.panNumber = "Pan Number is required!";
+    } else if (!isValidPan(values.panNumber)) {
+      errors.panNumber = "This is not a valid Pan Number";
     }
 
     return errors;
   };
 
-  const isValidEmail = (email) => {
+  const isValidEmail = (emailId) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    return emailRegex.test(emailId);
   };
 
-  const isValidPan = (pan) => {
+  const isValidPan = (panNumber) => {
     const panRegex = /[A-Z]{5}[0-9]{4}[A-Z]{1}/;
-    return panRegex.test(pan);
+    return panRegex.test(panNumber);
   };
 
-  const isValidProject = (project) => {
-    const projectRegex = /^CTPL\d{5}$/;
-    return projectRegex.test(project);
-  };
+  // const isValidProject = (project) => {
+  //   const projectRegex = /^CTPL\d{5}$/;
+  //   return projectRegex.test(project);
+  // };
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleSuccess = async () => {
     try {
       if (isEditMode) {
-        await axios.put(`http://localhost:8081/employee/{employeeId}${lastEnteredEmployee.id}`, formValues);
+        await axios.put(`http://localhost:8081/employee/${lastEnteredEmployee.employeeId}`, formValues);
         // Handle success update
       } else {
-        await axios.post('http://localhost:8081/employee/saveemployee', formValues);
+        await addEmployeeData(formValues);
         // Handle success creation
       }
 
@@ -195,11 +192,10 @@ export default function AddEmployeeData() {
         firstName: "",
         lastName: "",
         address: "",
-        mobilenumber: "",
-        emailid: "",
-        projectid: "",
-        aadharnumber: "",
-        pannumber: "",
+        mobileNumber: "",
+        emailId: "",
+        aadharNumber: "",
+        panNumber: "",
       });
       setSuccessModalOpen(false);
       navigate("/admin/employeeprofile");
@@ -216,6 +212,7 @@ export default function AddEmployeeData() {
     navigate('/admin');
   };
 
+
   return (
     <div className="background-clr">
       <NavPages />
@@ -226,7 +223,7 @@ export default function AddEmployeeData() {
             <div className="container employee-form">
               <div className="row">
                 <div className="col-md-6 form-group ">
-                  <label className="label">firstName<span className="required">*</span></label>
+                  <label className="label">Firstname<span className="required">*</span></label>
                   <input
                     type="text"
                     name="firstName"
@@ -237,7 +234,7 @@ export default function AddEmployeeData() {
                   <p className="text-danger"> {formErrors.firstName} </p>
                 </div>
                 <div className="col-md-6 form-group">
-                  <label className="label">lastName<span className="required">*</span></label>
+                  <label className="label">Lastname<span className="required">*</span></label>
                   <input
                     type="text"
                     name="lastName"
@@ -247,9 +244,60 @@ export default function AddEmployeeData() {
                   />
                   <p className="text-danger"> {formErrors.lastName} </p>
                 </div>
-              </div>
-              <div className="row">
                 <div className="col-md-6 form-group">
+                  <label className="label">Mobile Number<span className="required">*</span></label>
+                  <input
+                    type="text"
+                    name="mobileNumber"
+                    className="form-control"
+                    minLength={10}
+                    maxLength={10}
+                    value={formValues.mobileNumber}
+                    onChange={handleChange}
+                  />
+                  <p className="text-danger"> {formErrors.mobileNumber} </p>
+                </div>
+                <div className="col-md-6 form-group">
+                  <label className="label">Email Id<span className="required">*</span></label>
+                  <input
+                    type="text"
+                    name="emailId"
+                    className="form-control"
+                    value={formValues.emailId}
+                    onChange={handleChange}
+                  />
+                  <p className="text-danger"> {formErrors.emailId} </p>
+                </div>
+                {/*  */}
+               
+                <div className="col-md-6 form-group">
+                  <label className="label">Aadhar Number<span className="required">*</span></label>
+                  <input
+                    type="text"
+                    name="aadharNumber"
+                    className="form-control"
+                    minLength={12}
+                    maxLength={12}
+                    value={formValues.aadharNumber}
+                    onChange={handleChange}
+                  />
+                  <p className="text-danger"> {formErrors.aadharNumber} </p>
+                  </div>
+                  <div className="col-md-6 form-group">
+                  <label className="label">Pan Number<span className="required">*</span></label>
+                  <input
+                    type="text"
+                    name="panNumber"
+                    className="form-control"
+                    maxLength={10}
+                    value={formValues.panNumber}
+                    onChange={handleChange}
+                  />
+                  <p className="text-danger"> {formErrors.panNumber} </p>
+                </div>
+              
+              
+                <div className="col-md-12 form-group">
                   <label className="address">Address<span className="required">*</span></label>
                   <textarea
                     name="address"
@@ -261,92 +309,18 @@ export default function AddEmployeeData() {
                   ></textarea>
                   <p className="text-danger"> {formErrors.address} </p>
                 </div>
-                <div className="col-md-6 form-group">
-                  <label className="label">Mobile Number<span className="required">*</span></label>
-                  <input
-                    type="text"
-                    name="mobilenumber"
-                    className="form-control"
-                    minLength={10}
-                    maxLength={10}
-                    value={formValues.mobilenumber}
-                    onChange={handleChange}
-                  />
-                  <p className="text-danger"> {formErrors.mobilenumber} </p>
-                </div>
+                
               </div>
-              <div className="row">
-                <div className="col-md-6 form-group">
-                  <label className="label">Email Id<span className="required">*</span></label>
-                  <input
-                    type="text"
-                    name="emailid"
-                    className="form-control"
-                    value={formValues.emailid}
-                    onChange={handleChange}
-                  />
-                  <p className="text-danger"> {formErrors.emailid} </p>
-                </div>
-                <div className="col-md-6 form-group">
-                  <label className="label">Employee Id</label>
-                  <input
-                    disabled="disabled"
-                    type="text"
-                    name="employeeid"
-                    className="form-control"
-                    value={formValues.employeeid}
-                    onChange={handleChange}
-                  />
-                  {/* <p className="text-danger"> {formErrors.employeeid} </p> */}
-                </div>
-                <div className="col-md-6 form-group">
-                  <label className="label">Project Id</label>
-                  <select
-                    name="projectid"
-                    className="form-control"
-                    value={formValues.projectid}
-                    onChange={handleChange}
-                  >
-                    <option value="">Select Project ID</option>
-                    {projectOptions.map((projectId) => (
-                      <option key={projectId} value={projectId}>{projectId}</option>
-                    ))}
-                  </select>
-                  {/* <p className="text-danger"> {formErrors.projectid} </p> */}
-                </div>
-                <div className="col-md-6 form-group">
-                  <label className="label">Aadhar Number<span className="required">*</span></label>
-                  <input
-                    type="text"
-                    name="aadharnumber"
-                    className="form-control"
-                    minLength={12}
-                    maxLength={12}
-                    value={formValues.aadharnumber}
-                    onChange={handleChange}
-                  />
-                  <p className="text-danger"> {formErrors.aadharnumber} </p>
-                  <label className="label">Pan Number<span className="required">*</span></label>
-                  <input
-                    type="text"
-                    name="pannumber"
-                    className="form-control"
-                    maxLength={10}
-                    value={formValues.pannumber}
-                    onChange={handleChange}
-                  />
-                  <p className="text-danger"> {formErrors.pannumber} </p>
-                </div>
-              </div>
+              
             </div>
-            <div className="d-flex justify-content-center">
-              <button type="submit" className="btn btn-primary m-3 w-5" onClick={handleSuccess} style={{ width: '100px' }}>Save</button>
-              <button type="button" className="btn btn-secondary m-3 w-5" onClick={handleCancel} style={{ width: '100px' }}>Cancel</button>
+            <div className="buttons">
+              <button type="submit" className="btn btn-success mx-2">Save</button>
+              <button type="button" className="btn btn-secondary mx-2" onClick={handleCancel}>Cancel</button>
             </div>
           </div>
         </form>
         <Modal show={isSuccessModalOpen} onHide={handleClose}>
-          <Modal.Body>Do you want to Save</Modal.Body>
+          <Modal.Body>Do you want to Save?</Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>Cancel</Button>
             <Button variant="primary" onClick={handleSuccess}>Save</Button>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import  { getEmployeeData, addEmployeeData, deleteEmployeeData } from './EmployeeService';
+import  { getEmployeeData, addEmployeeData, deleteEmployeeData, updateEmployeeData, getEmployeeDetails } from './EmployeeService';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -14,13 +14,23 @@ export default function EmployeeDetails() {
   const [SuccessConfirmation, setSuccessConfirmation] = useState(false);
   const { id } = useParams(); // Get the employee id from the route parameters 
   const navigate = useNavigate();
-  const employeeData = getEmployeeData()  
-  const [empData, setEmpData] = useState() 
+  // const employeeData = getEmployeeDetails()  
+  // const [empData, setEmpData] = useState() 
   // const userData = employeeData.find((employee) => employee.id === parseInt(id, 10));
-  const userData = getEmployeeData(id); // Get employee data by id
+  // const userData = getEmployeeDetails(id); // Get employee data by id
+  const [userData,setUserData] = useState(null)
+  console.log(userData)
   const [editedEmployee, setEditedEmployee] = useState(userData || {});
   // const DeleteEmployee = employeeData[employeeData.length - 1];
 
+  useEffect(() => {
+    const fetchEmployeeData = async () => {
+      const data = await getEmployeeDetails(id);
+      setUserData(data);
+    };
+
+    fetchEmployeeData();
+  }, [id]); // Fetch employee details when the component mounts or id changes
 
   const handleEdit = () => {
     addEmployeeData(editedEmployee, id);
@@ -36,7 +46,7 @@ export default function EmployeeDetails() {
 
   
   const handleEditConfirm = () => {setSuccessModalOpen(true)}
-  const handleClose = () => {setSuccessModalOpen(false); window.location.reload()}
+  const handleClose = () => {setSuccessModalOpen(false); }
   const handleConfirmClose = () => {setSuccessConfirmation(false); window.location.reload()}
   
   const handleSuccess = ()=> {
@@ -73,17 +83,17 @@ export default function EmployeeDetails() {
           
           {/* <div className="row"> */}
           <div className="col-md-6 form-group">
-              <label className="label col-md-4"> id  : </label>
-              <label className="label col-md-8"> {userData.id} </label>
+              <label className="label col-md-4"> Id  : </label>
+              <label className="label col-md-8"> {userData.employeeId} </label>
             </div>
             
             <div className="col-md-6 form-group">
-              <label className="label col-md-4"> firstName  : </label>
+              <label className="label col-md-4"> Firstname  : </label>
               <label className="label col-md-8"> {userData.firstName} </label>
             </div>
 
             <div className="col-md-6 form-group">
-              <label className="label col-md-4"> lastName  : </label>
+              <label className="label col-md-4"> Lastname  : </label>
               <label className="label col-md-8"> {userData.lastName} </label>              
             </div>
 
@@ -95,12 +105,12 @@ export default function EmployeeDetails() {
 
             <div className="col-md-6 form-group">
               <label className="label col-md-4"> Mobile Number  : </label>
-              <label className="label col-md-8"> {userData.mobilenumber} </label>
+              <label className="label col-md-8"> {userData.mobileNumber} </label>
             </div>
           
             <div className="col-md-6 form-group">
               <label className="label col-md-4"> Email Id   : </label>
-              <label className="label col-md-8"> {userData.emailid} </label>
+              <label className="label col-md-8"> {userData.emailId} </label>
             </div>
 
             <div className="col-md-6 form-group">
@@ -116,12 +126,12 @@ export default function EmployeeDetails() {
 
             <div className="col-md-6 form-group">
                 <label className="label col-md-4"> Aadhar Card  : </label>
-                <label className="label col-md-8"> {userData.aadharnumber} </label>
+                <label className="label col-md-8"> {userData.aadharNumber} </label>
             </div>
             
             <div className="col-md-6 form-group">
                 <label className="label col-md-4"> Pan Card  :</label>
-                <label className="label col-md-8"> {userData.pannumber} </label>
+                <label className="label col-md-8"> {userData.panNumber} </label>
             </div>            
          </div>
          ) : (

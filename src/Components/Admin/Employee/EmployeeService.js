@@ -9,6 +9,16 @@ export const getEmployeeData = async () => {
     return []; // Return an empty array in case of error
   }
 };
+// Get Employee Detail
+export const getEmployeeDetails = async (employeeId) => {
+  try {
+    const response = await axios.get(`http://localhost:8081/employee/${employeeId}`);
+    return response.data; // Assuming the response.data contains the array of employee data
+  } catch (error) {
+    console.error('Error fetching employee data:', error);
+    return []; // Return an empty array in case of error
+  }
+};
 //create employee
 export const addEmployeeData = async (formValues) => {
     try {
@@ -22,23 +32,22 @@ export const addEmployeeData = async (formValues) => {
       // Handle error as needed
     }
   };
-//last entered  employee
-  export const getLastEnteredEmployee = async () => {
-    try {
-        const response = await axios.get('http://localhost:8081/employee/{employeeId}${lastEnteredEmployee.id}');
-        const allEmployees = response.data;
-    
-        if (allEmployees.length === 0) {
-          return null;
-        }    
-        // Assuming the last entered employee is the last item in the array
-        const lastEnteredEmployee = allEmployees[allEmployees.length - 1];
-        return lastEnteredEmployee;
-      } catch (error) {
-        console.error('Error fetching last entered employee:', error);
-        return null;
-      }
-  };
+///last entered  employee
+export const getLastEnteredEmployee = async () => {
+  try {
+    const response = await axios.get('http://localhost:8081/employee/getemployees');
+    const allEmployees = response.data;
+    if (allEmployees.length === 0) {
+      return null;
+    }
+    const lastEnteredEmployeeData = allEmployees[allEmployees.length - 1];
+    return lastEnteredEmployeeData;
+  } catch (error) {
+    console.error('Error fetching last entered employee:', error);
+    return null;
+  }
+};
+
 //delete employee
   export const deleteEmployeeData = async (employeeId) => {
     try {
@@ -57,11 +66,14 @@ export const addEmployeeData = async (formValues) => {
 //edit employee
   export const updateEmployeeData = async (employeeId, updatedData) => {
     try {
+      console.log("Updating employee with ID:", employeeId);
+    console.log("Updated data:", updatedData);
       const response = await axios.put(`http://localhost:8081/employee/${employeeId}`, updatedData);
       // Assuming the response contains the updated employee data
       const updatedEmployee = response.data;
       // You can handle the response as needed
       console.log('Updated employee:', updatedEmployee);
+      return updatedEmployee
     } catch (error) {
       console.error('Error updating employee data:', error);
       // Handle error as needed

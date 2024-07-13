@@ -1,34 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import {getEmployeeData} from './EmployeeService';
-import { useNavigate } from "react-router-dom";
-// import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom'
+import { getEmployeeData } from './EmployeeService';
+import { useNavigate, Link } from 'react-router-dom';
 import NavPages from '../NavPages';
-import '../../css/style.css'
-
+import './SearchEmployee.css';
 
 export default function SearchEmployee() {
-  
-  const [result, setResult] = useState(null)
-  const [items, setItems] = useState([])
-  const [searchtext, setSearchText] = useState("")
-  const navigate = useNavigate()
-  const handleSelect = () =>{
-    navigate('/admin/employeedetails')
-  }
-  
-  // const { id } = useParams();
- 
+  const [items, setItems] = useState([]);
+  const [searchText, setSearchText] = useState('');
+  const [result, setResult] = useState(false); // Whether to display "No record found"
+  const navigate = useNavigate();
+
   const handleFilter = async () => {
     try {
       const allEmployees = await getEmployeeData();
       const filteredEmployees = allEmployees.filter(
         (employee) =>
-          employee.firstname.toLowerCase().includes(searchtext.toLowerCase()) ||
-          employee.lastname.toLowerCase().includes(searchtext.toLowerCase())
+          employee.firstName.toLowerCase().includes(searchText.toLowerCase()) ||
+          employee.lastName.toLowerCase().includes(searchText.toLowerCase())
         // Add other fields as needed
       );
+
       if (filteredEmployees.length > 0) {
         setItems(filteredEmployees);
         setResult(false);
@@ -38,119 +30,91 @@ export default function SearchEmployee() {
       }
     } catch (error) {
       console.error('Error filtering employee data:', error);
-    }
-  };
-useEffect(() => {
-  handleFilter();
-}, [searchtext]); // Trigger filtering when searchtext changes
+      setResult(true);
+    }
+  };
 
-const handleClear = () => {
-  setSearchText('');
-};
+  useEffect(() => {
+    handleFilter();
+  }, [searchText]); // Trigger filtering when searchText changes
 
-const handleCancel = () => {
-  navigate('/admin');
-  };
-  
-  // const handleClear = () => {   
-  //   setSearchText("")
-  //   setItems([]);
-  //   setResult(false)
-  //  }
-  // const [searchQuery,setSearchQuery] = useState([])
-  // const handleCancel = () => {
-  //   navigate('/admin')
-  // }
+  const handleClear = () => {
+    setSearchText('');
+  };
 
-  // useEffect(() =>{
-  //   setItems(getEmployeeData());
-  // },[])
-  // const employeeData = items.length > 0 ? items : getEmployeeData();
+  const handleCancel = () => {
+    navigate('/admin');
+  };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Backspace') {
       // Trigger filtering when backspace key is pressed
       handleFilter();
-    }
-  };
-  
-  // const [searchQuery, setSearchQuery] = useState("");
-  // const handleSearchChange = (event) => {
-  //   setSearchQuery(event.target.value);
-  // };
+    }
+  };
 
-  // const handleEmployeeSelect = async (id) => {
-    // console.log(id)
-  //   if (id) {
-  //     try {
-  //       const response = await axios.get(employeedatas);
-  //       setSelectedEmployee(response.data.data)
-  //     } catch (error) {
-  //       console.error('Error fetching employee details:', error);
-  //     }
-  //   } else {
-  //     // Reset details if no employee is selected
-  //     setSelectedEmployee(null);
-  //   }
-  // };
+  const handleRowClick   = (employeeId) => {
+    navigate(`/admin/employeedetails/${employeeId}`);
+  };
 
   return (
-          
-   <div className='background-clr'>
-
-    <NavPages/>
-    <h3> Search Employee </h3>
-    <div className='container employee-form '>
-      <div className='d-flex justify-content-end   py-2' style={{ backgroundColor: "rgb(251, 250, 250)" }}  >
-         <span className='me-2'>EMPLOYEE</span>
-      <div>
-          <form className='no-focus-outline'>
-            <input className='w-75 search-control' type='text' value={searchtext} placeholder='search employee' onChange={(e) => {setSearchText(e.target.value); handleFilter()}} onKeyDown={handleKeyDown}></input>
-            <button className='border-0 bg-white' type='button' onClick={handleClear}><i className="bi bi-x" ></i></button>
-            <button className='border-0 bg-white' type='button' onClick={handleFilter}><i className="bi bi-search"></i></button>
-          </form>
-      </div>   
+    <div className='background-clr'>
+      <NavPages />
+      <h3> Search Employee </h3>
+      <div className='container employee-form'>
+        <div className='d-flex justify-content-end py-2' style={{ backgroundColor: 'rgb(251, 250, 250)' }}>
+          <span className='me-2'>EMPLOYEE</span>
+          <div>
+            <form className='no-focus-outline'>
+              <input
+                className='w-75 search-control'
+                type='text'
+                value={searchText}
+                placeholder='Search employee'
+                onChange={(e) => setSearchText(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+              <button className='border-0 bg-white' type='button' onClick={handleClear}>
+                <i className='bi bi-x'></i>
+              </button>
+              <button className='border-0 bg-white' type='button' onClick={handleFilter}>
+                <i className='bi bi-search'></i>
+              </button>
+            </form>
+          </div>
+        </div>
+        <div className='row'>
+          <div className='col-md-12 search-employee'>
+            <div className='employee-list'>
+              {result ? (
+                <p>No record found</p>
+              ) : (
+                <table className='table table-hover' style={{ width: '100%' }}>
+                  <thead className='table-header'>
+                    <tr className='text-center text-white'>
+                      <th scope='col'>EMPLOYEE ID</th>
+                      <th scope='col'>FIRST NAME</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {items.map((employee) => (
+                      <tr key={employee.employeeId} onClick={() => handleRowClick(employee.employeeId)} style={{ cursor: 'pointer' }}>
+                        <td className="text-center">{employee.employeeId}</td>
+                        <td className="text-center">{employee.firstName}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
-      <div className='row'>
-      <div className='col-md-12 search-employee'>
-      
-        <div className='employee-list'>
-        {result ? ( 
-              <p>No record found</p>):(
-        <table className='table table-hover' style={{width:"100%"}} >
-          <thead className='table-header'>
-            <tr className='text-center text-white'>
-               <th scope="col">EMPLOYEE ID</th>
-               <th scope="col">FIRST NAME</th>
-            </tr>
-          </thead>
-          <tbody>
-            
-            {items.map((d) => (
-             
-             <tr key={d.id} >
-              <td>
-              {/* <Link to={'/employeedetails${d.id.toString()} '}>{d.id}</Link> */}
-              <Link key={d.id} to={`/admin/employeedetails/${d.id}`}>{d.id}</Link>
-              </td>
-              <td>{d.firstname}</td>            
-             </tr>             
-                // ))): (<p>No records found</p>)}
-              ))}           
-          </tbody>
-          </table> 
-              )} 
-              
+      <div className='buttons'>
+        <button type='button' className='btn btn-secondary mx-2' onClick={handleCancel}>
+          Cancel
+        </button>
       </div>
-     
-      </div>  
-    </div>    
     </div>
-                 <div className='d-flex justify-content-center'>
-                 <button type="button" className="btn btn-secondary m-3 w-5" onClick={handleCancel} style={{ width: '100px' }}>Cancel</button>
-                 </div>
-                 
-   </div>
-
-  ) 
+  );
 }
