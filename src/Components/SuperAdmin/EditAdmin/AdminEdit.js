@@ -25,11 +25,11 @@ function AdminEdit() {
     const [aadharError, setAadharError] = useState('');
     const [panError, setPanError] = useState('');
     // admin list exclude current edit admin 
-    const [adminDatas, setAdminDatas] = useState(null);
+    const [adminDatas, setAdminDatas] = useState([]);
     // for edit confirmation modal
     const [confirmationForEdit, setConfirmationForEdit] = useState(false)
     // edit admin datas
-    const [editAdminData, setEditAdminData] = useState(null);
+    const [editAdminData, setEditAdminData] = useState("");
     // date and time
     const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
@@ -57,7 +57,7 @@ function AdminEdit() {
                 const response = await axios.get("http://localhost:8080/admins/getadmins");  //backend url
                 // Handle the response here if needed
                 const datas = response.data;
-                const filterData = datas.filter((data) => data.id !== id)
+                const filterData = datas.filter((data) => data.adminId !== id)
                 setAdminDatas(filterData);
             } catch (error) {
                 // Handle errors here
@@ -80,13 +80,13 @@ function AdminEdit() {
     // to get form input by formik
     const { values, isSubmitting, handleChange, handleBlur, errors, handleSubmit, touched, resetForm, setValues } = useFormik({
         initialValues: {
-            fname: "",
-            lname: "",
+            firstName: "",
+            lastName: "",
             address: "",
-            phone: "",
-            email: "",
-            aadhar: "",
-            pan: "",
+            mobileNumber: "",
+            emailId: "",
+            aadharNumber: "",
+            panNumber: "",
             employeeAccess: {
                 create: false,
                 edit: false,
@@ -108,32 +108,32 @@ function AdminEdit() {
 
 
     useEffect(() => {
-        if (values.phone && touched.phone) {
+        if (values.mobileNumber && touched.mobileNumber) {
             setPhoneError(''); // Clear custom phone error when input changes
         }
 
-    }, [values.phone]);
+    }, [values.mobileNumber]);
 
     useEffect(() => {
-        if (values.pan && touched.pan) {
+        if (values.panNumber && touched.panNumber) {
             setPanError(''); // Clear custom phone error when input changes
         }
 
-    }, [values.pan]);
+    }, [values.panNumber]);
 
     useEffect(() => {
-        if (values.aadhar && touched.aadhar) {
+        if (values.aadharNumber && touched.aadharNumber) {
             setAadharError(''); // Clear custom phone error when input changes
         }
 
-    }, [values.aadhar]);
+    }, [values.aadharNumber]);
 
     useEffect(() => {
-        if (values.email && touched.email) {
+        if (values.emailId && touched.emailId) {
             setUserAlreadyExit(''); // Clear custom phone error when input changes
         }
 
-    }, [values.email]);
+    }, [values.emailId]);
 
 
 
@@ -176,14 +176,14 @@ function AdminEdit() {
         let formHasErrors = false;
 
         // Checking if the email is already in use
-        const emailExists = adminDatas.some(admin => admin.email === values.email);
+        const emailExists = adminDatas.some(admin => admin.emailId === values.emailId);
         if (emailExists) {
             setUserAlreadyExit('Email already in use');
             formHasErrors = true;
         }
 
         // Checking if the phone number is already in use
-        const phoneExists = adminDatas.some(admin => admin.phone === values.phone);
+        const phoneExists = adminDatas.some(admin => admin.mobileNumber === values.mobileNumber);
         if (phoneExists) {
             // Assuming you have a state setter for phone error
             setPhoneError('Phone number already in use');
@@ -191,7 +191,7 @@ function AdminEdit() {
         }
 
         // Checking if the Aadhar number is already in use
-        const aadharExists = adminDatas.some(admin => admin.aadhar === values.aadhar);
+        const aadharExists = adminDatas.some(admin => admin.aadharNumber === values.aadharNumber);
         if (aadharExists) {
             // Assuming you have a state setter for Aadhar error
             setAadharError('Aadhar number already in use');
@@ -199,7 +199,7 @@ function AdminEdit() {
         }
 
         // Checking if the PAN number is already in use
-        const panExists = adminDatas.some(admin => admin.pan === values.pan);
+        const panExists = adminDatas.some(admin => admin.panNumber === values.panNumber);
         if (panExists) {
             // Assuming you have a state setter for PAN error
             setPanError('PAN number already in use');
@@ -256,20 +256,20 @@ function AdminEdit() {
                                         <div className="col-md-5" >
                                             <div className="mb-3">
                                                 <label htmlFor="admin-id" className="form-label">Admin Id<span style={{ color: 'red' }}>*</span> </label>
-                                                <input type="text" className="form-control" name="admin-id" id="admin-id" onChange={handleChange} onBlur={handleBlur} value={values.id} disabled ></input>
+                                                <input type="text" className="form-control" name="admin-id" id="admin-id" onChange={handleChange} onBlur={handleBlur} value={values.adminId} disabled ></input>
 
                                             </div>
 
                                             <div className="mb-3">
                                                 <label htmlFor="firstName" className="form-label">First Name<span style={{ color: 'red' }}>*</span> </label>
-                                                <input type="text" maxLength={50} className={`form-control  ${errors.fname && touched.fname ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="fname" id="firstName" onChange={handleChange} onBlur={handleBlur} value={values.fname} ></input>
-                                                {errors.fname && touched.fname && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.fname}</p>}
+                                                <input type="text" maxLength={50} className={`form-control  ${errors.firstName && touched.firstName ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="firstName" id="firstName" onChange={handleChange} onBlur={handleBlur} value={values.firstName} ></input>
+                                                {errors.firstName && touched.firstName && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.firstName}</p>}
                                             </div>
 
                                             <div className="mb-3">
                                                 <label htmlFor="lastName" className="form-label">Last Name<span style={{ color: 'red' }}>*</span> </label>
-                                                <input type="text" maxLength={50} className={`form-control  ${errors.lname && touched.lname ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="lname" id="lastName" onChange={handleChange} onBlur={handleBlur} value={values.lname} ></input>
-                                                {errors.lname && touched.lname && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.lname}</p>}
+                                                <input type="text" maxLength={50} className={`form-control  ${errors.lastName && touched.lastName ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="lastName" id="lastName" onChange={handleChange} onBlur={handleBlur} value={values.lastName} ></input>
+                                                {errors.lastName && touched.lastName && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.lastName}</p>}
                                             </div>
                                             <div className="mb-3">
                                                 <label htmlFor="address" className="form-label">Address<span style={{ color: 'red' }}>*</span>  </label>
@@ -278,14 +278,14 @@ function AdminEdit() {
                                             </div>
                                             <div className="mb-3">
                                                 <label htmlFor="email" className="form-label">Email Id<span style={{ color: 'red' }}>*</span>  </label>
-                                                <input type="email" maxLength={100} className={`form-control  ${errors.email && touched.email ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="email" id="email" onChange={handleChange} onBlur={handleBlur} value={values.email} ></input>
-                                                {errors.email && touched.email && <p className="error-message small mt-1">{errors.email}</p>}
+                                                <input type="email" maxLength={100} className={`form-control  ${errors.emailId && touched.emailId ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="emailId" id="email" onChange={handleChange} onBlur={handleBlur} value={values.emailId} ></input>
+                                                {errors.emailId && touched.emailId && <p className="error-message small mt-1">{errors.emailId}</p>}
                                                 {userAlreadyExit && <p className="sprAdmin-createAdmin-error-message small mt-1">{userAlreadyExit}</p>}
                                             </div>
                                             <div className="mb-3">
                                                 <label htmlFor="phone" className="form-label">Phone Number<span style={{ color: 'red' }}>*</span> </label>
-                                                <input type="text" maxLength={10} className={`form-control  ${errors.phone && touched.phone ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="phone" id="phone" onChange={handleChange} onBlur={handleBlur} value={values.phone} ></input>
-                                                {errors.phone && touched.phone && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.phone}</p>}
+                                                <input type="text" maxLength={10} className={`form-control  ${errors.mobileNumber && touched.mobileNumber ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="mobileNumber" id="phone" onChange={handleChange} onBlur={handleBlur} value={values.mobileNumber} ></input>
+                                                {errors.mobileNumber && touched.mobileNumber && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.mobileNumber}</p>}
                                                 {phoneError && <p className="sprAdmin-createAdmin-error-message small mt-1">{phoneError}</p>}
                                             </div>
                                         </div>
@@ -297,14 +297,14 @@ function AdminEdit() {
                                         <div className="col-md-5" >
                                             <div className="mb-3">
                                                 <label htmlFor="aadharNumber" className="form-label">Aadhar Number<span style={{ color: 'red' }}>*</span> </label>
-                                                <input type="text" maxLength={12} className={`form-control  ${errors.aadhar && touched.aadhar ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="aadhar" id="aadharNumber" onChange={handleChange} onBlur={handleBlur} value={values.aadhar} ></input>
-                                                {errors.aadhar && touched.aadhar && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.aadhar}</p>}
+                                                <input type="text" maxLength={12} className={`form-control  ${errors.aadharNumber && touched.aadharNumber ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="aadharNumber" id="aadharNumber" onChange={handleChange} onBlur={handleBlur} value={values.aadharNumber} ></input>
+                                                {errors.aadharNumber && touched.aadharNumber && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.aadharNumber}</p>}
                                                 {aadharError && <p className="sprAdmin-createAdmin-error-message small mt-1">{aadharError}</p>}
                                             </div>
                                             <div className="mb-3">
                                                 <label htmlFor="panNumber" className="form-label">Pan Number<span style={{ color: 'red' }}>*</span> </label>
-                                                <input type="text" maxLength={10} className={`form-control  ${errors.pan && touched.pan ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="pan" id="panNumber" onChange={handleChange} onBlur={handleBlur} value={values.pan} ></input>
-                                                {errors.pan && touched.pan && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.pan}</p>}
+                                                <input type="text" maxLength={10} className={`form-control  ${errors.panNumber && touched.panNumber ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="panNumber" id="panNumber" onChange={handleChange} onBlur={handleBlur} value={values.panNumber} ></input>
+                                                {errors.panNumber && touched.panNumber && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.panNumber}</p>}
                                                 {panError && <p className="sprAdmin-createAdmin-error-message small mt-1">{panError}</p>}
                                             </div>
                                             {/* checkboxes */}

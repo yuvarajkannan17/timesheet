@@ -51,9 +51,9 @@ function SearchAdmin() {
     }, []);
     
     function handleAdminClick(admin) {
-        setActiveRow(admin.id);
-        navigate('/superadmin/searchadmin/admindetailsview/' + admin.id)
-        console.log(admin.id);
+        setActiveRow(admin.adminId);
+        navigate('/superadmin/searchadmin/admindetailsview/' + admin.adminId)
+        console.log(admin);
     }
 
 
