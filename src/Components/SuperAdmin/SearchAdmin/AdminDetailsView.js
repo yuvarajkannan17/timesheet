@@ -51,7 +51,7 @@ function AdminDetailsView() {
     //  navigate to edit page
     function updateAdmin(id) {
         navigate('/superadmin/searchadmin/admindetailsview/editadmin/' + id);
-
+      
     }
 
     // cancel the confirmation modal for delete
@@ -102,52 +102,52 @@ function AdminDetailsView() {
                             <p className=''>Admin User</p>
                             <div>
                                 <div className='admin-edit d-inline-block me-5'>
-                                    <i className="bi bi-pencil-square text-primary h3" onClick={() => { updateAdmin(adminDetails.id) }}></i>
+                                    <i className="bi bi-pencil-square text-primary h3" onClick={() => { updateAdmin(adminDetails.adminId) }}></i>
                                 </div>
                                 <div className='admin-delete d-inline-block'>
-                                    <i className="bi bi-trash3 text-danger h3  " onClick={() => { removeAdmin(adminDetails.id) }}></i>
+                                    <i className="bi bi-trash3 text-danger h3  " onClick={() => { removeAdmin(adminDetails.adminId) }}></i>
                                 </div>
                             </div>
                         </div>
                         <hr />
                         <div className='text-center'>
-                            <img src={user} alt={adminDetails.fname} />
-                            <p className='text-primary'>{adminDetails.fname}</p>
+                            <img src={user} alt={adminDetails.firstName} />
+                            <p className='text-primary'>{adminDetails.firstName}</p>
                         </div>
                         <div className="row " >
                             <div className="col-md-6">
 
                                 <div className='row mb-2'>
                                     <div className='col-md-6'>Admin Id</div>
-                                    <div className='col-md-6 text-secondary'>{adminDetails.id}</div>
+                                    <div className='col-md-6 text-secondary'>{adminDetails.adminId}</div>
                                 </div>
                                 <div className='row mb-2'>
                                     <div className='col-md-6'>First Name</div>
-                                    <div className='col-md-6 text-secondary'>{adminDetails.fname}</div>
+                                    <div className='col-md-6 text-secondary'>{adminDetails.firstName}</div>
                                 </div>
                                 <div className='row mb-2'>
                                     <div className='col-md-6'>Last Name</div>
-                                    <div className='col-md-6 text-secondary'>{adminDetails.lname}</div>
+                                    <div className='col-md-6 text-secondary'>{adminDetails.lastName}</div>
                                 </div>
                                 <div className='row mb-2'>
                                     <div className='col-md-6'>Email </div>
-                                    <div className='col-md-6 mt-2  text-secondary'>{adminDetails.email}</div>
+                                    <div className='col-md-6   text-secondary'>{adminDetails.emailId}</div>
                                 </div>
                                 <div className='row mb-2'>
                                     <div className='col-md-6'>Phone</div>
-                                    <div className='col-md-6 text-secondary'>{adminDetails.phone}</div>
+                                    <div className='col-md-6 text-secondary'>{adminDetails.mobileNumber}</div>
                                 </div>
                                 <div className='row mb-2 '>
                                     <div className='col-md-6'>Address </div>
-                                    <div className='col-md-6 mt-2 text-secondary address'>{adminDetails.address}</div>
+                                    <div className='col-md-6  text-secondary address'>{adminDetails.address}</div>
                                 </div>
                                 <div className='row mb-2'>
                                     <div className='col-md-6'>Aadhar Number</div>
-                                    <div className='col-md-6 text-secondary'>{adminDetails.aadhar}</div>
+                                    <div className='col-md-6 text-secondary'>{adminDetails.aadharNumber}</div>
                                 </div>
                                 <div className='row mb-2'>
                                     <div className='col-md-6'>Pan Number</div>
-                                    <div className='col-md-6 text-secondary'>{adminDetails.pan}</div>
+                                    <div className='col-md-6 text-secondary'>{adminDetails.panNumber}</div>
                                 </div>
                             </div>
 
