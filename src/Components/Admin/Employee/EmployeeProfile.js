@@ -19,33 +19,25 @@ export default function EmployeeProfile() {
     };
 
     fetchEmployeeData();
-  }, []); // Empty dependency array ensures this effect runs only once, similar to componentDidMount
+  }, []);
 
   const handleEditConfirm = () => {
+    navigate('/admin/createemployee?editMode=true');
+  };
+
+  const handleSuccessClick = () => {
     setSuccessModalOpen(true);
   };
 
   const handleClose = () => {
     setSuccessModalOpen(false);
-    window.location.reload(); // Reloading the page on modal close (consider other options like state management)
-  };
-
-  const handleConfirmClose = () => {
-    setSuccessConfirmation(false);
-    window.location.reload(); // Reloading the page on modal close (consider other options like state management)
   };
 
   const handleSubmitClick = () => {
     setSuccessConfirmation(true);
   };
 
-  const handleSuccessClick = () => {
-    if (lastEnteredEmployee) {
-      navigate('/admin/createemployee?editMode=true');
-    }
-  };
-
-  const ConfirmClose = () => {
+  const handleConfirmClose = () => {
     setSuccessConfirmation(false);
     navigate('/admin/createemployee');
   };
@@ -87,7 +79,7 @@ export default function EmployeeProfile() {
 
           <div className='col-md-6 form-group'>
             <label className='label col-md-4'> Project Id : </label>
-            <label className='label col-md-8'> {lastEnteredEmployee.projectid} </label>
+            <label className='label col-md-8'> {lastEnteredEmployee.projectId} </label>
           </div>
 
           <div className='col-md-6 form-group'>
@@ -106,7 +98,7 @@ export default function EmployeeProfile() {
 
       <div className='my-5 text-center'>
         <button type='button' className='btn btn-secondary mx-2' onClick={handleEditConfirm}>
-          Back
+          Edit
         </button>
         <button type='submit' className='btn btn-success mx-2' onClick={handleSubmitClick}>
           Submit
@@ -132,7 +124,7 @@ export default function EmployeeProfile() {
           <div className='d-flex flex-column modal-success p-4 align-items-center '>
             <img src={successCheck} className='img-fluid mb-4' alt='successCheck' />
             <p className='mb-4 text-center'>Employee Profile Created Successfully</p>
-            <button className='btn w-100 text-white' onClick={ConfirmClose} style={{ backgroundColor: '#5EAC24' }}>
+            <button className='btn w-100 text-white' onClick={handleConfirmClose} style={{ backgroundColor: '#5EAC24' }}>
               Close
             </button>
           </div>

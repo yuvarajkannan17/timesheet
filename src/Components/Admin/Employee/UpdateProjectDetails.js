@@ -19,7 +19,7 @@ const UpdateProjectDetails = () => {
 
   useEffect(() => {
     if (searchTerm) {
-      axios.get(`https://65c0706125a83926ab964c6f.mockapi.io/api/projectdetails/projectDetails`)
+      axios.get(`http://localhost:8081/projects/getprojects`)
         .then((response) => {
           const foundProject = response.data.find(
             (project) => project.projectID === searchTerm || project.projectTitle === searchTerm

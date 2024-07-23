@@ -64,19 +64,13 @@ export const getLastEnteredEmployee = async () => {
     }
   };
 //edit employee
-  export const updateEmployeeData = async (employeeId, updatedData) => {
-    try {
-      console.log("Updating employee with ID:", employeeId);
-    console.log("Updated data:", updatedData);
-      const response = await axios.put(`http://localhost:8081/employee/${employeeId}`, updatedData);
-      // Assuming the response contains the updated employee data
-      const updatedEmployee = response.data;
-      // You can handle the response as needed
-      console.log('Updated employee:', updatedEmployee);
-      return updatedEmployee
-    } catch (error) {
-      console.error('Error updating employee data:', error);
-      // Handle error as needed
-    }
-  };
+export const updateEmployeeData = async (employeeId, updatedData) => {
+  try {
+    const response = await axios.put(`http://localhost:8081/employee/${employeeId}`, updatedData);
+    return response.data; // Assuming the response.data contains the updated employee data
+  } catch (error) {
+    console.error('Error updating employee data:', error);
+    throw error; // Throw error to be handled in component
+  }
+};
 

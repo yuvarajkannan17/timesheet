@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { getLastEnteredEmployee, addEmployeeData } from "../Employee/EmployeeService";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import NavPages from "../NavPages";
+import { getLastEnteredEmployee, addEmployeeData, updateEmployeeData } from "../Employee/EmployeeService"; // Assuming you have functions for adding and updating employees
 import '../../css/style.css';
 
-export default function AddEmployeeData() {
+const AddEmployeeData = () => {
   const [formValues, setFormValues] = useState({
     firstName: "",
     lastName: "",
@@ -25,34 +24,38 @@ export default function AddEmployeeData() {
   const location = useLocation();
   const navigate = useNavigate();
 
-   useEffect(() => {
-    const lastEntered = getLastEnteredEmployee();
-    setLastEnteredEmployee(lastEntered);
-    setIsEditMode(location.search.includes("editMode=true"));
-    
-    if (lastEntered && location.search.includes("editMode=true")) {
-      setFormValues({
-        firstName: lastEntered.firstName,
-        lastName: lastEntered.lastName,
-        address: lastEntered.address,
-        mobileNumber: lastEntered.mobileNumber,
-        emailId: lastEntered.emailId,
-        aadharNumber: lastEntered.aadharNumber,
-        panNumber: lastEntered.panNumber,
-      });
-      setIsEditMode(true);
-    } else {
-      setFormValues({
-        firstName: '',
-        lastName: '',
-        address: '',
-        mobileNumber: '',
-        emailId: '',
-        aadharNumber: '',
-        panNumber: '',
-      });
-      setIsEditMode(false);
-    }
+  useEffect(() => {
+    const fetchEmployeeData = async () => {
+      const lastEntered = await getLastEnteredEmployee();
+      setLastEnteredEmployee(lastEntered);
+      setIsEditMode(location.search.includes("editMode=true"));
+      
+      if (lastEntered && location.search.includes("editMode=true")) {
+        setFormValues({
+          firstName: lastEntered.firstName,
+          lastName: lastEntered.lastName,
+          address: lastEntered.address,
+          mobileNumber: lastEntered.mobileNumber,
+          emailId: lastEntered.emailId,
+          aadharNumber: lastEntered.aadharNumber,
+          panNumber: lastEntered.panNumber,
+        });
+        setIsEditMode(true);
+      } else {
+        setFormValues({
+          firstName: '',
+          lastName: '',
+          address: '',
+          mobileNumber: '',
+          emailId: '',
+          aadharNumber: '',
+          panNumber: '',
+        });
+        setIsEditMode(false);
+      }
+    };
+
+    fetchEmployeeData();
   }, [location.search]);
 
   const handleChange = (e) => {
@@ -67,46 +70,31 @@ export default function AddEmployeeData() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSave = () => {
     const validationError = validate(formValues);
     if (Object.keys(validationError).length > 0) {
       setFormErrors(validationError);
-      return;
-    }
-
-    
-    try {
-      const { data: existingData } = await axios.get(`http://localhost:8081/employee/getemployees?mobile=${formValues.mobileNumber}&email=${formValues.emailId}&aadhar=${formValues.aadharNumber}&pan=${formValues.panNumber}`);
-      const errors = {};
-
-      if (existingData.mobileNumber) {
-        errors.mobileNumber = "Mobile number already exists";
-      }
-
-      if (existingData.emailId) {
-        errors.emailId = "Email address already exists";
-      }
-
-      if (existingData.aadharNumber) {
-        errors.aadharNumber = "Aadhar number already exists";
-      }
-
-      if (existingData.panNumber) {
-        errors.panNumber = "PAN number already exists";
-      }
-
-      if (Object.keys(errors).length > 0) {
-        setFormErrors(errors);
-        return;
-      }
-
+    } else {
       setSuccessModalOpen(true);
-    } catch (error) {
-      console.error("Error while checking existing data:", error);
     }
   };
 
+  const handleSubmit = async () => {
+    try {
+      if (isEditMode) {
+        await updateEmployeeData(lastEnteredEmployee.employeeId, formValues);
+      } else {
+        await addEmployeeData(formValues);
+      }
+      setSuccessModalOpen(false);
+      handleSuccess(); // Call handleSuccess after successful form submission
+      navigate("/admin/employeeprofile");
+    } catch (error) {
+      console.error("Error while saving data:", error);
+    }
+  };
+  
+  
   const validate = (values) => {
     const errors = {};
 
@@ -140,12 +128,6 @@ export default function AddEmployeeData() {
       errors.emailId = "This is not a valid email format";
     }
 
-    // if (!values.projectid) {
-    //   errors.projectid = "Project Id is required!";
-    // } else if (!isValidProject(values.projectid)) {
-    //   errors.projectid = "This is not a valid Project Id";
-    // }
-
     if (!values.aadharNumber) {
       errors.aadharNumber = "Aadhar Number is required!";
     } else if (values.aadharNumber.length !== 12) {
@@ -171,36 +153,12 @@ export default function AddEmployeeData() {
     return panRegex.test(panNumber);
   };
 
-  // const isValidProject = (project) => {
-  //   const projectRegex = /^CTPL\d{5}$/;
-  //   return projectRegex.test(project);
-  // };
-
-  // const navigate = useNavigate();
-
   const handleSuccess = async () => {
     try {
-      if (isEditMode) {
-        await axios.put(`http://localhost:8081/employee/${lastEnteredEmployee.employeeId}`, formValues);
-        // Handle success update
-      } else {
-        await addEmployeeData(formValues);
-        // Handle success creation
-      }
-
-      setFormValues({
-        firstName: "",
-        lastName: "",
-        address: "",
-        mobileNumber: "",
-        emailId: "",
-        aadharNumber: "",
-        panNumber: "",
-      });
       setSuccessModalOpen(false);
       navigate("/admin/employeeprofile");
     } catch (error) {
-      console.error("Error while saving data:", error);
+      console.error("Error while navigating:", error);
     }
   };
 
@@ -212,12 +170,11 @@ export default function AddEmployeeData() {
     navigate('/admin');
   };
 
-
   return (
     <div className="background-clr">
       <NavPages />
       <div>
-        <form onSubmit={handleSubmit}>
+        <form>
           <div>
             <h3> Create Profile </h3>
             <div className="container employee-form">
@@ -227,106 +184,107 @@ export default function AddEmployeeData() {
                   <input
                     type="text"
                     name="firstName"
-                    className="form-control"
+                    className={`form-control ${formErrors.firstName ? 'is-invalid' : ''}`}
                     value={formValues.firstName}
                     onChange={handleChange}
                   />
-                  <p className="text-danger"> {formErrors.firstName} </p>
+                  {formErrors.firstName && <div className="invalid-feedback">{formErrors.firstName}</div>}
                 </div>
                 <div className="col-md-6 form-group">
                   <label className="label">Lastname<span className="required">*</span></label>
                   <input
                     type="text"
                     name="lastName"
-                    className="form-control"
+                    className={`form-control ${formErrors.lastName ? 'is-invalid' : ''}`}
                     value={formValues.lastName}
                     onChange={handleChange}
                   />
-                  <p className="text-danger"> {formErrors.lastName} </p>
+                  {formErrors.lastName && <div className="invalid-feedback">{formErrors.lastName}</div>}
                 </div>
                 <div className="col-md-6 form-group">
                   <label className="label">Mobile Number<span className="required">*</span></label>
                   <input
                     type="text"
                     name="mobileNumber"
-                    className="form-control"
+                    className={`form-control ${formErrors.mobileNumber ? 'is-invalid' : ''}`}
                     minLength={10}
                     maxLength={10}
                     value={formValues.mobileNumber}
                     onChange={handleChange}
                   />
-                  <p className="text-danger"> {formErrors.mobileNumber} </p>
+                  {formErrors.mobileNumber && <div className="invalid-feedback">{formErrors.mobileNumber}</div>}
                 </div>
                 <div className="col-md-6 form-group">
                   <label className="label">Email Id<span className="required">*</span></label>
                   <input
                     type="text"
                     name="emailId"
-                    className="form-control"
+                    className={`form-control ${formErrors.emailId ? 'is-invalid' : ''}`}
                     value={formValues.emailId}
                     onChange={handleChange}
                   />
-                  <p className="text-danger"> {formErrors.emailId} </p>
+                  {formErrors.emailId && <div className="invalid-feedback">{formErrors.emailId}</div>}
                 </div>
-                {/*  */}
-               
                 <div className="col-md-6 form-group">
                   <label className="label">Aadhar Number<span className="required">*</span></label>
                   <input
                     type="text"
                     name="aadharNumber"
-                    className="form-control"
+                    className={`form-control ${formErrors.aadharNumber ? 'is-invalid' : ''}`}
                     minLength={12}
                     maxLength={12}
                     value={formValues.aadharNumber}
                     onChange={handleChange}
                   />
-                  <p className="text-danger"> {formErrors.aadharNumber} </p>
-                  </div>
-                  <div className="col-md-6 form-group">
+                  {formErrors.aadharNumber && <div className="invalid-feedback">{formErrors.aadharNumber}</div>}
+                </div>
+                <div className="col-md-6 form-group">
                   <label className="label">Pan Number<span className="required">*</span></label>
                   <input
                     type="text"
                     name="panNumber"
-                    className="form-control"
+                    className={`form-control ${formErrors.panNumber ? 'is-invalid' : ''}`}
                     maxLength={10}
                     value={formValues.panNumber}
                     onChange={handleChange}
                   />
-                  <p className="text-danger"> {formErrors.panNumber} </p>
+                  {formErrors.panNumber && <div className="invalid-feedback">{formErrors.panNumber}</div>}
                 </div>
-              
-              
                 <div className="col-md-12 form-group">
                   <label className="address">Address<span className="required">*</span></label>
                   <textarea
                     name="address"
-                    className="form-control"
+                    className={`form-control ${formErrors.address ? 'is-invalid' : ''}`}
                     rows="5"
                     cols="50"
                     value={formValues.address}
                     onChange={handleChange}
                   ></textarea>
-                  <p className="text-danger"> {formErrors.address} </p>
+                  {formErrors.address && <div className="invalid-feedback">{formErrors.address}</div>}
                 </div>
-                
               </div>
-              
             </div>
             <div className="buttons">
-              <button type="submit" className="btn btn-success mx-2">Save</button>
-              <button type="button" className="btn btn-secondary mx-2" onClick={handleCancel}>Cancel</button>
+              <button type="button" className="btn btn-success mx-2" onClick={handleSave}>
+                Save
+              </button>
+              <button type="button" className="btn btn-secondary mx-2" onClick={handleCancel}>
+                Cancel
+              </button>
             </div>
           </div>
         </form>
+
         <Modal show={isSuccessModalOpen} onHide={handleClose}>
           <Modal.Body>Do you want to Save?</Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>Cancel</Button>
-            <Button variant="primary" onClick={handleSuccess}>Save</Button>
+            <Button variant="primary" onClick={handleSubmit}>Save</Button>
           </Modal.Footer>
         </Modal>
       </div>
-    </div>
-  );
-}
+    </div>
+  );
+};
+
+export default AddEmployeeData;

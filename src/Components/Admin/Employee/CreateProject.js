@@ -114,7 +114,7 @@ const CreateProject = () => {
     };
 
     try {
-      const response = await axios.post('https://65c0706125a83926ab964c6f.mockapi.io/api/projectdetails/projectDetails', postData);
+      const response = await axios.post('http://localhost:8081/projects/saveproject', postData);
 
       console.log('API Response:', response.data);
       setShowSuccessModal(true); // Show success modal when form is successfully submitted

@@ -83,7 +83,7 @@ export default function EmployeeDetails() {
           
           {/* <div className="row"> */}
           <div className="col-md-6 form-group">
-              <label className="label col-md-4"> Id  : </label>
+              <label className="label col-md-4"> Employee Id  : </label>
               <label className="label col-md-8"> {userData.employeeId} </label>
             </div>
             
@@ -113,15 +113,12 @@ export default function EmployeeDetails() {
               <label className="label col-md-8"> {userData.emailId} </label>
             </div>
 
-            <div className="col-md-6 form-group">
-              <label className="label col-md-4"> Employee Id  : </label>
-              <label className="label col-md-8"> {userData.employeeid} </label>
-            </div>
+           
             
             {/* <div className="row"> */}
               <div className="col-md-6 form-group">
                 <label className="label col-md-4"> Project Id  : </label>
-                <label className="label col-md-8"> {userData.projectid} </label>
+                <label className="label col-md-8"> {userData.projectId} </label>
               </div>
 
             <div className="col-md-6 form-group">
