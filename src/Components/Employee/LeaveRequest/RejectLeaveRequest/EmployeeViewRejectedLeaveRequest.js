@@ -25,7 +25,7 @@ function ViewRejectedLeaveRequests() {
         }
         getRejectedLeaveRequests();
     }, []);
-    
+    console.log(rejectedLeaveRequests)
     const handleCancel = () => {
         navigate("/employee");
     }
@@ -57,7 +57,7 @@ function ViewRejectedLeaveRequests() {
                                     <td>{leave.startDate}</td>
                                     <td>{leave.endDate}</td>
                                     <td>{leave.noOfDays}</td>
-                                    <td>{leave.rejectReason}</td>
+                                    <td>{leave.reasonForRejection}</td>
                                 </tr>
                             ))}
                         </tbody>
