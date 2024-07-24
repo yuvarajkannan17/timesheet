@@ -20,16 +20,25 @@ function AdminApproveLeaveRequest() {
  
 
   const navigate = useNavigate();
-  useEffect(() => {
-
-    async function getLeaveData() {
-      const leaves = await axios.get(leaveUrl);
-      const leaveList = leaves.data;
-      setleaveDatas(leaveList.map((leave) => ({
+  async function getLeaveData() {
+    try {
+      const response = await axios.get("http://localhost:8081/admin");
+      const leaveList = response.data;
+      
+      const filteredLeaveList = leaveList.filter(leave => leave.status === "PENDING");
+      
+      setleaveDatas(filteredLeaveList.map((leave) => ({
         ...leave,
         checked: false,
       })));
+    } catch (error) {
+      console.error("Error fetching leave data:", error);
     }
+  }
+
+  useEffect(() => {
+
+    
     getLeaveData();
   }, [])
 
@@ -43,6 +52,7 @@ function AdminApproveLeaveRequest() {
     if (isChecked) {
       setErrorMessage('');
     }
+    
   }, [leaveDatas]);
 
   function validateRejection() {
@@ -62,11 +72,15 @@ function AdminApproveLeaveRequest() {
 
   // ask confirmation or trigger alert
   function approveLeaveFun() {
+
     if (atLeastOneChecked) {
       setAskConfirmationForApprove(true);
     } else {
       setErrorMessage("Please select at least one Leave Request!!")
     }
+
+
+
   }
   // ask confirmation or trigger alert
   function rejectLeaveFun() {
@@ -75,6 +89,9 @@ function AdminApproveLeaveRequest() {
     } else {
       setErrorMessage("Please select at least one Leave Request!!")
     }
+
+
+
   }
 
   // reset the timesheet
@@ -85,6 +102,7 @@ function AdminApproveLeaveRequest() {
 
   // update the timesheetCheckBox
   function handleCheckboxChange(id) {
+
     setleaveDatas((prevData) =>
       prevData.map((sheet) =>
         sheet.id === id ? { ...sheet, checked: !sheet.checked } : sheet
@@ -93,46 +111,33 @@ function AdminApproveLeaveRequest() {
   }
 
 
-  // timesheet approvel
   async function approveSaveConfirmation() {
     setAskConfirmationForApprove(false);
+
+    // Filter the leaves that are approved
     const approvedLeavesRequest = leaveDatas.filter((leave) => leave.checked === true);
 
-
+    console.log(approvedLeavesRequest);
 
     try {
-      // Update the status of approved sheets and track their IDs
-      const updates = approvedLeavesRequest.map(async (leave) => {
-        // Update the status of the sheet locally
-        const updatedLeavesRequest = { ...leave, status: "Your leave request has been approved" };
+        // Create an array of promises
+        const updatePromises = approvedLeavesRequest.map(async (emp) => {
+            // Perform the PUT request
+            const response = await axios.put(`http://localhost:8081/admin/${emp.id}/approve`);
+            return response.data; // Return the response data if needed
+        });
 
+        // Wait for all the promises to complete
+        const updatedLeaves = await Promise.all(updatePromises);
 
-        // Make a PUT request to update the status of the sheet in the API
-        const response = await axios.put(`${leaveUrl}/${updatedLeavesRequest.id}`, updatedLeavesRequest);
-        const responseData = response.data;
-
-        // console.log("Updated approve leaves request:", responseData);
-
-        return updatedLeavesRequest;
-      });
-
-
-
-      // Wait for all updates to finish
-      const updatedLeavesRequest = await Promise.all(updates);
-
-      // Update the state with the updated data
-      setleaveDatas(updatedLeavesRequest);
-
-      // Reset checkbox selection
-      // cancelLeaveFun();
-
-      // Show success modal
-      setSuccessModalForApprove(true);
+          getLeaveData();
+        // Show success modal
+        setSuccessModalForApprove(true);
     } catch (error) {
-      console.log('API error', error);
+        console.error('Error updating leave status:', error);
     }
-  }
+}
+
 
   // cancel the approvel
   function approveCancelConfirmation() {
@@ -142,8 +147,6 @@ function AdminApproveLeaveRequest() {
 
   // reject the timesheet
   async function rejectSaveConfirmation() {
-
-
     // First validate the rejection reason
     if (!rejectReason) {
       // Set the error message if no reason is selected
@@ -155,37 +158,32 @@ function AdminApproveLeaveRequest() {
     setAskConfirmationForReject(false);
     const rejectLeaves = leaveDatas.filter((leave) => leave.checked === true);
 
-
-
     try {
-      // Update the status of approved sheets and track their IDs
+      // Update the status of rejected leaves and track their IDs
       const updates = rejectLeaves.map(async (leave) => {
-        // Update the status of the sheet locally
-        const updatedLeave = { ...leave, status: "Your timesheet has been rejected", rejectReason:rejectReason };
+        // Update the leave object with rejection reason
+        
 
-        // Make a PUT request to update the status of the sheet in the API
-        const response = await axios.put(`${leaveUrl}/${updatedLeave.id}`, updatedLeave);
-        // console.log("Updated reject sheet:", response.data);
+        // Make a PUT request to update the status of the leave in the API
+        const response = await axios.put(`http://localhost:8081/admin/${leave.id}/reject`,{
+          reasonForRejection:rejectReason
+        });
+        
 
-        return updatedLeave;
+        return response.data;
       });
 
       // Wait for all updates to finish
-      const updatedLeave = await Promise.all(updates);
+      const updatedLeaves = await Promise.all(updates);
 
-      // Update the state with the updated data
-      setleaveDatas(updatedLeave);
-
-      // Reset checkbox selection
-      // cancelLeaveFun();
-
+      getLeaveData();
+        setRejectReason("");
       // Show success modal
       setSuccessModalForReject(true);
     } catch (error) {
       console.log('API error', error);
     }
-
-  }
+}
 
   // reject cancel
   function rejectCancelConfirmation() {
@@ -197,10 +195,12 @@ function AdminApproveLeaveRequest() {
 
     if (check) {
       console.log(id)
-      navigate('/admin/adminapprovedetails/' + id)
+      navigate('/admin/leavedetails/' + id)
     } else {
       setErrorMessage("Please select the person you wish to view !!!")
     }
+
+    console.log(id)
 
 
   }
@@ -220,7 +220,7 @@ function AdminApproveLeaveRequest() {
 
   return (
     <>
-
+       
       <div className="ti-background-clr">
         <Container>
           <div className="py-3 ">
@@ -237,9 +237,11 @@ function AdminApproveLeaveRequest() {
                 <tr className="text-center spr-approval-header" >
                   <th> <input className="me-1" type="checkbox" checked={selectAllChecked} onChange={selectAllCheckbox} />Select </th>
                   <th>Emp Id</th>
-                  <th>Emp Name</th>
+                  <th>Leave Type</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
                   <th>No Of Days Leave</th>
-                  <th>Action</th>
+                  <th>Comments</th>
                 </tr>
               </thead>
               <tbody >
@@ -254,12 +256,15 @@ function AdminApproveLeaveRequest() {
                         onChange={() => handleCheckboxChange(sheet.id)}
                       ></input>
                     </td>
-                    <td>{sheet.id}</td>
-                    <td>{sheet.name}</td>
-                    <td>{sheet.numberOfDays}</td>
+                    <td>{sheet.empId}</td>
+                    <td>{sheet.reason}</td>
+                    <td>{sheet.startDate}</td>
+                    <td>{sheet.endDate}</td>
+                    <td>{sheet.noOfDays}</td>
+                    <td>{sheet.comments}</td>
+                    
 
-                    <td><button className="btn btn-primary" onClick={() => { goToLeaveDetails(sheet.id, sheet.checked) }}>Edit</button></td>
-
+                    
                   </tr>
                 )) : ""}
 

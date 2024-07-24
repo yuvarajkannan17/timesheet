@@ -13,8 +13,8 @@ function AdminViewRejectedLeaveRequests() {
     useEffect(() => {
         async function getRejectedLeaveRequests() {
             try {
-                const response = await axios.get(leaveUrl);
-                setRejectedLeaveRequests(response.data.filter(leave => leave.status === "Your timesheet has been rejected"));
+                const response = await axios.get('http://localhost:8081/admin/leave-requests');
+                setRejectedLeaveRequests(response.data.filter(leave => leave.status === "REJECTED"));
             } catch (error) {
                 console.error('Error fetching rejected leave requests:', error);
                 setErrorMessage('Error fetching rejected leave requests. Please try again.');
