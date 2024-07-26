@@ -24,23 +24,23 @@ const AdminAddTimesheet = () => {
     generateTimesheetData(selectedMonth);
   }, [selectedMonth, showFirstHalf]);
 
-  // useEffect(() => {
-  //   const fetchProjects = async () => {
-  //     try {
-  //       const response = await axios.get('https://65e69d32d7f0758a76e8a1e0.mockapi.io/projectIDs');
-  //       const data = response.data;
-  //       const projectOptions = data.map(project => ({
-  //         value: project.projectID,
-  //         label: project.projectID,
-  //       }));
-  //       setAvailableProjects(projectOptions);
-  //     } catch (error) {
-  //       console.error('Error fetching projects:', error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await axios.get('https://65e69d32d7f0758a76e8a1e0.mockapi.io/projectIDs');
+        const data = response.data;
+        const projectOptions = data.map(project => ({
+          value: project.projectID,
+          label: project.projectID,
+        }));
+        setAvailableProjects(projectOptions);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    };
 
-  //   fetchProjects();
-  // }, []);
+    fetchProjects();
+  }, []);
 
   function addSaveDataCancelFun() {
     setAddDataSaveConfirmation(false)

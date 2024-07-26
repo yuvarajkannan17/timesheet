@@ -77,7 +77,7 @@ console.log(formik.values)
                                 <div className="p-5 center-align">
                                     <form onSubmit={formik.handleSubmit}>
                                     <div className="my-3 leave-row">
-                                            <label> <span style={{ color: 'red' }}>*</span>Emp Id :</label>
+                                            <label> <span style={{ color: 'red' }}>*</span>Admin Id :</label>
                                             <input type='text'  className='w-25' name="empId" value={formik.values.empId} onChange={formik.handleChange} ></input>
 
                                   </div>

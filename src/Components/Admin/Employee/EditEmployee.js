@@ -1,132 +1,227 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getLastEnteredEmployee } from './EmployeeService';
+import React, { useState, useEffect } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import successCheck from '../../Image/checked.png';
-import '../../css/style.css';
+import { useParams, useNavigate } from "react-router-dom";
+import { getEmployeeDetails, updateEmployeeData } from './EmployeeService'; // Adjusted import for update
 
-export default function EmployeeProfile() {
-  const [lastEnteredEmployee, setLastEnteredEmployee] = useState(null);
-  const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
-  const [successConfirmation, setSuccessConfirmation] = useState(false);
+import successCheck from '../../Image/checked.png';
+
+export default function EditEmployee() {
+  const { id } = useParams(); // Get the employee id from the route parameters
   const navigate = useNavigate();
+
+  // State for form values, initial values, errors, and success modal
+  const [formValues, setFormValues] = useState({
+    firstName: '',
+    lastName: '',
+    address: '',
+    mobileNumber: '',
+    emailId: '',
+    projectId: '',
+    aadharNumber: '',
+    panNumber: ''
+  });
+  const [initialFormValues, setInitialFormValues] = useState({});
+  const [formErrors, setFormErrors] = useState({});
+  const [successConfirmation, setSuccessConfirmation] = useState(false);
 
   useEffect(() => {
     const fetchEmployeeData = async () => {
-      const employeeData = await getLastEnteredEmployee();
-      setLastEnteredEmployee(employeeData);
+      try {
+        const data = await getEmployeeDetails(id); // Fetch employee details based on id
+        setFormValues(data);
+        setInitialFormValues(data);
+      } catch (error) {
+        console.error('Error fetching employee details:', error);
+        // Handle error (e.g., show error message)
+      }
     };
 
     fetchEmployeeData();
-  }, []);
+  }, [id]);
 
-  const handleEditConfirm = () => {
-    navigate('/admin/createemployee?editMode=true');
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({
+      ...formValues,
+      [name]: value,
+    });
+    // Clear the error message when the user starts typing
+    setFormErrors({
+      ...formErrors,
+      [name]: "",
+    });
   };
 
-  const handleSuccessClick = () => {
-    setSuccessModalOpen(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const validationError = validate(formValues);
+    if (Object.keys(validationError).length > 0) {
+      setFormErrors(validationError);
+      return;
+    }
+
+    try {
+      await updateEmployeeData(id, formValues); // Update employee data
+      setSuccessConfirmation(true); // Show success modal
+    } catch (error) {
+      console.error('Error updating employee:', error);
+      // Handle error (e.g., show error message)
+    }
   };
 
-  const handleClose = () => {
-    setSuccessModalOpen(false);
-  };
+  const validate = (values) => {
+    const errors = {};
 
-  const handleSubmitClick = () => {
-    setSuccessConfirmation(true);
+    // Validate each field as per your requirements
+    if (!values.firstName) {
+      errors.firstName = "Firstname is required!";
+    }
+    // Add similar validations for other fields
+
+    return errors;
   };
 
   const handleConfirmClose = () => {
+    if (isFormChanged()) {
+      setFormValues(initialFormValues);
+    } else {
+      navigate('/admin/searchemployee');
+    }
+  };
+
+  const handleCancelSuccess = () => {
+    navigate('/admin/searchemployee');
+  };
+
+  const handleSubmitClick = () => {
     setSuccessConfirmation(false);
-    navigate('/admin/createemployee');
+  };
+
+  const isFormChanged = () => {
+    // Check if any form values have changed from initialFormValues
+    return (
+      initialFormValues.firstName !== formValues.firstName ||
+      initialFormValues.lastName !== formValues.lastName ||
+      initialFormValues.address !== formValues.address ||
+      initialFormValues.mobileNumber !== formValues.mobileNumber ||
+      initialFormValues.emailId !== formValues.emailId ||
+      initialFormValues.projectId !== formValues.projectId ||
+      initialFormValues.aadharNumber !== formValues.aadharNumber ||
+      initialFormValues.panNumber !== formValues.panNumber
+      // Add similar checks for other fields
+    );
   };
 
   return (
-    <div className='background-clr'>
-      <h3> Employee Profile </h3>
-      {lastEnteredEmployee ? (
-        <div className='container employee-form'>
-          <div className='col-md-6 form-group'>
-            <label className='label col-md-4'> Firstname : </label>
-            <label className='label col-md-8'> {lastEnteredEmployee.firstName} </label>
+    <div className="background-clr">
+      <form onSubmit={handleSubmit}>
+        <h3>Edit Employee Details</h3>
+        <div className="container employee-form">
+          <div className="row">
+            <div className="col-md-6 form-group">
+              <label className="label">Firstname:</label>
+              <input
+                type="text"
+                name="firstName"
+                className="form-control"
+                value={formValues.firstName || ''}
+                onChange={handleChange}/>
+              <p className="text-danger">{formErrors.firstName}</p>
+            </div>
+            <div className="col-md-6 form-group">
+              <label className="label">Lastname:</label>
+              <input
+                type="text"
+                name="lastName"
+                className="form-control"
+                value={formValues.lastName || ''}
+                onChange={handleChange}/>
+              <p className="text-danger">{formErrors.lastName}</p>
+            </div>
           </div>
-
-          <div className='col-md-6 form-group'>
-            <label className='label col-md-4'> Lastname : </label>
-            <label className='label col-md-8'> {lastEnteredEmployee.lastName} </label>
+          <div className="row">
+            <div className="col-md-6 form-group">
+              <label className="label">Address:</label>
+              <textarea
+                name="address"
+                className="form-control"
+                rows="5"
+                value={formValues.address || ''}
+                onChange={handleChange}></textarea>
+              <p className="text-danger">{formErrors.address}</p>
+            </div>
+            <div className="col-md-6 form-group">
+              <label className="label">Mobile Number:</label>
+              <input
+                type="text"
+                name="mobileNumber"
+                className="form-control"
+                value={formValues.mobileNumber || ''}
+                onChange={handleChange}/>
+              <p className="text-danger">{formErrors.mobileNumber}</p>
+            </div>
           </div>
-
-          <div className='col-md-6 form-group'>
-            <label className='label col-md-4'> Address : </label>
-            <label className='label col-md-8'> {lastEnteredEmployee.address} </label>
-          </div>
-
-          <div className='col-md-6 form-group'>
-            <label className='label col-md-4'> Mobile Number : </label>
-            <label className='label col-md-8'> {lastEnteredEmployee.mobileNumber} </label>
-          </div>
-
-          <div className='col-md-6 form-group'>
-            <label className='label col-md-4'> Email Id : </label>
-            <label className='label col-md-8'> {lastEnteredEmployee.emailId} </label>
-          </div>
-
-          <div className='col-md-6 form-group'>
-            <label className='label col-md-4'> Employee Id : </label>
-            <label className='label col-md-8'> {lastEnteredEmployee.employeeId} </label>
-          </div>
-
-          <div className='col-md-6 form-group'>
-            <label className='label col-md-4'> Project Id : </label>
-            <label className='label col-md-8'> {lastEnteredEmployee.projectId} </label>
-          </div>
-
-          <div className='col-md-6 form-group'>
-            <label className='label col-md-4'> Aadhar Card : </label>
-            <label className='label col-md-8'> {lastEnteredEmployee.aadharNumber} </label>
-          </div>
-
-          <div className='col-md-6 form-group'>
-            <label className='label col-md-4'> Pan Card :</label>
-            <label className='label col-md-8'> {lastEnteredEmployee.panNumber} </label>
+          <div className="row">
+            <div className="col-md-6 form-group">
+              <label className="label">Email Id:</label>
+              <input
+                type="text"
+                name="emailId"
+                className="form-control"
+                value={formValues.emailId || ''}
+                onChange={handleChange}/>
+              <p className="text-danger">{formErrors.emailId}</p>
+            </div>
+            <div className="col-md-6 form-group">
+              <label className="label">Project Id:</label>
+              <input
+                type="text"
+                name="projectId"
+                className="form-control"
+                value={formValues.projectId || ''}
+                onChange={handleChange}/>
+              {/* <p className="text-danger">{formErrors.projectId}</p> */}
+            </div>
+            <div className="col-md-6 form-group">
+              <label className="label">Aadhar Number:</label>
+              <input
+                type="text"
+                name="aadharNumber"
+                className="form-control"
+                value={formValues.aadharNumber || ''}
+                onChange={handleChange}/>
+              <p className="text-danger">{formErrors.aadharNumber}</p>
+            </div>
+            <div className="col-md-6 form-group">
+              <label className="label">Pan Number:</label>
+              <input
+                type="text"
+                name="panNumber"
+                className="form-control"
+                value={formValues.panNumber || ''}
+                onChange={handleChange}/>
+              <p className="text-danger">{formErrors.panNumber}</p>
+            </div>
           </div>
         </div>
-      ) : (
-        <></>
-      )}
-
-      <div className='my-5 text-center'>
-        <button type='button' className='btn btn-secondary mx-2' onClick={handleEditConfirm}>
-          Edit
-        </button>
-        <button type='submit' className='btn btn-success mx-2' onClick={handleSubmitClick}>
-          Submit
-        </button>
-      </div>
-
-      {/* Success Modal */}
-      <Modal show={isSuccessModalOpen} onHide={handleClose}>
-        <Modal.Body>Do you want to go back?</Modal.Body>
-        <Modal.Footer>
-          <Button variant='secondary' onClick={handleClose}>
+        <div className="buttons">
+          <button type="submit" className="btn btn-success mx-2">
+            Submit
+          </button>
+          <button type="button" className="btn btn-secondary mx-2" onClick={handleCancelSuccess}>
             Cancel
-          </Button>
-          <Button variant='primary' onClick={handleSuccessClick}>
-            Yes
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          </button>
+        </div>
+      </form>
 
-      {/* Confirmation Modal */}
+      {/* Success Confirmation Modal */}
       <Modal centered size='sm' show={successConfirmation} onHide={handleConfirmClose}>
         <Modal.Body>
-          <div className='d-flex flex-column modal-success p-4 align-items-center '>
-            <img src={successCheck} className='img-fluid mb-4' alt='successCheck' />
-            <p className='mb-4 text-center'>Employee Profile Created Successfully</p>
-            <button className='btn w-100 text-white' onClick={handleConfirmClose} style={{ backgroundColor: '#5EAC24' }}>
-              Close
-            </button>
+          <div className="d-flex flex-column modal-success p-4 align-items-center ">
+            <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+            <p className="mb-4 text-center">Employee Profile Updated Successfully</p>
+            <button className="btn w-100 text-white" onClick={handleSubmitClick} style={{ backgroundColor: '#5EAC24' }}>Close</button>
           </div>
         </Modal.Body>
       </Modal>

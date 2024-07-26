@@ -34,7 +34,7 @@ const [isOpenProjectManagement, setIsOpenProjectManagement] = useState(false);
                                 <div className="collapse-content ">
                                     <ul><Link to={'/admin/adminaddtimesheet'}>Add Timesheet</Link></ul>
                                     <ul><Link to={'/admin/adminedittimesheet'}>Edit Timesheet</Link></ul>
-                                    <ul><Link to={'/admin/adminrejecttimesheet'}>Reject Timesheet</Link></ul>
+                                    <ul><Link to={'/admin/adminrejecttimesheet'}>View Rejected Timesheet</Link></ul>
                                     <ul><Link to={'/admin/approvalpage'}>Approve Timesheet</Link></ul>
 
                                 </div>
