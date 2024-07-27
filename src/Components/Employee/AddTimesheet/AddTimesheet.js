@@ -125,7 +125,7 @@ const AddTimesheet = () => {
         projectId:""
       })
  
-      // navigate("/employee")
+      
   
     } catch (error) {
       console.error('Error saving timesheet data:', error);
@@ -134,49 +134,11 @@ const AddTimesheet = () => {
   };
   
   
-  // async function addDataSubmitConfirmationFun() {
-  //   setAddDataSubmitConfirmation(true);        
-  // } 
+  
 
   function addSubmitDataCancelFun() {
     setAddDataSubmitConfirmation(false)
   }
-
-  // const handleConfirmSave = async () => {
-
-   
-  //   try {
-  //     if (!selectedMonth) {
-  //       console.error('Please select a month before saving.');
-  //       return;
-  //     }
-
-  //     const timesheetPayload = {
-  //       selectedMonth,
-  //       showFirstHalf,
-  //       data: timesheetData.map(({ date, entries }) => ({
-  //         date: date.toISOString(),
-  //         entries,
-  //       })),
-
-       
-        
-  //     };
-
-  //     console.log("times",timesheetPayload);
-  //     // const response = await axios.post('https://65c0706125a83926ab964c6f.mockapi.io/api/projectdetails/timesheets', timesheetPayload);
-
-  //     // console.log('Timesheet data saved successfully:', response.data);
-  //     // setShowConfirmationModal(false);
-  //     // setShowSuccessModal(true);
-
-  //   } catch (error) {
-  //     console.error('Error saving timesheet data:', error);
-  //     alert('Error saving timesheet data:');
-  //   }
-  // };
-
-  
 
   const handleCancel = () => {
     navigate('/employee'); // Navigate back to the home page
@@ -213,21 +175,7 @@ const AddTimesheet = () => {
     }
     
 
-    // try {
-    //   // Use Promise.all to handle multiple API calls concurrently
-    //    if(formattedTimesheetData){
-    //     await Promise.all(
-    //       formattedTimesheetData.map(async (obj) => {
-    //         let response = await axios.post("http://localhost:8002/api/working-hours", obj);
-    //         return response;
-    //       })
-    //     );
-    //    }
-
-    //   console.log("Submitted Successfully");
-    // } catch (error) {
-    //   console.error("Error submitting timesheet data:", error);
-    // }
+  
 
     
      
@@ -247,12 +195,6 @@ const AddTimesheet = () => {
     setShowFirstHalf(!showFirstHalf);
   };
 
-
- 
-
-  
-  
-  
 
   const loadRecentTimesheetData = () => {
     const savedTimesheetDataList = JSON.parse(localStorage.getItem('timesheetDataList')) || [];
@@ -279,13 +221,6 @@ const AddTimesheet = () => {
   console.log("local",getValueFromLocal);
 
   
-
-
-
- 
-
-
-
 
   function enteringProjectId(e){
     setInputData({...inputData,projectId:e.target.value})
