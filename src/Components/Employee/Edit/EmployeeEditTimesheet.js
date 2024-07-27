@@ -8,7 +8,15 @@ import { Modal, Button } from "react-bootstrap";
 import successCheck from '../../Image/checked.png'
 
 function EmployeeEditTimesheet() {
-    const [timesheetData, setTimesheetData] = useState('');
+    const [timesheetData, setTimesheetData] = useState([]);
+    const [editData,setEditData]=useState({
+        startDate:"",
+        endDate:"",
+        projectId:"",
+        employeeId:""
+
+    })
+    const [getValueFromLocal,setGetValueFromLocal]=useState([]);
     const [editId, setEditId] = useState('');
     const objectPositionRef = useRef(1);
     const [editDataSaveConfirmation, setEditDataSaveConfirmation] = useState(false);
@@ -19,21 +27,64 @@ function EmployeeEditTimesheet() {
 
 
     const navigate = useNavigate();
-    async function getEditTimesheet() {
-        const response = await axios.get(employeeSheetUrl);
-        const datas = response.data;
-        const length = datas.length;
-        const sheetData = datas[length - objectPositionRef.current];
-        setEditId(sheetData.id)
-        setTimesheetData(sheetData);
 
+    const loadRecentTimesheetData = () => {
+        const savedTimesheetDataList = JSON.parse(localStorage.getItem('timesheetDataList')) || [];
+        if (savedTimesheetDataList.length > 0) {
+          // Get the most recent timesheet based on the timestamp
+          const mostRecentTimesheet = savedTimesheetDataList.reduce((latest, current) => {
+            return current.timestamp > latest.timestamp ? current : latest;
+          }, savedTimesheetDataList[0]);
+          
+          setGetValueFromLocal(mostRecentTimesheet.data.map(entry => ({
+            date: new Date(entry.date),
+            projectId: entry.projectId,
+            employeeId: entry.employeeId,
+            hours: entry.hours,
+          })));
+          console.log("Loaded recent timesheet data from localStorage:", mostRecentTimesheet);
+        }
+      };
+    
+      useEffect(()=>{
+       loadRecentTimesheetData();
+      },[])
+    
+      console.log("local",getValueFromLocal);
+
+      function formatDateToDDMMYYYY(date) {
+        const d = new Date(date);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
     }
+    
 
-    useEffect(() => {
-        getEditTimesheet();
-    }, []);
+    function getEditData() {
+        let firstObject = getValueFromLocal[0];
+        let lastObject = getValueFromLocal[getValueFromLocal.length - 1];
+    
+        if (firstObject && lastObject) {
+            setEditData({
+                ...editData,
+                "startDate": formatDateToDDMMYYYY(firstObject.date),
+                "endDate": formatDateToDDMMYYYY(lastObject.date),
+                "projectId": lastObject.projectId,
+                "employeeId": lastObject.employeeId
+            });
+        }
+    }
+    
 
+      useEffect(()=>{
+        getEditData();
+      },[getValueFromLocal])
+    
+      console.log("edit Data",editData);
+   
 
+        
 
     const handleChange = (selectedOptions) => {
         setTimesheetData((preValue) => ({
@@ -62,6 +113,8 @@ function EmployeeEditTimesheet() {
         }
 
     };
+
+    
     function calculateTotalWorkHours() {
         if (timesheetData.timesheetData) {
             const totalWorkHours = timesheetData.timesheetData.reduce((acc, cur) => acc + parseInt(cur.hoursWorked), 0);
@@ -82,7 +135,7 @@ function EmployeeEditTimesheet() {
     function goToPreviousPage() {
         if (objectPositionRef.current > 3) return; // Prevent going beyond 3
         objectPositionRef.current += 1;
-        getEditTimesheet();
+        // getEditTimesheet();
     }
 
     async function editDataSaveConfirmationFun() {
@@ -99,7 +152,7 @@ function EmployeeEditTimesheet() {
     function goToNextPage() {
         if (objectPositionRef.current <= 1) return;
         objectPositionRef.current -= 1;
-        getEditTimesheet();
+        // getEditTimesheet();
     }
     
 
@@ -136,7 +189,7 @@ function EmployeeEditTimesheet() {
 
     return (
         <>
-            {timesheetData && (
+        
                 <div className="ti-background-clr">
                     <div className="">
                         <div >
@@ -147,13 +200,28 @@ function EmployeeEditTimesheet() {
 
                                 <div className=" d-flex justify-content-between">
                                     <div className="m-1">
-                                        <label htmlFor="fromDate"> Date :  </label>
-                                        <input type="date" id="fromDate" className="mx-1" value={timesheetData.StartDate} readOnly></input>
+                                    <label htmlFor="fromDate">Start Date: </label>
+                                    <input type="text" id="fromDate" className="mx-1" value={editData.startDate} readOnly />
                                     </div>
                                     <div>
                                         <button className="btn btn-primary mx-2" onClick={goToPreviousPage} disabled={objectPositionRef.current >= 3}> <i class="bi bi-caret-left-fill"></i>Backward</button>
                                         <button className="btn btn-primary mx-2" onClick={goToNextPage} disabled={objectPositionRef.current <= 1}>Forward  <i class="bi bi-caret-right-fill"></i></button>
                                     </div>
+                                </div>
+                                <div className=" d-flex justify-content-between">
+                                    <div className="m-1">
+                                        <label htmlFor="fromDate">End Date :  </label>
+                                        <input type="text" id="fromDate" className="mx-1"  value={editData.endDate}  readOnly></input>
+                                    </div>
+                                   
+                                </div>
+
+                                <div className=" d-flex justify-content-between">
+                                    <div className="m-1">
+                                        <label htmlFor="emp_id">Emp Id :  </label>
+                                        <input type="text" id="emp_id" className="mx-1"  value={editData.employeeId}  readOnly></input>
+                                    </div>
+                                   
                                 </div>
 
 
@@ -162,8 +230,8 @@ function EmployeeEditTimesheet() {
                                         <thead>
                                             <tr>
                                                 <th style={{ backgroundColor: ' #c8e184' }} >Date</th>
-                                                {timesheetData && timesheetData.timesheetData.map((date) => (
-                                                    <th style={{ backgroundColor: ' #c8e184' }} key={date.date}>{date.date}</th>
+                                                {getValueFromLocal && getValueFromLocal.map((date) => (
+                                                    <th style={{ backgroundColor: ' #c8e184' }} key={date.date}>{formatDateToDDMMYYYY(date.date)}</th>
                                                 ))}
                                             </tr>
                                         </thead>
@@ -171,34 +239,26 @@ function EmployeeEditTimesheet() {
 
                                             <tr>
                                                 <th style={{ backgroundColor: '#c8e184' }} >Day</th>
-                                                {timesheetData && timesheetData.timesheetData.map((date) => (
+                                                {/* {timesheetData && timesheetData.timesheetData.map((date) => (
                                                     <td key={date.date} style={{ backgroundColor: date.day.toLowerCase() === 'sunday' ? 'yellow' : ' #c8e184' }}>{date.day}</td>
-                                                ))}
+                                                ))} */}
                                             </tr>
                                             <tr>
                                                 <th style={{ backgroundColor: "#e8fcaf" }} >
 
                                                     <div >
-                                                        <Select
-                                                            options={timesheetData.projectOptions}
-
-                                                            value={timesheetData.workingProject}
-                                                            onChange={handleChange}
-                                                            placeholder="choose the project"
-                                                            className="my-2 "
-
-                                                        />
+                                                        <input type="text" className="w-100 mt-3" placeholder=" PROJECT ID " ></input>
                                                     </div>
                                                 </th>
-                                                {timesheetData && timesheetData.timesheetData.map((date, index) => (
+                                                {/* {timesheetData && timesheetData.timesheetData.map((date, index) => (
                                                     <td key={date.date} style={{ backgroundColor: '#e8fcaf' }}  ><input type="text" inputmode="numeric" className="ti-workInput-edit border border-none text-center mt-3 " value={date.hoursWorked} min={0} max={12}  onChange={(e) => handleWorkHoursChange(index, e.target.value)}></input></td>
-                                                ))}
+                                                ))} */}
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                                 <div>
-                                    <span className='fw-bold'>Total Hours Worked : </span> <span className='fw-bold'>{timesheetData.noOfHoursWorked}</span>
+                                    <span className='fw-bold'>Total Hours Worked : </span> <span className='fw-bold'></span>
                                 </div>
                                 <div className="d-flex justify-content-center" >
                                     <button className="btn btn-primary m-3 w-5" onClick={editDataSaveConfirmationFun} style={{ width: '100px' }}>Save</button>
@@ -254,8 +314,10 @@ function EmployeeEditTimesheet() {
             </Modal>
                     
                 </div>
-            )}
+            
         </>
+        
+        
     );
 }
 

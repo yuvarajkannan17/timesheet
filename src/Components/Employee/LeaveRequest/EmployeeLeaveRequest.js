@@ -26,7 +26,7 @@ export function EmployeeLeaveRequest() {
         validationSchema: schemaLeave,
         onSubmit
     })
- 
+ console.log("date",typeof formik.values.startDate)
     // Calculate the last day of June
     // const lastDayOfJune = new Date(new Date().getFullYear(), 5, 30); // Note: Month index is zero-based, so June is 5
     
@@ -91,6 +91,7 @@ console.log(formik.values)
                                                 onChange={date => {
                                                     const startDate = date.toLocaleDateString('en-US'); // Example: "4/4/2024"
                                                     formik.setFieldValue("startDate", date);
+                                                    
                                                 }}
                                                 minDate={new Date()}
                                         
