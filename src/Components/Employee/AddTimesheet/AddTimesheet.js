@@ -147,15 +147,10 @@ const AddTimesheet = () => {
   async function addDataSumbitFun(){
     setAddDataSubmitConfirmation(false);
 
-    const formattedTimesheetData = timesheetData.map((obj) => ({
-      ...obj,
-      date: obj.date.toISOString().split('T')[0], // Format date to YYYY-MM-DD
-    }));
-
-    console.log(formattedTimesheetData);
+    
 
 
-    if(formattedTimesheetData){
+    if(timesheetData){
 
       try{
         let response= await axios.post("http://localhost:8002/api/working-hours",timesheetData);
@@ -182,17 +177,21 @@ const AddTimesheet = () => {
 }
 
   const handleForward = () => {
-    const nextMonth = new Date(selectedMonth);
-    nextMonth.setMonth(nextMonth.getMonth() + (showFirstHalf ? 0 : 1));
-    setSelectedMonth(nextMonth.toISOString().split('T')[0].slice(0, 7));
-    setShowFirstHalf(!showFirstHalf);
+      if(selectedMonth){
+        const nextMonth = new Date(selectedMonth);
+        nextMonth.setMonth(nextMonth.getMonth() + (showFirstHalf ? 0 : 1));
+        setSelectedMonth(nextMonth.toISOString().split('T')[0].slice(0, 7));
+        setShowFirstHalf(!showFirstHalf);
+      }
   };
 
   const handleBackward = () => {
-    const previousMonth = new Date(selectedMonth);
-    previousMonth.setMonth(previousMonth.getMonth() - (showFirstHalf ? 1 : 0));
-    setSelectedMonth(previousMonth.toISOString().split('T')[0].slice(0, 7));
-    setShowFirstHalf(!showFirstHalf);
+     if(selectedMonth){
+      const previousMonth = new Date(selectedMonth);
+      previousMonth.setMonth(previousMonth.getMonth() - (showFirstHalf ? 1 : 0));
+      setSelectedMonth(previousMonth.toISOString().split('T')[0].slice(0, 7));
+      setShowFirstHalf(!showFirstHalf);
+     }
   };
 
 
@@ -421,7 +420,7 @@ const isSunday = (date) => date.getDay() === 0;
                 
               </tr>
               <tr>
-                <th><input type='text' className='w-100  ' value={inputData.projectId} onChange={enteringProjectId} placeholder='Enter Project Id' /></th>
+                <th><input type='text' className='w-100  ' value={inputData.projectId} onChange={enteringProjectId} placeholder=' Project Id' /></th>
                 {timesheetData.map((entry,rowIndex)=>
                    <td><input key={rowIndex} type="text"
                    inputMode="numeric"
