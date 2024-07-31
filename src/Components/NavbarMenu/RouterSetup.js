@@ -19,7 +19,7 @@ import SearchEmployee from '../Admin/Employee/SearchEmployee.js';
 import AdminHome from '../Admin/Home/AdminHome.js';
 import AdminAddTimesheet from '../Admin/AddTimesheet/AdminAddTimesheet.js';
 import AdminEditTimesheet from '../Admin/EditTimesheet/AdminEditTimesheet.js';
-import AdminRejectTimesheet from '../Admin/RejectTimesheet/AdminRejectTimesheet.js';
+import AdminRejectTimesheet from '../Admin/ViewRejectedTimesheet/AdminRejectTimesheet.js';
 import AdminEditLeaveRequest from '../Admin/EditLeaveRequest/AdminEditLeaveRequest.js'
 import AdminAddLeaveRequest from '../Admin/AddLeaveRequest/AdminAddLeaveRequest.js'
 import AdminRejectLeaveRequest from '../Admin/RejectLeaveRequest/AdminRejectLeaveRequest.js'
@@ -47,7 +47,8 @@ import SupervisorLeaveDetails from '../Supervisor/LeaveApproval/SupervisorLeaveD
 import SuperadminLeaveDetails from '../SuperAdmin/LeaveApproval/SuperadminLeaveDetails.js';
 import SuperadminLeaveApproval from '../SuperAdmin/LeaveApproval/SuperadminLeaveApproval.js';
 import SuperadminApproveTimesheet from '../SuperAdmin/TimesheetApproval/ApproveTimesheet.js';
-import SuperadminModifyAdminTimesheet from '../SuperAdmin/TimesheetApproval/ModifyEmployeeTimesheet.js';import ViewRejectedLeaveRequests from '../Employee/LeaveRequest/RejectLeaveRequest/EmployeeViewRejectedLeaveRequest.js';
+import SuperadminModifyAdminTimesheet from '../SuperAdmin/TimesheetApproval/ModifyEmployeeTimesheet.js';
+import ViewRejectedLeaveRequests from '../Employee/LeaveRequest/RejectLeaveRequest/EmployeeViewRejectedLeaveRequest.js';
 import AdminViewRejectedLeaveRequests from '../Admin/ViewRejectedLeaveRequests/AdminViewRejectedLeaveRequests.js';
 import SupervisorViewRejectedLeaveRequests from '../Supervisor/ViewRejectedLeaveRequest/SupervisorViewRejectedLeaveRequests.js';
 

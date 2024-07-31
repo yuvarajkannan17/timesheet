@@ -1,28 +1,51 @@
+// employeeprofile.js
+
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getLastEnteredEmployee } from './EmployeeService';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import successCheck from '../../Image/checked.png';
 import '../../css/style.css';
+import { addEmployeeData } from './EmployeeService';
 
 export default function EmployeeProfile() {
-  const [lastEnteredEmployee, setLastEnteredEmployee] = useState(null);
+  const [employeeData, setEmployeeData] = useState(null);
   const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
   const [successConfirmation, setSuccessConfirmation] = useState(false);
+  const [error, setError] = useState(null);
+  const [isEditConfirmationOpen, setEditConfirmationOpen] = useState(false);
+
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    const fetchEmployeeData = async () => {
-      const employeeData = await getLastEnteredEmployee();
-      setLastEnteredEmployee(employeeData);
-    };
-
-    fetchEmployeeData();
-  }, []);
+    if (location.state && location.state.employee) {
+      setEmployeeData(location.state.employee);
+    } else {
+      // Implement fetching logic if not passed through state
+    }
+  }, [location.state]);
 
   const handleEditConfirm = () => {
-    navigate('/admin/createemployee?editMode=true');
+    setEditConfirmationOpen(true);
+  };
+
+  const handleEditConfirmClose = () => {
+    setEditConfirmationOpen(false);
+  };
+
+  const handleEditYes = () => {
+    setEditConfirmationOpen(false);
+    navigate('/admin/createemployee?editMode=true', { state: { employee: employeeData } });
+  };
+
+  const handleSubmitClick = async () => {
+    try {
+      await addEmployeeData(employeeData);
+      setSuccessConfirmation(true);
+    } catch (error) {
+      setError('Error submitting employee data. Please try again.');
+    }
   };
 
   const handleSuccessClick = () => {
@@ -33,95 +56,105 @@ export default function EmployeeProfile() {
     setSuccessModalOpen(false);
   };
 
-  const handleSubmitClick = () => {
-    setSuccessConfirmation(true);
-  };
-
   const handleConfirmClose = () => {
     setSuccessConfirmation(false);
-    navigate('/admin/createemployee');
+    navigate('/admin');
   };
+
+  if (!employeeData) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className='background-clr'>
-      <h3> Employee Profile </h3>
-      {lastEnteredEmployee ? (
+      <h3>Employee Profile</h3>
+      {employeeData && (
         <div className='container employee-form'>
-          <div className='col-md-6 form-group'>
-            <label className='label col-md-4'> Firstname : </label>
-            <label className='label col-md-8'> {lastEnteredEmployee.firstName} </label>
-          </div>
+          <div className='row'>
+            <div className='col-md-6 form-group'>
+              <label className='label col-md-4'>Firstname:</label>
+              <label className='label col-md-8'>{employeeData.firstName}</label>
+            </div>
 
-          <div className='col-md-6 form-group'>
-            <label className='label col-md-4'> Lastname : </label>
-            <label className='label col-md-8'> {lastEnteredEmployee.lastName} </label>
-          </div>
+            <div className='col-md-6 form-group'>
+              <label className='label col-md-4'>Lastname:</label>
+              <label className='label col-md-8'>{employeeData.lastName}</label>
+            </div>
 
-          <div className='col-md-6 form-group'>
-            <label className='label col-md-4'> Address : </label>
-            <label className='label col-md-8'> {lastEnteredEmployee.address} </label>
-          </div>
+            <div className='col-md-6 form-group'>
+              <label className='label col-md-4'>Address:</label>
+              <label className='label col-md-8'>{employeeData.address}</label>
+            </div>
 
-          <div className='col-md-6 form-group'>
-            <label className='label col-md-4'> Mobile Number : </label>
-            <label className='label col-md-8'> {lastEnteredEmployee.mobileNumber} </label>
-          </div>
+            <div className='col-md-6 form-group'>
+              <label className='label col-md-4'>Mobile Number:</label>
+              <label className='label col-md-8'>{employeeData.mobileNumber}</label>
+            </div>
 
-          <div className='col-md-6 form-group'>
-            <label className='label col-md-4'> Email Id : </label>
-            <label className='label col-md-8'> {lastEnteredEmployee.emailId} </label>
-          </div>
+            <div className='col-md-6 form-group'>
+              <label className='label col-md-4'>Email Id:</label>
+              <label className='label col-md-8'>{employeeData.emailId}</label>
+            </div>
 
-          <div className='col-md-6 form-group'>
-            <label className='label col-md-4'> Employee Id : </label>
-            <label className='label col-md-8'> {lastEnteredEmployee.employeeId} </label>
-          </div>
+            <div className='col-md-6 form-group'>
+              <label className='label col-md-4'>Employee Id:</label>
+              <label className='label col-md-8'>{employeeData.employeeId}</label>
+            </div>
 
-          <div className='col-md-6 form-group'>
-            <label className='label col-md-4'> Project Id : </label>
-            <label className='label col-md-8'> {lastEnteredEmployee.projectId} </label>
-          </div>
+            <div className='col-md-6 form-group'>
+              <label className='label col-md-4'>Project Id:</label>
+              <label className='label col-md-8'>{employeeData.projectId}</label>
+            </div>
 
-          <div className='col-md-6 form-group'>
-            <label className='label col-md-4'> Aadhar Card : </label>
-            <label className='label col-md-8'> {lastEnteredEmployee.aadharNumber} </label>
-          </div>
+            <div className='col-md-6 form-group'>
+              <label className='label col-md-4'>Aadhar Card:</label>
+              <label className='label col-md-8'>{employeeData.aadharNumber}</label>
+            </div>
 
-          <div className='col-md-6 form-group'>
-            <label className='label col-md-4'> Pan Card :</label>
-            <label className='label col-md-8'> {lastEnteredEmployee.panNumber} </label>
+            <div className='col-md-6 form-group'>
+              <label className='label col-md-4'>Pan Card:</label>
+              <label className='label col-md-8'>{employeeData.panNumber}</label>
+            </div>
+
+            <div className='col-md-6 form-group'>
+              <label className='label col-md-4'>Password:</label>
+              <label className='label col-md-8'>{employeeData.password}</label>
+            </div>
           </div>
         </div>
-      ) : (
-        <></>
       )}
 
       <div className='my-5 text-center'>
         <button type='button' className='btn btn-secondary mx-2' onClick={handleEditConfirm}>
           Edit
         </button>
-        <button type='submit' className='btn btn-success mx-2' onClick={handleSubmitClick}>
+        <button type='button' className='btn btn-success mx-2' onClick={handleSubmitClick}>
           Submit
         </button>
       </div>
+
+      {/* Edit Confirmation Modal */}
+      <Modal show={isEditConfirmationOpen} onHide={handleEditConfirmClose}>
+        <Modal.Body>Do you want to navigate to the edit page?</Modal.Body>
+        <Modal.Footer>
+          <Button variant='secondary' onClick={handleEditConfirmClose}>Cancel</Button>
+          <Button variant='primary' onClick={handleEditYes}>Yes</Button>
+        </Modal.Footer>
+      </Modal>
 
       {/* Success Modal */}
       <Modal show={isSuccessModalOpen} onHide={handleClose}>
         <Modal.Body>Do you want to go back?</Modal.Body>
         <Modal.Footer>
-          <Button variant='secondary' onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button variant='primary' onClick={handleSuccessClick}>
-            Yes
-          </Button>
+          <Button variant='secondary' onClick={handleClose}>Cancel</Button>
+          <Button variant='primary' onClick={handleSuccessClick}>Yes</Button>
         </Modal.Footer>
       </Modal>
 
       {/* Confirmation Modal */}
       <Modal centered size='sm' show={successConfirmation} onHide={handleConfirmClose}>
         <Modal.Body>
-          <div className='d-flex flex-column modal-success p-4 align-items-center '>
+          <div className='d-flex flex-column modal-success p-4 align-items-center'>
             <img src={successCheck} className='img-fluid mb-4' alt='successCheck' />
             <p className='mb-4 text-center'>Employee Profile Created Successfully</p>
             <button className='btn w-100 text-white' onClick={handleConfirmClose} style={{ backgroundColor: '#5EAC24' }}>
@@ -130,6 +163,20 @@ export default function EmployeeProfile() {
           </div>
         </Modal.Body>
       </Modal>
+
+      {/* Error Modal */}
+      {error && (
+        <Modal centered size='sm' show={Boolean(error)} onHide={() => setError(null)}>
+          <Modal.Body>
+            <div className='d-flex flex-column modal-error p-4 align-items-center'>
+              <p className='mb-4 text-center'>{error}</p>
+              <button className='btn w-100 text-white' onClick={() => setError(null)} style={{ backgroundColor: '#d9534f' }}>
+                Close
+              </button>
+            </div>
+          </Modal.Body>
+        </Modal>
+      )}
     </div>
   );
 }

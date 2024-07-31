@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState, useCallback } from 'react';
 import { getEmployeeData } from './EmployeeService';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import NavPages from '../NavPages';
 import './SearchEmployee.css';
 
@@ -11,7 +10,7 @@ export default function SearchEmployee() {
   const [result, setResult] = useState(false); // Whether to display "No record found"
   const navigate = useNavigate();
 
-  const handleFilter = async () => {
+  const handleFilter = useCallback(async () => {
     try {
       const allEmployees = await getEmployeeData();
       const filteredEmployees = allEmployees.filter(
@@ -32,14 +31,15 @@ export default function SearchEmployee() {
       console.error('Error filtering employee data:', error);
       setResult(true);
     }
-  };
+  }, [searchText]); // Use searchText as dependency
 
   useEffect(() => {
     handleFilter();
-  }, [searchText]); // Trigger filtering when searchText changes
+  }, [handleFilter]); // Include handleFilter in the dependency array
 
   const handleClear = () => {
     setSearchText('');
+    handleFilter(); // Optionally trigger filter after clearing the search text
   };
 
   const handleCancel = () => {
@@ -53,7 +53,7 @@ export default function SearchEmployee() {
     }
   };
 
-  const handleRowClick   = (employeeId) => {
+  const handleRowClick = (employeeId) => {
     navigate(`/admin/employeedetails/${employeeId}`);
   };
 
@@ -97,7 +97,7 @@ export default function SearchEmployee() {
                     </tr>
                   </thead>
                   <tbody>
-                      {items.map((employee) => (
+                    {items.map((employee) => (
                       <tr key={employee.employeeId} onClick={() => handleRowClick(employee.employeeId)} style={{ cursor: 'pointer' }}>
                         <td className="text-center">{employee.employeeId}</td>
                         <td className="text-center">{employee.firstName}</td>

@@ -32,6 +32,49 @@ export const addEmployeeData = async (formValues) => {
       // Handle error as needed
     }
   };
+
+  // Check for duplicate employee details
+// Check for duplicate employee details
+export const checkEmployeeDuplicates = async (employeeData) => {
+  try {
+    const response = await axios.get('http://localhost:8081/employee/getemployees');
+    const allEmployees = response.data;
+
+    const duplicates = {
+      emailId: false,
+      panNumber: false,
+      mobileNumber: false,
+      aadharNumber: false,
+    };
+
+    allEmployees.forEach((employee) => {
+      // Convert to strings for comparison
+      const employeeMobile = employee.mobileNumber.toString();
+      const employeeAadhar = employee.aadharNumber.toString();
+      const inputMobile = employeeData.mobileNumber.toString();
+      const inputAadhar = employeeData.aadharNumber.toString();
+
+      if (employee.emailId === employeeData.emailId) {
+        duplicates.emailId = true;
+      }
+      if (employee.panNumber === employeeData.panNumber) {
+        duplicates.panNumber = true;
+      }
+      if (employeeMobile === inputMobile) {
+        duplicates.mobileNumber = true;
+      }
+      if (employeeAadhar === inputAadhar) {
+        duplicates.aadharNumber = true;
+      }
+    });
+
+    return duplicates;
+  } catch (error) {
+    console.error('Error checking employee duplicates:', error);
+    return null; // Handle error appropriately
+  }
+};
+
 ///last entered  employee
 export const getLastEnteredEmployee = async () => {
   try {

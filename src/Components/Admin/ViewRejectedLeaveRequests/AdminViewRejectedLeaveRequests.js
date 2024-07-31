@@ -22,7 +22,7 @@ function AdminViewRejectedLeaveRequests() {
         }
         getRejectedLeaveRequests();
     }, []);
-
+    console.log(rejectedLeaveRequests)
     const handleCancel = () => {
         navigate("/admin");
     }
@@ -50,11 +50,11 @@ function AdminViewRejectedLeaveRequests() {
                         <tbody>
                             {rejectedLeaveRequests.map((leave) => (
                                 <tr key={leave.id} className="text-center">
-                                    <td>{leave.leaveReason}</td>
+                                    <td>{leave.reason}</td>
                                     <td>{leave.startDate}</td>
                                     <td>{leave.endDate}</td>
-                                    <td>{leave.numberOfDays}</td>
-                                    <td>{leave.rejectReason}</td>
+                                    <td>{leave.noOfDays}</td>
+                                    <td>{leave.reasonForRejection}</td>
                                 </tr>
                             ))}
                         </tbody>

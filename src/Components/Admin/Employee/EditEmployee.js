@@ -19,7 +19,8 @@ export default function EditEmployee() {
     emailId: '',
     projectId: '',
     aadharNumber: '',
-    panNumber: ''
+    panNumber: '',
+    password: ''
   });
   const [initialFormValues, setInitialFormValues] = useState({});
   const [formErrors, setFormErrors] = useState({});
@@ -77,7 +78,38 @@ export default function EditEmployee() {
     if (!values.firstName) {
       errors.firstName = "Firstname is required!";
     }
-    // Add similar validations for other fields
+    if (!values.lastName) {
+      errors.lastName = "Lastname is required!";
+    }
+    if (!values.address) {
+      errors.address = "Address is required!";
+    }
+    if (!values.mobileNumber) {
+      errors.mobileNumber = "Mobile Number is required!";
+    } else if (!/^\d{10}$/.test(values.mobileNumber)) {
+      errors.mobileNumber = "Mobile Number must be 10 digits!";
+    }
+    if (!values.emailId) {
+      errors.emailId = "Email Id is required!";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.emailId)) {
+      errors.emailId = "Email Id is invalid!";
+    }
+    
+    if (!values.aadharNumber) {
+      errors.aadharNumber = "Aadhar Number is required!";
+    } else if (!/^\d{12}$/.test(values.aadharNumber)) {
+      errors.aadharNumber = "Aadhar Number must be 12 digits!";
+    }
+    if (!values.panNumber) {
+      errors.panNumber = "PAN Number is required!";
+    } else if (!/[A-Z]{5}\d{4}[A-Z]{1}/.test(values.panNumber)) {
+      errors.panNumber = "PAN Number format is invalid!";
+    }
+    if (!values.password) {
+      errors.password = "Password is required!";
+    } else if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/.test(values.password)) {
+      errors.password = "Password format is invalid!";
+    }
 
     return errors;
   };
@@ -96,6 +128,7 @@ export default function EditEmployee() {
 
   const handleSubmitClick = () => {
     setSuccessConfirmation(false);
+    navigate('/admin/searchemployee'); // Navigate after closing the modal
   };
 
   const isFormChanged = () => {
@@ -108,7 +141,9 @@ export default function EditEmployee() {
       initialFormValues.emailId !== formValues.emailId ||
       initialFormValues.projectId !== formValues.projectId ||
       initialFormValues.aadharNumber !== formValues.aadharNumber ||
-      initialFormValues.panNumber !== formValues.panNumber
+      initialFormValues.panNumber !== formValues.panNumber ||
+      initialFormValues.password !== formValues.password
+
       // Add similar checks for other fields
     );
   };
@@ -118,11 +153,14 @@ export default function EditEmployee() {
       <form onSubmit={handleSubmit}>
         <h3>Edit Employee Details</h3>
         <div className="container employee-form">
+
           <div className="row">
+
             <div className="col-md-6 form-group">
               <label className="label">Firstname:</label>
               <input
                 type="text"
+                maxLength={50}
                 name="firstName"
                 className="form-control"
                 value={formValues.firstName || ''}
@@ -133,18 +171,22 @@ export default function EditEmployee() {
               <label className="label">Lastname:</label>
               <input
                 type="text"
+                maxLength={50}
                 name="lastName"
                 className="form-control"
                 value={formValues.lastName || ''}
                 onChange={handleChange}/>
               <p className="text-danger">{formErrors.lastName}</p>
             </div>
-          </div>
-          <div className="row">
+          {/* </div> */}
+
+          {/* <div className="row"> */}
+
             <div className="col-md-6 form-group">
               <label className="label">Address:</label>
               <textarea
                 name="address"
+                maxLength={100}
                 className="form-control"
                 rows="5"
                 value={formValues.address || ''}
@@ -155,24 +197,28 @@ export default function EditEmployee() {
               <label className="label">Mobile Number:</label>
               <input
                 type="text"
+                maxLength={10}
                 name="mobileNumber"
                 className="form-control"
                 value={formValues.mobileNumber || ''}
                 onChange={handleChange}/>
               <p className="text-danger">{formErrors.mobileNumber}</p>
             </div>
-          </div>
-          <div className="row">
             <div className="col-md-6 form-group">
               <label className="label">Email Id:</label>
               <input
                 type="text"
+                maxLength={100}
                 name="emailId"
                 className="form-control"
                 value={formValues.emailId || ''}
                 onChange={handleChange}/>
               <p className="text-danger">{formErrors.emailId}</p>
             </div>
+          {/* </div>           */}
+            
+            {/* <div className="row"> */}
+
             <div className="col-md-6 form-group">
               <label className="label">Project Id:</label>
               <input
@@ -187,12 +233,14 @@ export default function EditEmployee() {
               <label className="label">Aadhar Number:</label>
               <input
                 type="text"
+                maxLength={12}
                 name="aadharNumber"
                 className="form-control"
                 value={formValues.aadharNumber || ''}
                 onChange={handleChange}/>
               <p className="text-danger">{formErrors.aadharNumber}</p>
             </div>
+            
             <div className="col-md-6 form-group">
               <label className="label">Pan Number:</label>
               <input
@@ -203,8 +251,19 @@ export default function EditEmployee() {
                 onChange={handleChange}/>
               <p className="text-danger">{formErrors.panNumber}</p>
             </div>
+            <div className="col-md-6 form-group">
+                  <label className="label">Password</label>
+                  <input
+                    type="text"
+                    name="password"
+                    className="form-control" 
+                    value={formValues.password || ''}
+                    onChange={handleChange}/>
+                  <p className="text-danger">{formErrors.password}</p>
+            </div>
           </div>
         </div>
+
         <div className="buttons">
           <button type="submit" className="btn btn-success mx-2">
             Submit

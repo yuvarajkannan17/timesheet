@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
-import NavPages from "../NavPages";
-import { getLastEnteredEmployee, addEmployeeData, updateEmployeeData } from "../Employee/EmployeeService"; // Assuming you have functions for adding and updating employees
+import { checkEmployeeDuplicates } from "../Employee/EmployeeService";
 import '../../css/style.css';
 
 const AddEmployeeData = () => {
@@ -16,47 +14,19 @@ const AddEmployeeData = () => {
     emailId: "",
     aadharNumber: "",
     panNumber: "",
+    password: ""
   });
-  const [lastEnteredEmployee, setLastEnteredEmployee] = useState(null);
-  const [isEditMode, setIsEditMode] = useState(false);
   const [formErrors, setFormErrors] = useState({});
+  const [validationErrors, setValidationErrors] = useState({});
   const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchEmployeeData = async () => {
-      const lastEntered = await getLastEnteredEmployee();
-      setLastEnteredEmployee(lastEntered);
-      setIsEditMode(location.search.includes("editMode=true"));
-      
-      if (lastEntered && location.search.includes("editMode=true")) {
-        setFormValues({
-          firstName: lastEntered.firstName,
-          lastName: lastEntered.lastName,
-          address: lastEntered.address,
-          mobileNumber: lastEntered.mobileNumber,
-          emailId: lastEntered.emailId,
-          aadharNumber: lastEntered.aadharNumber,
-          panNumber: lastEntered.panNumber,
-        });
-        setIsEditMode(true);
-      } else {
-        setFormValues({
-          firstName: '',
-          lastName: '',
-          address: '',
-          mobileNumber: '',
-          emailId: '',
-          aadharNumber: '',
-          panNumber: '',
-        });
-        setIsEditMode(false);
-      }
-    };
-
-    fetchEmployeeData();
-  }, [location.search]);
+    if (location.state && location.state.employee) {
+      setFormValues(location.state.employee);
+    }
+  }, [location.state]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,102 +34,80 @@ const AddEmployeeData = () => {
       ...prevData,
       [name]: value,
     }));
+
+    // Clear specific field errors on change
     setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
+
+    // Clear duplicate errors for the field being edited
+    setValidationErrors((prevErrors) => ({
       ...prevErrors,
       [name]: "",
     }));
   };
 
-  const handleSave = () => {
-    const validationError = validate(formValues);
-    if (Object.keys(validationError).length > 0) {
-      setFormErrors(validationError);
-    } else {
-      setSuccessModalOpen(true);
-    }
-  };
-
-  const handleSubmit = async () => {
-    try {
-      if (isEditMode) {
-        await updateEmployeeData(lastEnteredEmployee.employeeId, formValues);
-      } else {
-        await addEmployeeData(formValues);
-      }
-      setSuccessModalOpen(false);
-      handleSuccess(); // Call handleSuccess after successful form submission
-      navigate("/admin/employeeprofile");
-    } catch (error) {
-      console.error("Error while saving data:", error);
-    }
-  };
-  
-  
   const validate = (values) => {
     const errors = {};
-
-    if (!values.firstName) {
-      errors.firstName = "Firstname is required!";
-    } else if (values.firstName.length > 50) {
-      errors.firstName = "Firstname cannot exceed more than 50 characters";
-    }
-
-    if (!values.lastName) {
-      errors.lastName = "Lastname is required!";
-    } else if (values.lastName.length > 50) {
-      errors.lastName = "Lastname cannot exceed more than 50 characters";
-    }
-
-    if (!values.address) {
-      errors.address = "Address is required!";
-    } else if (values.address.length > 100) {
-      errors.address = "Address cannot exceed more than 100 characters";
-    }
-
-    if (!values.mobileNumber) {
-      errors.mobileNumber = "Mobile Number is required!";
-    } else if (values.mobileNumber.length !== 10) {
-      errors.mobileNumber = "Mobile Number should be 10 characters";
-    }
-
-    if (!values.emailId) {
-      errors.emailId = "Email Id is required!";
-    } else if (!isValidEmail(values.emailId)) {
-      errors.emailId = "This is not a valid email format";
-    }
-
-    if (!values.aadharNumber) {
-      errors.aadharNumber = "Aadhar Number is required!";
-    } else if (values.aadharNumber.length !== 12) {
-      errors.aadharNumber = "Aadhar Number should be 12 characters";
-    }
-
-    if (!values.panNumber) {
-      errors.panNumber = "Pan Number is required!";
-    } else if (!isValidPan(values.panNumber)) {
-      errors.panNumber = "This is not a valid Pan Number";
-    }
+    if (!values.firstName) errors.firstName = "Firstname is required!";
+    if (!values.lastName) errors.lastName = "Lastname is required!";
+    if (!values.address) errors.address = "Address is required!";
+    if (!values.mobileNumber || values.mobileNumber.length !== 10) errors.mobileNumber = "Valid Mobile Number is required!";
+    if (!values.emailId || !isValidEmail(values.emailId)) errors.emailId = "Valid Email Id is required!";
+    if (!values.aadharNumber || values.aadharNumber.length !== 12) errors.aadharNumber = "Valid Aadhar Number is required!";
+    if (!values.panNumber || !isValidPan(values.panNumber)) errors.panNumber = "Valid Pan Number is required!";
+    if (!values.password || !isValidPassword(values.password)) errors.password = "Valid Paaaword is required!";
 
     return errors;
   };
 
-  const isValidEmail = (emailId) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(emailId);
-  };
+  const isValidEmail = (emailId) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailId);
+  const isValidPan = (panNumber) => /[A-Z]{5}[0-9]{4}[A-Z]{1}/.test(panNumber);
+  const isValidPassword = (password) => /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/.test(password);
 
-  const isValidPan = (panNumber) => {
-    const panRegex = /[A-Z]{5}[0-9]{4}[A-Z]{1}/;
-    return panRegex.test(panNumber);
-  };
+  const handleSave = async () => {
+    const errors = validate(formValues);
+    setFormErrors(errors);
 
-  const handleSuccess = async () => {
-    try {
-      setSuccessModalOpen(false);
-      navigate("/admin/employeeprofile");
-    } catch (error) {
-      console.error("Error while navigating:", error);
+    if (Object.keys(errors).length === 0) {
+      // Check for duplicates
+      try {
+        const duplicates = await checkEmployeeDuplicates(formValues);
+
+        const newValidationErrors = {};
+
+        // Check each field for duplicates and set validation errors if any
+        if (duplicates.emailId) {
+          newValidationErrors.emailId = 'Email ID already exists';
+        }
+        if (duplicates.panNumber) {
+          newValidationErrors.panNumber = 'PAN Number already exists';
+        }
+        if (duplicates.mobileNumber) {
+          newValidationErrors.mobileNumber = 'Mobile Number already exists';
+        }
+        if (duplicates.aadharNumber) {
+          newValidationErrors.aadharNumber = 'Aadhar Number already exists';
+        }
+
+        if (Object.keys(newValidationErrors).length > 0) {
+          setValidationErrors(newValidationErrors);
+          return;
+        }
+
+        setSuccessModalOpen(true);
+      } catch (error) {
+        console.error('Error checking duplicates:', error);
+        // Handle error, maybe show a user-friendly message
+      }
     }
+  };
+
+  const handleSubmit = () => {
+    // Save data to the server or state management here
+    setSuccessModalOpen(false);
+    navigate("/admin/employeeprofile", { state: { employee: formValues } });
   };
 
   const handleClose = () => {
@@ -172,117 +120,134 @@ const AddEmployeeData = () => {
 
   return (
     <div className="background-clr">
-      <NavPages />
       <div>
         <form>
           <div>
-            <h3> Create Profile </h3>
+            <h3>Create Employee</h3>
             <div className="container employee-form">
               <div className="row">
-                <div className="col-md-6 form-group ">
+                <div className="col-md-6 form-group">
                   <label className="label">Firstname<span className="required">*</span></label>
                   <input
-                    type="text"
+                    type="text"  
+                    maxLength={50}                  
                     name="firstName"
-                    className={`form-control ${formErrors.firstName ? 'is-invalid' : ''}`}
+                    className={`form-control ${formErrors.firstName || validationErrors.firstName ? 'is-invalid' : ''}`}
                     value={formValues.firstName}
                     onChange={handleChange}
                   />
-                  {formErrors.firstName && <div className="invalid-feedback">{formErrors.firstName}</div>}
+                  {(formErrors.firstName || validationErrors.firstName) && <div className="invalid-feedback">{formErrors.firstName || validationErrors.firstName}</div>}
                 </div>
                 <div className="col-md-6 form-group">
                   <label className="label">Lastname<span className="required">*</span></label>
                   <input
                     type="text"
+                    maxLength={50}
                     name="lastName"
-                    className={`form-control ${formErrors.lastName ? 'is-invalid' : ''}`}
+                    className={`form-control ${formErrors.lastName || validationErrors.lastName ? 'is-invalid' : ''}`}
                     value={formValues.lastName}
                     onChange={handleChange}
                   />
-                  {formErrors.lastName && <div className="invalid-feedback">{formErrors.lastName}</div>}
+                  {(formErrors.lastName || validationErrors.lastName) && <div className="invalid-feedback">{formErrors.lastName || validationErrors.lastName}</div>}
                 </div>
                 <div className="col-md-6 form-group">
                   <label className="label">Mobile Number<span className="required">*</span></label>
                   <input
                     type="text"
-                    name="mobileNumber"
-                    className={`form-control ${formErrors.mobileNumber ? 'is-invalid' : ''}`}
-                    minLength={10}
                     maxLength={10}
+                    name="mobileNumber"
+                    className={`form-control ${formErrors.mobileNumber || validationErrors.mobileNumber ? 'is-invalid' : ''}`}
                     value={formValues.mobileNumber}
                     onChange={handleChange}
                   />
-                  {formErrors.mobileNumber && <div className="invalid-feedback">{formErrors.mobileNumber}</div>}
+                  {(formErrors.mobileNumber || validationErrors.mobileNumber) && <div className="invalid-feedback">{formErrors.mobileNumber || validationErrors.mobileNumber}</div>}
                 </div>
                 <div className="col-md-6 form-group">
                   <label className="label">Email Id<span className="required">*</span></label>
                   <input
-                    type="text"
+                    type="email"
+                    maxLength={100}
                     name="emailId"
-                    className={`form-control ${formErrors.emailId ? 'is-invalid' : ''}`}
+                    className={`form-control ${formErrors.emailId || validationErrors.emailId ? 'is-invalid' : ''}`}
                     value={formValues.emailId}
                     onChange={handleChange}
                   />
-                  {formErrors.emailId && <div className="invalid-feedback">{formErrors.emailId}</div>}
+                  {(formErrors.emailId || validationErrors.emailId) && <div className="invalid-feedback">{formErrors.emailId || validationErrors.emailId}</div>}
                 </div>
                 <div className="col-md-6 form-group">
                   <label className="label">Aadhar Number<span className="required">*</span></label>
                   <input
                     type="text"
-                    name="aadharNumber"
-                    className={`form-control ${formErrors.aadharNumber ? 'is-invalid' : ''}`}
-                    minLength={12}
                     maxLength={12}
+                    name="aadharNumber"
+                    className={`form-control ${formErrors.aadharNumber || validationErrors.aadharNumber ? 'is-invalid' : ''}`}
                     value={formValues.aadharNumber}
                     onChange={handleChange}
                   />
-                  {formErrors.aadharNumber && <div className="invalid-feedback">{formErrors.aadharNumber}</div>}
+                  {(formErrors.aadharNumber || validationErrors.aadharNumber) && <div className="invalid-feedback">{formErrors.aadharNumber || validationErrors.aadharNumber}</div>}
                 </div>
                 <div className="col-md-6 form-group">
                   <label className="label">Pan Number<span className="required">*</span></label>
                   <input
-                    type="text"
+                    type="text"                   
                     name="panNumber"
-                    className={`form-control ${formErrors.panNumber ? 'is-invalid' : ''}`}
-                    maxLength={10}
+                    className={`form-control ${formErrors.panNumber || validationErrors.panNumber ? 'is-invalid' : ''}`}
                     value={formValues.panNumber}
                     onChange={handleChange}
                   />
-                  {formErrors.panNumber && <div className="invalid-feedback">{formErrors.panNumber}</div>}
+                  {(formErrors.panNumber || validationErrors.panNumber) && <div className="invalid-feedback">{formErrors.panNumber || validationErrors.panNumber}</div>}
                 </div>
-                <div className="col-md-12 form-group">
-                  <label className="address">Address<span className="required">*</span></label>
+                <div className="col-md-6 form-group">
+                  <label className="label">Address<span className="required">*</span></label>
                   <textarea
                     name="address"
+                    maxLength={100}
                     className={`form-control ${formErrors.address ? 'is-invalid' : ''}`}
-                    rows="5"
-                    cols="50"
                     value={formValues.address}
                     onChange={handleChange}
-                  ></textarea>
+                  />
                   {formErrors.address && <div className="invalid-feedback">{formErrors.address}</div>}
                 </div>
+                <div className="col-md-6 form-group">
+                  <label className="label">Password<span className="required">*</span></label>
+                  <input
+                    type="text"
+                    name="password"
+                    className={`form-control ${formErrors.password || validationErrors.password ? 'is-invalid' : ''}`}
+                    value={formValues.password}
+                    onChange={handleChange}
+                  />
+                  {(formErrors.password || validationErrors.password) && <div className="invalid-feedback">{formErrors.password || validationErrors.password}</div>}
+                </div>
               </div>
-            </div>
-            <div className="buttons">
-              <button type="button" className="btn btn-success mx-2" onClick={handleSave}>
-                Save
-              </button>
-              <button type="button" className="btn btn-secondary mx-2" onClick={handleCancel}>
-                Cancel
-              </button>
+              <div className="buttons">
+                <button
+                  type="button"
+                  className="btn btn-success mx-2"
+                  onClick={handleSave}
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary mx-2"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
         </form>
-
-        <Modal show={isSuccessModalOpen} onHide={handleClose}>
-          <Modal.Body>Do you want to Save?</Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>Cancel</Button>
-            <Button variant="primary" onClick={handleSubmit}>Save</Button>
-          </Modal.Footer>
-        </Modal>
       </div>
+
+      <Modal show={isSuccessModalOpen} onHide={handleClose}>
+        <Modal.Body>Do you want to save?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>Cancel</Button>
+          <Button variant="primary" onClick={handleSubmit}>Save</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

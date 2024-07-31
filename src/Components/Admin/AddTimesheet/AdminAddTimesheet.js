@@ -6,102 +6,179 @@ import './AddTimesheet.css';
 import { Modal, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import successCheck from '../../Image/checked.png'
+import checkedImage from '../../Image/checked.png';
 
 
 
 const AdminAddTimesheet = () => {
+  const [errors,setErrors]=useState("");
+ const [inputData,setInputData]=useState({
+  employeeId:"",
+  projectId:""
+
+ })
   const [selectedMonth, setSelectedMonth] = useState('');
   const [timesheetData, setTimesheetData] = useState([]);
   const [availableProjects, setAvailableProjects] = useState([]);
   const [tableRowCount, setTableRowCount] = useState(1);
   const [showFirstHalf, setShowFirstHalf] = useState(true);
-  const [addDataSaveConfirmation, setAddDataSaveConfirmation] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [addDataSubmitConfirmation, setAddDataSubmitConfirmation] = useState(false);
-  const [saveModalForEmployeeAdd, setSaveModalForEmployeeAdd] = useState(false);
   const [successModalForEmployeeAdd, setSuccessModalForEmployeeAdd] = useState(false);
+  const [getValueFromLocal,setGetValueFromLocal]=useState("")
+  const navigate = useNavigate();
+
+
+  const generateTimesheetData = (selectedMonth) => {
+    if (!selectedMonth) return;
+  
+    const currentYear = parseInt(selectedMonth.slice(0, 4));
+    const currentMonth = parseInt(selectedMonth.slice(5, 7)) - 1; // Adjust for zero-based month index
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const startDay = showFirstHalf ? 1 : 16;
+    const endDay = showFirstHalf ? 15 : daysInMonth;
+  
+    const newTimesheetData = [];
+  
+    for (let day = startDay; day <= endDay; day++) {
+      const date = new Date(currentYear, currentMonth, day);
+      newTimesheetData.push({ date, projectId: "", employeeId: "", hours: 0 });
+    }
+  
+    setErrors({ ...errors, date: "" });
+    setTimesheetData(newTimesheetData);
+    
+  };
 
   useEffect(() => {
     generateTimesheetData(selectedMonth);
   }, [selectedMonth, showFirstHalf]);
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await axios.get('https://65e69d32d7f0758a76e8a1e0.mockapi.io/projectIDs');
-        const data = response.data;
-        const projectOptions = data.map(project => ({
-          value: project.projectID,
-          label: project.projectID,
-        }));
-        setAvailableProjects(projectOptions);
-      } catch (error) {
-        console.error('Error fetching projects:', error);
-      }
-    };
+     
 
-    fetchProjects();
-  }, []);
+  console.log("timesheetData",timesheetData)
 
-  function addSaveDataCancelFun() {
-    setAddDataSaveConfirmation(false)
-  }
-
-  async function addDataSaveConfirmationFun() {
-    setAddDataSaveConfirmation(true);
-}
-async function addDataSubmitConfirmationFun() {
-  setAddDataSubmitConfirmation(true);        
-} 
-
-function addSubmitDataCancelFun() {
-  setAddDataSubmitConfirmation(false)
-}
-
-const addDataSaveFun = async () => {
-    setAddDataSaveConfirmation(false);
+  const saveTimesheetData = () => {
+    let hasErrors = false;
+    const newErrors = { date: "", projectId: "", employeeId: "" };
+  
+    // Check if timesheetData is empty
+    if (timesheetData.length === 0) {
+      newErrors.date = "No timesheet data available";
+      hasErrors = true;
+    } else {
+      // Validate each entry in timesheetData
+      timesheetData.forEach((entry) => {
+        if (!entry.date) {
+          newErrors.date = "Date is required";
+          hasErrors = true;
+        }
+        if (!entry.projectId) {
+          newErrors.projectId = "Project ID is required";
+          hasErrors = true;
+        }
+        if (!entry.employeeId) {
+          newErrors.employeeId = "Employee ID is required";
+          hasErrors = true;
+        }
+      });
+    }
+  
+    // Update state with new errors
+    setErrors(newErrors);
+  
+    // Prevent saving if there are errors
+    if (hasErrors) {
+      console.error('Validation errors:', newErrors);
+      return;
+    }
+  
+    // Save data to local storage
     try {
-      if (!selectedMonth) {
-        console.error('Please select a month before saving.');
-        return;
-      }
       const timesheetPayload = {
-        selectedMonth,
-        showFirstHalf,
-        data: timesheetData.map(({ date, entries }) => ({
+        data: timesheetData.map(({ date, projectId, employeeId, hours }) => ({
           date: date.toISOString(),
-          entries,
+          projectId,
+          employeeId,
+          
+          hours:Number(hours),
         })),
+        timestamp: new Date().getTime()
       };
-
-      const response = await axios.post('https://65c0706125a83926ab964c6f.mockapi.io/api/projectdetails/timesheets', timesheetPayload);
-      setSaveModalForEmployeeAdd(true);
-      console.log('Timesheet data saved successfully:', response.data);
+  
+      // Get existing timesheets from localStorage
+      const existingTimesheets = JSON.parse(localStorage.getItem('timesheetDataList')) || [];
+  
+      // Add new timesheet to the list
+      existingTimesheets.push(timesheetPayload);
+  
+      // Save updated list to localStorage
+      localStorage.setItem('timesheetDataList', JSON.stringify(existingTimesheets));
+      console.log("Timesheet data saved locally:", timesheetPayload);
+  
+         
+      // Show success modal
+      setShowSuccessModal(true);
+        setTimesheetData([]);
+      setSelectedMonth("");
+      setInputData({
+        employeeId:"",
+        projectId:""
+      })
+ 
+      
+  
     } catch (error) {
       console.error('Error saving timesheet data:', error);
+      alert('Error saving timesheet data.');
     }
   };
+  
+  
+  
+
+  function addSubmitDataCancelFun() {
+    setAddDataSubmitConfirmation(false)
+  }
+
+  const handleCancel = () => {
+    navigate('/admin'); // Navigate back to the home page
+  };
+
+  
 
   async function addDataSumbitFun(){
     setAddDataSubmitConfirmation(false);
-    try{
-      if (!selectedMonth) {      
-        console.error('Please select a month before submit.');
-        return;
+
+    const formattedTimesheetData = timesheetData.map((obj) => ({
+      ...obj,
+      date: obj.date.toISOString().split('T')[0], // Format date to YYYY-MM-DD
+    }));
+
+    console.log(formattedTimesheetData);
+
+
+    if(formattedTimesheetData){
+
+      try{
+        let response= await axios.post("http://localhost:8081/api/working-hours",timesheetData);
+         setSuccessModalForEmployeeAdd(true)
+         
+        setTimesheetData([]);
+        setSelectedMonth("");
+        setInputData({
+          employeeId:"",
+          projectId:""
+        })
+      }catch(error){
+
+        console.log(error)
+
       }
-      const timesheetPayload = {
-        selectedMonth,
-        showFirstHalf,
-        data: timesheetData.map(({ date, entries }) => ({
-          date: date.toISOString(),
-          entries,
-        })),
-      };
-      const response =  await axios.post('http://localhost:8081/api/working-hours', timesheetPayload);    
-    setSuccessModalForEmployeeAdd(true)
-    console.log('Timesheet data submitted successfully:', response.data);
-  }catch(error){
-    console.log(error)
-  }
+
+    }   
+     
 }
 
   const handleForward = () => {
@@ -118,77 +195,159 @@ const addDataSaveFun = async () => {
     setShowFirstHalf(!showFirstHalf);
   };
 
-  const generateTimesheetData = (selectedMonth) => {
-    if (!selectedMonth) return;
 
-    const currentYear = parseInt(selectedMonth.slice(0, 4));
-    const daysInMonth = new Date(currentYear, parseInt(selectedMonth.slice(5, 7)), 0).getDate();
-    const startDay = showFirstHalf ? 1 : 16;
-    const totalDays = showFirstHalf ? 15 : daysInMonth - 15;
-    const newTimesheetData = Array.from({ length: totalDays }, (_, i) => {
-    const dayOfMonth = startDay + i;
-    const date = new Date(currentYear, parseInt(selectedMonth.slice(5, 7)) - 1, dayOfMonth);
-    return { date, entries: Array(tableRowCount).fill({ projectId: '', workHours: '' }) };
+  const loadRecentTimesheetData = () => {
+    const savedTimesheetDataList = JSON.parse(localStorage.getItem('timesheetDataList')) || [];
+    if (savedTimesheetDataList.length > 0) {
+      // Get the most recent timesheet based on the timestamp
+      const mostRecentTimesheet = savedTimesheetDataList.reduce((latest, current) => {
+        return current.timestamp > latest.timestamp ? current : latest;
+      }, savedTimesheetDataList[0]);
+      
+      setGetValueFromLocal(mostRecentTimesheet.data.map(entry => ({
+        date: new Date(entry.date),
+        projectId: entry.projectId,
+        employeeId: entry.employeeId,
+        hours: entry.hours,
+      })));
+      console.log("Loaded recent timesheet data from localStorage:", mostRecentTimesheet);
+    }
+  };
+
+  useEffect(()=>{
+   loadRecentTimesheetData();
+  },[])
+
+  console.log("local",getValueFromLocal);
+
+  
+
+  function enteringProjectId(e){
+    setInputData({...inputData,projectId:e.target.value})
+    let updateProjectId = timesheetData.map((day)=>({
+
+        ...day,
+        projectId:e.target.value
+
+      }))
+
+      setTimesheetData(updateProjectId)
+
+      setErrors({errors,projectId:""})
+
+  }
+ 
+
+  const enteringWorkHours= (rowIndex, value) => {
+    if (!isNaN(value)) {
+
+        if (value < 0 || value > 12) {
+            // If the value is less than 0 or greater than 12 , we don't need do anything
+            
+          }else{
+            // Update the timesheetData array
+    const updatedTimesheetData = timesheetData.map((entry, index) => {
+      if (index === rowIndex) {
+        // Update the specific row index with the new value
+        return {
+          ...entry,
+          // Assuming you want to update the 'workHours' field or similar
+          hours: Number(value) 
+        };
+      }
+      return entry;
     });
-
-    setTimesheetData(newTimesheetData);
-  };
-
-  const handleWorkHoursChange = (rowIndex, columnIndex, value) => {
-    const newTimesheetData = [...timesheetData];
-
-    if (!newTimesheetData[rowIndex]?.entries) {
-      newTimesheetData[rowIndex].entries = [];
+  
+    setTimesheetData(updatedTimesheetData);
+       
+          }
+       
+    } else {
+        value = 0;
     }
 
-    if (!newTimesheetData[rowIndex].entries[columnIndex]) {
-      newTimesheetData[rowIndex].entries[columnIndex] = {};
-    }
 
-    newTimesheetData[rowIndex].entries[columnIndex].workHours = value;
-    setTimesheetData(newTimesheetData);
-  }; 
+};
 
-  const handleProjectChange = (rowIndex, columnIndex, selectedOption) => {
-    const newTimesheetData = [...timesheetData];
-    newTimesheetData[rowIndex].entries[columnIndex].projectId = selectedOption.value;
-    setTimesheetData(newTimesheetData);
-  };
+function enteringEmpId(e){
 
-  const handleAddRow = () => {
-    setTableRowCount((prev) => prev + 1);
-  };
+     setInputData({...inputData,employeeId:e.target.value})
+  let updateEmpId = timesheetData.map((day)=>({
 
-  const handleRemoveRow = (rowIndex) => {
-    const newTimesheetData = [...timesheetData];
-    newTimesheetData.splice(rowIndex, 1);
-    setTimesheetData(newTimesheetData);
-    setTableRowCount((prev) => prev - 1);
-  };
-  const navigate = useNavigate();
-  function goToAdminHome() {
-    navigate('/admin')
+    ...day,
+    employeeId:e.target.value
+
+  }))
+
+  setTimesheetData(updateEmpId)
+  
+   setErrors({...errors,employeeId:""})
+
 }
- // Calculate total work hours
- const totalWorkHours = timesheetData.reduce((total, row) => {
-  return (
-    total +
-    row.entries.reduce((rowTotal, entry) => {
-      return rowTotal + (entry.workHours ? parseInt(entry.workHours) : 0);
-    }, 0)
-  );
-}, 0);
 
+
+function calculateTotalWorkHours() {
+  return timesheetData.reduce((total, entry) => {
+    // Ensure the hours field is a number and add it to the total
+    const workHours = entry.hours ? parseFloat(entry.hours) : 0;
+    return total + workHours;
+  }, 0);
+}
+
+const isSunday = (date) => date.getDay() === 0;
+
+  console.log("error",errors);
+
+  async function confirmationForSubmit() {
+    let hasErrors = false;
+    const newErrors = { date: "", projectId: "", employeeId: "" };
+  
+    // Check if timesheetData is empty
+    if (timesheetData.length === 0) {
+      newErrors.date = "No timesheet data available";
+      hasErrors = true;
+    } else {
+      // Validate each entry in timesheetData
+      timesheetData.forEach((entry) => {
+        if (!entry.date) {
+          newErrors.date = "Date is required";
+          hasErrors = true;
+        }
+        if (!entry.projectId) {
+          newErrors.projectId = "Project ID is required";
+          hasErrors = true;
+        }
+        if (!entry.employeeId) {
+          newErrors.employeeId = "Employee ID is required";
+          hasErrors = true;
+        }
+      });
+    }
+  
+    // Update state with new errors
+    setErrors(newErrors);
+  
+    // Prevent saving if there are errors
+    if (hasErrors) {
+      console.error('Validation errors:', newErrors);
+      return;
+    } else {
+      setAddDataSubmitConfirmation(true);
+  
+     
+    }
+  }
+  
   return (
     <div className="AddTimesheet background-clr">
       <div className="AddTimesheet employeeEdit-container pt-4">
         <div>
-          <p className='AddTimesheet fs-4 text-secondary'>Add Timesheet</p>
+          <p className="AddTimesheet fs-4 text-secondary">Add Timesheet</p>
         </div>
 
         <div className="d-flex justify-content-between">
           <div className="m-1">
-            <label htmlFor="fromMonth">Select Month and Year :  </label>
+            <label htmlFor="fromMonth">Select Month and Year : </label>
             <input
               type="month"
               id="fromMonth"
@@ -197,7 +356,7 @@ const addDataSaveFun = async () => {
               onChange={(e) => setSelectedMonth(e.target.value)}
             />
           </div>
-          <div>
+        <div>
             <button
               className="AddTimesheet btn btn-primary"
               onClick={handleBackward}
@@ -208,16 +367,37 @@ const addDataSaveFun = async () => {
               className="AddTimesheet btn btn-primary ms-2"
               onClick={handleForward}
             >
-              Forward<i className="bi bi-caret-right-fill"></i>
+                            Forward<i className="bi bi-caret-right-fill"></i>
             </button>
           </div>
         </div>
+
+        {errors && errors.date ? <small style={{color:"red",fontWeight:"bold"}}>{errors.date}</small> : ""}
+       
+        <div className='d-flex justify-content-between'>
+           <div className="m-1">
+            <label htmlFor="emp-id">EMP ID : </label>
+            <input
+              type="text"
+              id="emp-id"
+              className="mx-1"
+              value={inputData.employeeId}
+               onChange={enteringEmpId}
+               placeholder=' Enter EMP ID'
+            />
+           </div>
+          
+        </div>
+        {errors.employeeId && errors.employeeId ? <small style={{color:'red',fontWeight:"bold"}}>{errors.employeeId}</small>:""}
+        
+        
+
 
         <div className=" table-responsive border border-1 rounded p-4 border-black my-4" style={{ position: 'relative', zIndex: 1 }}>
           <table className="table table-bordered text-center">
             <thead>
               <tr>
-                <th style={{ backgroundColor: '#c8e184' }} >Date</th>
+                <th style={{ backgroundColor: '#c8e184' }}>Date</th>
                 {timesheetData.map((entry, rowIndex) => (
                   <th key={rowIndex} style={{ backgroundColor: ' #c8e184' }}>
                     {entry.date.toLocaleDateString('en-US', {
@@ -226,95 +406,100 @@ const addDataSaveFun = async () => {
                     })}
                   </th>
                 ))}
-                <th style={{ backgroundColor: ' #c8e184' }}></th>
+                
               </tr>
               <tr>
-                <th style={{ backgroundColor: ' #c8e184' }} >Day</th>
+                <th style={{ backgroundColor: ' #c8e184' }}>Day</th>
                 {timesheetData.map((entry, rowIndex) => (
-                  <td key={rowIndex} style={{ backgroundColor: entry.date.getDay() === 0 ? 'gold' : '#c8e184' }}>
+                  <td
+                    key={rowIndex}
+                    style={{ backgroundColor: entry.date.getDay() === 0 ? 'gold' : '#c8e184' }}
+                  >
                     {entry.date.toLocaleDateString('en-US', { weekday: 'short' })}
                   </td>
                 ))}
-                <td style={{ backgroundColor: ' #c8e184' }}></td>
+                
               </tr>
-              {[...Array(tableRowCount)].map((_, rowIndex) => (
-                <tr key={rowIndex}>
-                  <th style={{ backgroundColor: "#e8fcaf" }}>
-                    <div>
-                      <Select
-                        options={availableProjects.map((project) => ({
-                          value: project.value,
-                          label: project.label,
-                        }))}
-                        value={timesheetData[rowIndex]?.entries[0]?.projectId ? { value: timesheetData[rowIndex].entries[0].projectId, label: timesheetData[rowIndex].entries[0].projectId } : null}
-                        onChange={(selectedOption) => handleProjectChange(rowIndex, 0, selectedOption)}
-                        placeholder="Project ID"
-                        className="AddTimesheet my-2" 
-                      />
-                    </div>
-                  </th>
-                  {timesheetData.map((entry, columnIndex) => (
-                    <td key={columnIndex} style={{ backgroundColor: "#e8fcaf" }}>
-                      <input
-                        type="text"
-                        inputMode="numeric"
-                        className="AddTimesheet form-control" 
-                        placeholder="0"
-                        value={timesheetData[rowIndex]?.entries[columnIndex]?.workHours}
-                        onChange={(e) => handleWorkHoursChange(rowIndex, columnIndex, e.target.value)}
-                      />
-                    </td>
-                  ))}
-                  <td style={{ backgroundColor: "#e8fcaf" }}>
-                    <button
-                      className="AddTimesheet btn btn-danger" 
-                      onClick={() => handleRemoveRow(rowIndex)}
-                    >
-                      X
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              <tr>
+                <th><input type='text' className='w-100  ' value={inputData.projectId} onChange={enteringProjectId} placeholder='Enter Project Id' /></th>
+                {timesheetData.map((entry,rowIndex)=>
+                   <td><input key={rowIndex} type="text"
+                   inputMode="numeric"
+                   className="AddTimesheet form-control"
+                   placeholder="0" value={entry.hours} min={0} max={15}  disabled={isSunday(entry.date)}  onChange={(e)=>enteringWorkHours(rowIndex,e.target.value)}></input></td>
+                )}
+                
+              </tr>
+               
             </thead>
           </table>
-          <button
-            className="AddTimesheet btn btn-success ms-2" 
-            onClick={handleAddRow}
-          >
-            +
-          </button>
+
+          {errors.projectId && errors.projectId ? <small style={{color:"red",fontWeight:"bold"}}>{errors.projectId}</small>:""}
+        
+        
         </div>
 
         <div>
-            <span className="AddTimesheet fw-bold">Total Hours Worked : </span>{' '}
-            <span className="AddTimesheet fw-bold">{totalWorkHours}</span> 
+          <span className="AddTimesheet fw-bold">Total Hours Worked : </span>{' '}
+          <span className="AddTimesheet fw-bold">{calculateTotalWorkHours()}</span>
         </div>
-        <div className="d-flex justify-content-center" >
-            <button className="btn btn-success m-3 w-5" onClick={addDataSubmitConfirmationFun} style={{ width: '100px' }}>Submit</button>
-            <button className="AddTimesheet btn btn-primary m-3 w-5" onClick={addDataSaveConfirmationFun} style={{ width: '100px' }}>Save</button>
-            <button className="AddTimesheet btn btn-secondary m-3 w-5" onClick={goToAdminHome} style={{ width: '100px' }}>Cancel</button>
+        <div className="d-flex justify-content-center">
+          <button
+           type='button'
+            className="AddTimesheet btn btn-primary m-3 w-5"
+            onClick={saveTimesheetData}
+            style={{ width: '100px' }}
+          >
+            Save
+          </button>
+          <button
+            className="AddTimesheet btn btn-success m-3 w-5"
+            onClick={confirmationForSubmit}
+            style={{ width: '100px' }}
+          >
+            Submit
+          </button>
+          <button
+            className="AddTimesheet btn btn-secondary m-3 w-5"
+            onClick={handleCancel}
+            style={{ width: '100px' }}
+          >
+            Cancel
+          </button>
         </div>
       </div>
-           <Modal show={addDataSaveConfirmation} >
-                <Modal.Body >Do you want to Save this sheet?</Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={addSaveDataCancelFun}>
-                        Cancel
-                    </Button>
-                    <Button variant="primary" onClick={addDataSaveFun}>
-                        Save
-                    </Button>
-                </Modal.Footer>
-            </Modal>
 
-            <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={saveModalForEmployeeAdd}  >
-                <div className="d-flex flex-column modal-success p-4 align-items-center ">
-                    <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
-                    <p className="mb-4 text-center"> Your Timesheet has been saved.</p>
-                    <button className="btn  w-100 text-white" onClick={() => { setSaveModalForEmployeeAdd(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
-                </div>
-            </Modal>
-            <Modal show={addDataSubmitConfirmation}>
+      {/* Save Confirmation Modal */}
+       {/* <Modal show={showConfirmationModal} onHide={() => setShowConfirmationModal(false)}>
+        <Modal.Body>Do you want to Save this sheet?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowConfirmationModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleConfirmSave}>
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal> */}
+      <Modal
+        className="custom-modal"
+        style={{ left: '50%', transform: 'translateX(-50%)' }}
+        dialogClassName="modal-dialog-centered"
+        show={showSuccessModal}
+      >
+        <div className="d-flex flex-column modal-success p-4         align-items-center">
+          <img src={checkedImage} className="img-fluid mb-4" alt="successCheck" />
+          <p className="mb-4 text-center">Your Timesheet has been Saved.</p>
+          <button
+            className="btn  w-100 text-white"
+            onClick={() => navigate('/admin')}
+            style={{ backgroundColor: '#5EAC24' }}>
+            Close
+          </button>
+        </div>
+      </Modal>
+
+      <Modal show={addDataSubmitConfirmation}>
                 <Modal.Body >Do you want to Submit?</Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={addSubmitDataCancelFun}>
@@ -329,9 +514,10 @@ const addDataSaveFun = async () => {
                 <div className="d-flex flex-column modal-success p-4 align-items-center ">
                     <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
                     <p className="mb-4 text-center"> Your Timesheet has submitted for approval.</p>
-                    <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForEmployeeAdd(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+                    <button className="btn  w-100 text-white" onClick={() => { navigate('/admin') }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
                 </div>
-            </Modal>
+            </Modal>     
+       
     </div>
   );
 };
