@@ -21,7 +21,7 @@ function EmployeeHome() {
                                 <div className="collapse-content ">
                                     <ul><Link to={'/employee/addtimesheet'}>Add Timesheet</Link></ul>
                                     <ul><Link to={'/employee/edittimesheet'}>Edit Timesheet</Link></ul>
-                                    <ul><Link to={'/employee/rejecttimesheet'}>Reject Timesheet</Link></ul>
+                                    <ul><Link to={'/employee/rejecttimesheet'}>View Rejected Timesheet</Link></ul>
 
                                 </div>
                             )}

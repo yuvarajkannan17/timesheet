@@ -8,11 +8,13 @@ import { Provider } from 'react-redux';
 
 import modalReducer from './Components/features/modal'
 import adminDetailReducer from './Components/features/adminDetails';
+import submitBtn from './Components/features/submitBtn';
   const store=configureStore({
 
     reducer:{
       modal:modalReducer,
-      adminDetails:adminDetailReducer
+      adminDetails:adminDetailReducer,
+      submitBtn
     }
 
   })
