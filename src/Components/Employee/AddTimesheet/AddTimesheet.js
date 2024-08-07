@@ -32,7 +32,7 @@ const AddTimesheet = () => {
 
   let {isSubmit} =useSelector((state)=>state.submitBtn.value);
  const dispatch= useDispatch();
-  console.log(isSubmit);
+  
 
   useEffect(() => {
     // Retrieve the submit state from local storage when the component mounts
@@ -52,9 +52,7 @@ const AddTimesheet = () => {
     generateTimesheetData(selectedMonth);
   }, [selectedMonth, showFirstHalf]);
 
-  console.log(submitEmployeeId);
-  console.log(startSubmitDate);
-  console.log(endSubmitDate);
+ 
 
   async function timesheetState() {
 
@@ -221,7 +219,7 @@ const AddTimesheet = () => {
     calculateTotalWorkHours();
   }, [projectRows]);
 
-  console.log("proj",projectRows)
+  
   const handleAddRow = () => {
     setProjectRows((prev) => [...prev, {}]);
   };
@@ -325,13 +323,13 @@ const AddTimesheet = () => {
       localStorage.setItem('timesheetData', JSON.stringify(existingData));
         setSaveModalForTimesheet(true);
       // Log the data for debugging
-      console.log("Saved Timesheet Data:", existingData);
+      
     }
     
   };
   
   
-  console.log("time",timesheetData)
+  
  
   const submitTimesheetData = async () => {
     if (!validateTimesheetData()) {
@@ -399,8 +397,8 @@ const AddTimesheet = () => {
       }
     });
   
-    // Log the formatted data
-    console.log("Formatted Timesheet Data:", formattedData);
+  
+    
   
     // Check if there is any data to send
     if (formattedData.length > 0) {
@@ -486,14 +484,14 @@ const AddTimesheet = () => {
 
         <div className='d-flex justify-content-between'>
           {selectedMonth && <div className="m-1">
-            <label htmlFor="emp-id">EMP ID : </label>
+            <label htmlFor="emp-id">EMPLOYEE ID : </label>
             <input
               type="text"
               id="emp-id"
               className="mx-1"
               value={employeeId}
               onChange={updatingEmployeeId}
-              placeholder=' Enter EMP ID'
+              placeholder=' EMPXXX'
             />
           </div>}
         </div>
@@ -547,7 +545,7 @@ const AddTimesheet = () => {
                         <input
                           type="text"
                           inputMode='numeric'
-                          className="AddTimesheet form-control my-3"
+                          className="AddTimesheet form-control my-3 text-center"
                           placeholder="0"
                           value={project.workHours ? project.workHours[columnIndex] : ''}
                           disabled={isSunday(entry.date)}
@@ -600,7 +598,8 @@ const AddTimesheet = () => {
             <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForTimesheet}  >
                 <div className="d-flex flex-column modal-success p-4 align-items-center ">
                     <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
-                    <p className="mb-4 text-center"> Your Have Submitted Timesheet From <b> {startSubmitDate} To {endSubmitDate} </b>.</p>
+                    <p className="mb-4 text-center"> You Have Submitted Timesheet For Approval .</p>
+                    <p className="mb-4 text-center"><b>  {startSubmitDate} To {endSubmitDate} </b></p>
                     <button className="btn  w-100 text-white" onClick={closeSuccessModal} style={{ backgroundColor: '#5EAC24' }}>Close</button>
                 </div>
             </Modal>  
