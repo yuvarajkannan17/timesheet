@@ -101,7 +101,7 @@ function SearchAdmin() {
                                 </thead>
                                 <tbody>
 
-                                    {filteredAdminList&&filteredAdminList.map((d) => (
+                                    {filteredAdminList&&searchQuery&&filteredAdminList.map((d) => (
                                         <tr key={d.adminId} className={`text-center adminList-column ${activeRow === d.adminId ? 'table-active' : ''} `} onClick={() => handleAdminClick(d)}>
                                             <td>{d.adminId}</td>
                                             <td>{d.firstName}</td>

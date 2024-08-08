@@ -22,12 +22,13 @@ function CreateAdmin() {
     const [phoneError, setPhoneError] = useState('');
     const [aadharError, setAadharError] = useState('');
     const [panError, setPanError] = useState('');
-    
+    const [passwordError, setPasswordError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [createAdminError, setCreateAdminError] = useState('');
     // redux state 
     const modal = useSelector(state => state.modal.value)
     const showFailureModal = modal.failureModal;
-   
+
     const dispatch = useDispatch();
     useEffect(() => {
         const fetchDataFromApi = async () => {
@@ -55,6 +56,7 @@ function CreateAdmin() {
             emailId: "",
             aadharNumber: "",
             panNumber: "",
+            password: "",
             employeeAccess: {
                 create: false,
                 edit: false,
@@ -72,43 +74,49 @@ function CreateAdmin() {
         onSubmit
     })
 
-    
-    
+
+
 
     useEffect(() => {
         if (values.mobileNumber && touched.mobileNumber) {
             setPhoneError(''); // Clear custom phone error when input changes
         }
-       
+
     }, [values.mobileNumber]);
 
     useEffect(() => {
         if (values.panNumber && touched.panNumber) {
             setPanError(''); // Clear custom phone error when input changes
         }
-       
+
     }, [values.panNumber]);
+    useEffect(() => {
+        if (values.password && touched.password) {
+            setPanError(''); // Clear custom phone error when input changes
+        }
+
+    }, [values.password]);
 
     useEffect(() => {
-        if (values.aadharNumber&& touched.aadharNumber) {
+        if (values.aadharNumber && touched.aadharNumber) {
             setAadharError(''); // Clear custom phone error when input changes
         }
-       
+
     }, [values.aadharNumber]);
 
     useEffect(() => {
         if (values.emailId && touched.emailId) {
             setUserAlreadyExit(''); // Clear custom phone error when input changes
         }
-       
+
     }, [values.emailId]);
-    
+
 
     // function for api call after form submission
 
     async function onSubmit(values, actions) {
         let formHasErrors = false;
-           
+
         // Checking if the email is already in use
         const emailExists = adminDatas.some(admin => admin.emailId === values.emailId);
         if (emailExists) {
@@ -145,6 +153,15 @@ function CreateAdmin() {
             formHasErrors = true;
         }
 
+        // Checking if the PAN number is already in use
+        const passwordExists = adminDatas.some(admin => admin.password === values.password);
+        if (passwordExists) {
+            // Assuming you have a state setter for PAN error
+            setPasswordError('Password already in use');
+
+            formHasErrors = true;
+        }
+
         if (formHasErrors) {
             return; // Stop the form submission if there are errors
         }
@@ -155,11 +172,14 @@ function CreateAdmin() {
 
         try {
             const response = await axios.post("http://localhost:8080/admins/saveadmin", values);
-            dispatch(successModal(true));
-            actions.resetForm();
-            navigate('/superadmin/searchadmin');
-            console.log(values)
-            
+            if (response.data) {
+                dispatch(successModal(true));
+                actions.resetForm();
+                navigate('/superadmin/searchadmin');
+                console.log(response.data)
+            }
+
+
         } catch (error) {
             setCreateAdminError(error.message);
             dispatch(failureModal(true));
@@ -173,6 +193,8 @@ function CreateAdmin() {
     const handleCancel = () => {
         resetForm();
     };
+
+    const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
 
 
@@ -214,8 +236,8 @@ function CreateAdmin() {
                                     <div className="mb-3">
                                         <label htmlFor="mobileNumber" className="form-label">Mobile Number<span style={{ color: 'red' }}>*</span> </label>
                                         <input type="text" maxLength={10} className={`form-control  ${errors.mobileNumber && touched.mobileNumber ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="mobileNumber" id="mobileNumber" onChange={handleChange} onBlur={handleBlur} value={values.mobileNumber} ></input>
-                                       {errors.mobileNumber && touched.mobileNumber && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.mobileNumber}</p>}
-                                       {phoneError && <p className="sprAdmin-createAdmin-error-message small mt-1">{phoneError}</p>}
+                                        {errors.mobileNumber && touched.mobileNumber && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.mobileNumber}</p>}
+                                        {phoneError && <p className="sprAdmin-createAdmin-error-message small mt-1">{phoneError}</p>}
                                     </div>
                                 </div>
                                 {/* Skip the next 1 columns */}
@@ -235,6 +257,16 @@ function CreateAdmin() {
                                         <input type="text" maxLength={10} className={`form-control  ${errors.panNumber && touched.panNumber ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="panNumber" id="panNumber" onChange={handleChange} onBlur={handleBlur} value={values.panNumber} ></input>
                                         {errors.panNumber && touched.panNumber && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.panNumber}</p>}
                                         {panError && <p className="sprAdmin-createAdmin-error-message small mt-1">{panError}</p>}
+                                    </div>
+                                    <div className="mb-3">
+                                        <label htmlFor="password" className="form-label">Password<span style={{ color: 'red' }}>*</span> </label>
+                                        <div className="d-flex">
+                                            <input type={showPassword ? "text" : "password"} maxLength={10} className={`form-control  ${errors.password && touched.password ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="password" id="password" onChange={handleChange} onBlur={handleBlur} value={values.password} ></input>
+                                            <i className={`bi ${!showPassword ? "bi-eye-slash-fill" : "bi-eye-fill"} text-primary mt-2 ms-2 `} style={{ cursor: 'pointer' }} onClick={togglePasswordVisibility}></i>
+                                        </div>
+                                        {errors.password && touched.password && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.password}</p>}
+
+                                        {passwordError && <p className="sprAdmin-createAdmin-error-message small mt-1">{passwordError}</p>}
                                     </div>
                                     {/* checkboxes */}
                                     <div className="form-group">
@@ -296,7 +328,7 @@ function CreateAdmin() {
                     </div>
                 </Modal>
 
-               
+
             </div>
 
 

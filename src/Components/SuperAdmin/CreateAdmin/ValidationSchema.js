@@ -43,7 +43,10 @@ export const basicSchema = Yup.object().shape({
     .matches(/[A-Z]{5}[0-9]{4}[A-Z]{1}/
       , 'Please enter the vaild pan number')
     .required('Pan Number is required'),
-  // checkboxes
+    password:Yup.string()
+    .matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,"Password must include at least one number, one letter, one special character, and have a minimum length of 8 characters")
+    .required("Password is required ")
+    // checkboxes
   // employeeAccess: Yup.object().shape({
   //   create: Yup.boolean(),
   //   edit: Yup.boolean(),
