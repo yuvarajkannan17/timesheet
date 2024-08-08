@@ -182,28 +182,8 @@ export default function EditEmployee() {
 
           {/* <div className="row"> */}
 
-            <div className="col-md-6 form-group">
-              <label className="label">Address:</label>
-              <textarea
-                name="address"
-                maxLength={100}
-                className="form-control"
-                rows="5"
-                value={formValues.address || ''}
-                onChange={handleChange}></textarea>
-              <p className="text-danger">{formErrors.address}</p>
-            </div>
-            <div className="col-md-6 form-group">
-              <label className="label">Mobile Number:</label>
-              <input
-                type="text"
-                maxLength={10}
-                name="mobileNumber"
-                className="form-control"
-                value={formValues.mobileNumber || ''}
-                onChange={handleChange}/>
-              <p className="text-danger">{formErrors.mobileNumber}</p>
-            </div>
+            
+            
             <div className="col-md-6 form-group">
               <label className="label">Email Id:</label>
               <input
@@ -215,20 +195,21 @@ export default function EditEmployee() {
                 onChange={handleChange}/>
               <p className="text-danger">{formErrors.emailId}</p>
             </div>
+            <div className="col-md-6 form-group">
+                  <label className="label">Password</label>
+                  <input
+                    type="text"
+                    name="password"
+                    className="form-control" 
+                    value={formValues.password || ''}
+                    onChange={handleChange}/>
+                  <p className="text-danger">{formErrors.password}</p>
+            </div>
           {/* </div>           */}
             
             {/* <div className="row"> */}
 
-            <div className="col-md-6 form-group">
-              <label className="label">Project Id:</label>
-              <input
-                type="text"
-                name="projectId"
-                className="form-control"
-                value={formValues.projectId || ''}
-                onChange={handleChange}/>
-              {/* <p className="text-danger">{formErrors.projectId}</p> */}
-            </div>
+            
             <div className="col-md-6 form-group">
               <label className="label">Aadhar Number:</label>
               <input
@@ -252,14 +233,37 @@ export default function EditEmployee() {
               <p className="text-danger">{formErrors.panNumber}</p>
             </div>
             <div className="col-md-6 form-group">
-                  <label className="label">Password</label>
-                  <input
-                    type="text"
-                    name="password"
-                    className="form-control" 
-                    value={formValues.password || ''}
-                    onChange={handleChange}/>
-                  <p className="text-danger">{formErrors.password}</p>
+              <label className="label">Mobile Number:</label>
+              <input
+                type="text"
+                maxLength={10}
+                name="mobileNumber"
+                className="form-control"
+                value={formValues.mobileNumber || ''}
+                onChange={handleChange}/>
+              <p className="text-danger">{formErrors.mobileNumber}</p>
+            </div>
+            <div className="col-md-6 form-group">
+              <label className="label">Project Id:</label>
+              <input
+                type="text"
+                name="projectId"
+                className="form-control"
+                value={formValues.projectId || ''}
+                onChange={handleChange}/>
+              {/* <p className="text-danger">{formErrors.projectId}</p> */}
+            </div>
+            
+            <div className="col-md-6 form-group">
+              <label className="label">Address:</label>
+              <textarea
+                name="address"
+                maxLength={100}
+                className="form-control"
+                rows="5"
+                value={formValues.address || ''}
+                onChange={handleChange}></textarea>
+              <p className="text-danger">{formErrors.address}</p>
             </div>
           </div>
         </div>

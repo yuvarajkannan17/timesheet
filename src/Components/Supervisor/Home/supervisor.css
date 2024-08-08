@@ -87,6 +87,7 @@
 .left-navigation button{
     background-color:  #1C2FBA;
     color: #fff;
+    width: 100%;
 }
 
 .right-details{

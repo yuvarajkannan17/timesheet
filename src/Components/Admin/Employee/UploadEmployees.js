@@ -86,6 +86,7 @@ export default function UploadEmployees() {
     navigate('/admin')
   }
   
+  
 
   const handleClose = () => {setSuccessModalOpen(false); }
   // const handleSuccessClick = () => {
@@ -113,6 +114,7 @@ export default function UploadEmployees() {
   
       // If the upload is successful, show the success modal
       setSuccessModalOpen(true);
+      
     } catch (error) {
       // Handle any errors that occur during the file upload
       console.error('Error uploading file:', error);

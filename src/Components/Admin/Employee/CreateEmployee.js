@@ -150,18 +150,7 @@ const AddEmployeeData = () => {
                   />
                   {(formErrors.lastName || validationErrors.lastName) && <div className="invalid-feedback">{formErrors.lastName || validationErrors.lastName}</div>}
                 </div>
-                <div className="col-md-6 form-group">
-                  <label className="label">Mobile Number<span className="required">*</span></label>
-                  <input
-                    type="text"
-                    maxLength={10}
-                    name="mobileNumber"
-                    className={`form-control ${formErrors.mobileNumber || validationErrors.mobileNumber ? 'is-invalid' : ''}`}
-                    value={formValues.mobileNumber}
-                    onChange={handleChange}
-                  />
-                  {(formErrors.mobileNumber || validationErrors.mobileNumber) && <div className="invalid-feedback">{formErrors.mobileNumber || validationErrors.mobileNumber}</div>}
-                </div>
+                
                 <div className="col-md-6 form-group">
                   <label className="label">Email Id<span className="required">*</span></label>
                   <input
@@ -173,6 +162,17 @@ const AddEmployeeData = () => {
                     onChange={handleChange}
                   />
                   {(formErrors.emailId || validationErrors.emailId) && <div className="invalid-feedback">{formErrors.emailId || validationErrors.emailId}</div>}
+                </div>
+                <div className="col-md-6 form-group">
+                  <label className="label">Password<span className="required">*</span></label>
+                  <input
+                    type="password"
+                    name="password"
+                    className={`form-control ${formErrors.password || validationErrors.password ? 'is-invalid' : ''}`}
+                    value={formValues.password}
+                    onChange={handleChange}
+                  />
+                  {(formErrors.password || validationErrors.password) && <div className="invalid-feedback">{formErrors.password || validationErrors.password}</div>}
                 </div>
                 <div className="col-md-6 form-group">
                   <label className="label">Aadhar Number<span className="required">*</span></label>
@@ -198,6 +198,19 @@ const AddEmployeeData = () => {
                   {(formErrors.panNumber || validationErrors.panNumber) && <div className="invalid-feedback">{formErrors.panNumber || validationErrors.panNumber}</div>}
                 </div>
                 <div className="col-md-6 form-group">
+                  <label className="label">Mobile Number<span className="required">*</span></label>
+                  <input
+                    type="text"
+                    maxLength={10}
+                    name="mobileNumber"
+                    className={`form-control ${formErrors.mobileNumber || validationErrors.mobileNumber ? 'is-invalid' : ''}`}
+                    value={formValues.mobileNumber}
+                    onChange={handleChange}
+                  />
+                  {(formErrors.mobileNumber || validationErrors.mobileNumber) && <div className="invalid-feedback">{formErrors.mobileNumber || validationErrors.mobileNumber}</div>}
+                </div>
+                
+                <div className="col-md-6 form-group">
                   <label className="label">Address<span className="required">*</span></label>
                   <textarea
                     name="address"
@@ -207,17 +220,6 @@ const AddEmployeeData = () => {
                     onChange={handleChange}
                   />
                   {formErrors.address && <div className="invalid-feedback">{formErrors.address}</div>}
-                </div>
-                <div className="col-md-6 form-group">
-                  <label className="label">Password<span className="required">*</span></label>
-                  <input
-                    type="text"
-                    name="password"
-                    className={`form-control ${formErrors.password || validationErrors.password ? 'is-invalid' : ''}`}
-                    value={formValues.password}
-                    onChange={handleChange}
-                  />
-                  {(formErrors.password || validationErrors.password) && <div className="invalid-feedback">{formErrors.password || validationErrors.password}</div>}
                 </div>
               </div>
               <div className="buttons">

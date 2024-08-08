@@ -22,11 +22,13 @@ function AdminApprovalPage() {
   const editTimesheetRejectModalValue = useSelector(state => state.modal.value.editTimesheetRejectModalValue);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  
+
   // console.log(timesheetDatas)
   useEffect(() => {
 
     async function getTimesheet() {
-      const timesheets = await axios.get(employeeSheetUrl);
+      const timesheets = await axios.get('http://localhost:8081/admin/working-hours');
       const datasOfTimesheet = timesheets.data;
       setTimesheetDatas(datasOfTimesheet.map((sheetData) => ({
         ...sheetData,
@@ -106,7 +108,7 @@ function AdminApprovalPage() {
 
 
         // Make a PUT request to update the status of the sheet in the API
-        const response = await axios.put(`${employeeSheetUrl}/${updatedSheet.id}`, updatedSheet);
+        const response = await axios.put();
         const responseData = response.data;
 
         console.log("Updated approve sheet:", responseData);
