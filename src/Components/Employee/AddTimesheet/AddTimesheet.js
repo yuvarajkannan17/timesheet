@@ -33,28 +33,8 @@ const AddTimesheet = () => {
   let {isSubmit} =useSelector((state)=>state.submitBtn.value);
  const dispatch= useDispatch();
   
-   setInterval(()=>{
-    const savedSubmitState = localStorage.getItem('isSubmitOn');
-    const startSubmitDate=  localStorage.getItem('startSubmitDate');
-    const endSubmitDate=localStorage.getItem('endSubmitDate');
-    const submitEmployeeId=localStorage.getItem('submitEmployeeId')
-    if(savedSubmitState){
-           timesheetState();
-    }
-   },1000)
-  useEffect(() => {
-    // Retrieve the submit state from local storage when the component mounts
-    const savedSubmitState = localStorage.getItem('isSubmitOn');
-    const startSubmitDate=  localStorage.getItem('startSubmitDate');
-    const endSubmitDate=localStorage.getItem('endSubmitDate');
-    const submitEmployeeId=localStorage.getItem('submitEmployeeId')
-    if (savedSubmitState === 'true') {
-       setStartSubmitDate(startSubmitDate);
-       setEndSubmitDate(endSubmitDate);
-       setSubmitEmployeeId(submitEmployeeId)
-      dispatch(submitON(true)); // Set the Redux state if needed
-    }
-  }, []);
+  
+ 
 
   useEffect(() => {
     generateTimesheetData(selectedMonth);
@@ -62,38 +42,6 @@ const AddTimesheet = () => {
 
  
 
-  async function timesheetState() {
-
-    if (startSubmitDate && endSubmitDate && submitEmployeeId) {
-      try {
-        let response = await axios.get(`http://localhost:8002/api/working-hours/${submitEmployeeId}/range?startDate=${startSubmitDate}&endDate=${endSubmitDate}`);
-        let data = response.data;
-  
-        // Check if all objects in the array have a status other than "NEW"
-        const allApproved = data.every(obj => obj.status !== "NEW");
-  
-        if (allApproved) {
-          console.log("GET APPROVED");
-          dispatch(submitOFF(false));
-          localStorage.removeItem('isSubmitOn');
-          localStorage.removeItem('startSubmitDate');
-          localStorage.removeItem('endSubmitDate');
-          localStorage.removeItem('submitEmployeeId');
-          setStartSubmitDate("");
-          setEndSubmitDate("")
-          setSubmitEmployeeId("")
-          clearInterval(intervalId);
-        }else{
-          console.log("PENDING")
-        }
-      } catch (error) {
-        console.error("Error fetching timesheet data:", error);
-      }
-    }
-  }
-  
-  // Call the timesheetState function every second
-  const intervalId = setInterval(timesheetState, 1000);
   
 
   useEffect(() => {
@@ -421,9 +369,10 @@ const AddTimesheet = () => {
         // Send the data to the backend
         const response = await axios.post("http://localhost:8002/api/working-hours", formattedData);
           if(response.data){
+            let data=response.data;
+           let statusValue= data[0].status;
              dispatch(submitON(true));
               localStorage.setItem('isSubmitOn', 'true');
-             
               let receviedData=response.data;
              let lengthOfData=receviedData.length;
             let last=receviedData[lengthOfData-1];
@@ -437,8 +386,8 @@ const AddTimesheet = () => {
             localStorage.setItem('startSubmitDate', firstDate);
             localStorage.setItem('endSubmitDate', lastDate);
             localStorage.setItem('submitEmployeeId', empId);
-           console.log(firstDate)
-           console.log(lastDate)
+            localStorage.setItem('statusValue', statusValue);
+         
            setSuccessModalForTimesheet(true);
            
           }
