@@ -33,7 +33,15 @@ const AddTimesheet = () => {
   let {isSubmit} =useSelector((state)=>state.submitBtn.value);
  const dispatch= useDispatch();
   
-
+   setInterval(()=>{
+    const savedSubmitState = localStorage.getItem('isSubmitOn');
+    const startSubmitDate=  localStorage.getItem('startSubmitDate');
+    const endSubmitDate=localStorage.getItem('endSubmitDate');
+    const submitEmployeeId=localStorage.getItem('submitEmployeeId')
+    if(savedSubmitState){
+           timesheetState();
+    }
+   },1000)
   useEffect(() => {
     // Retrieve the submit state from local storage when the component mounts
     const savedSubmitState = localStorage.getItem('isSubmitOn');
@@ -68,6 +76,9 @@ const AddTimesheet = () => {
           console.log("GET APPROVED");
           dispatch(submitOFF(false));
           localStorage.removeItem('isSubmitOn');
+          localStorage.removeItem('startSubmitDate');
+          localStorage.removeItem('endSubmitDate');
+          localStorage.removeItem('submitEmployeeId');
           setStartSubmitDate("");
           setEndSubmitDate("")
           setSubmitEmployeeId("")
@@ -148,22 +159,26 @@ const AddTimesheet = () => {
 
     setTimesheetData(newTimesheetData);
   };
-
+   
   const handleProjectChange = (rowIndex, selectedOption) => {
     if (selectedOption && selectedOption.value) {
       setProjectIdError(""); // Clear the error when a valid projectId is selected
-  
-      const updatedProjectRows = [...projectRows];
-      updatedProjectRows[rowIndex] = {
-        ...updatedProjectRows[rowIndex],
-        projectId: selectedOption.value
-      };
-      setProjectRows(updatedProjectRows);
+        let result=projectRows.some(project=>project.projectId===selectedOption.value);
+        if(result){
+           setProjectIdError("Project Already In Use")
+        }else{
+          const updatedProjectRows = [...projectRows];
+          updatedProjectRows[rowIndex] = {
+            ...updatedProjectRows[rowIndex],
+            projectId: selectedOption.value
+          };
+          setProjectRows(updatedProjectRows);
+        }
     } else {
       setProjectIdError("Please select a valid project");
     }
   };
-
+  console.log("project",projectRows);
   const isSunday = (date) => date.getDay() === 0;
 
   const handleWorkHoursChange = (rowIndex, columnIndex, value) => {
