@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import '../../Supervisor/Home/supervisor.css'
 import { useSelector, useDispatch } from 'react-redux';
 import { submitON, submitOFF } from '../../features/submitBtn';
+
+import { leaveSubmitON,leaveSubmitOFF } from '../../features/empLeaveSubmit';
 import axios from 'axios';
 function EmployeeHome() {
     const [isOpenTimesheet, setIsOpenTimesheet] = useState(true);
@@ -12,9 +14,18 @@ function EmployeeHome() {
     const [submitEmployeeId, setSubmitEmployeeId] = useState("")
     const [statusValue, setStatusValue] = useState("")
     const [countTimesheet,setCountTimesheet]=useState(0);
-    const [rejectTimesheetCount,setRejectTimesheetCount]=useState(0)
+    const [rejectTimesheetCount,setRejectTimesheetCount]=useState(0);
+    const [leaveObjectId,setLeaveObjectId]=useState("");
+    const [isLeaveSubmit,setIsLeaveSubmit]=useState("");
+    const [leaveSubmitEmpId,setLeaveSubmitEmpId]=useState("");
+    const [leaveSubmitStartDate,setLeaveSubmitStartDate]=useState("");
+    const [leaveSubmitEndDate,setLeaveSubmitEndDate]=useState("");
+    const [leaveSubmitStatus,setLeaveSubmitStatus]=useState("");
+    const [leavePending,setLeavePending]=useState(0)
+    const [rejectLeave,setRejectLeave]=useState(0);
     const dispatch = useDispatch();
-
+   
+    
     // setInterval(()=>{
     //     const savedSubmitState = localStorage.getItem('isSubmitOn');
     //     const startSubmitDate=  localStorage.getItem('startSubmitDate');
@@ -24,7 +35,13 @@ function EmployeeHome() {
     //            timesheetState();
     //     }
     //    },1000)
+           
+    useEffect(()=>{
+     setLeaveObjectId(localStorage.getItem("leaveObjectId"));
+    },[])
 
+
+       
     useEffect(() => {
         // Retrieve the submit state from local storage when the component mounts
         const savedSubmitState = localStorage.getItem('isSubmitOn');
@@ -47,7 +64,49 @@ function EmployeeHome() {
         }
     }, []);
 
+  async function count(){
+        let response=  await axios.get("http://localhost:8002/leave-requests");
+        let data= response.data;
+      if(data){
+        let pendingCount= data.filter((obj)=>obj.status==="PENDING");
+        
+        let rejectCount= data.filter((obj)=>obj.status==="REJECTED");
+        setLeavePending(pendingCount.length);
+        setRejectLeave(rejectCount.length);
+      }
+    }
 
+    useEffect(()=>{
+        count();
+    },[])
+
+         async  function leaveStatus(){
+                let response=  await axios.get("http://localhost:8002/leave-requests");
+                let data= response.data;
+               
+                 let submitLeaveRequest=data.filter(obj=>obj.id==leaveObjectId);
+                                
+                 submitLeaveRequest.map((obj)=>{
+                    setLeaveSubmitStartDate(obj.startDate);
+                    setLeaveSubmitEndDate(obj.endDate);
+                    setLeaveSubmitStatus(obj.status);
+            })
+                 let leaveStatus = submitLeaveRequest.some(obj => obj.status === "PENDING");
+                console.log(leaveStatus)
+                  if(leaveStatus){
+                     dispatch(leaveSubmitON(true));
+               
+                  }else{
+                    dispatch(leaveSubmitOFF(false));
+                   
+                     
+                  }
+                
+           }
+
+           useEffect(()=>{
+             leaveStatus();
+           },[leaveObjectId])
 
     async function timesheetState() {
 
@@ -135,8 +194,8 @@ function EmployeeHome() {
 
                         </div>
                         <div className="row text-center ti-home-notification">
-                            <div className="col   mx-5 my-2 p-2 ">Leaves to be approved :</div>
-                            <div className="col  mx-5  my-2 p-2  ">Rejected Leave Request :</div>
+                            <div className="col   mx-5 my-2 p-2 ">Leaves to be approved : {leavePending}</div>
+                            <div className="col  mx-5  my-2 p-2  ">Rejected Leave Request : {rejectLeave}</div>
                         </div>
 
                         <div className="row text-center ti-home-content mt-2">
@@ -176,14 +235,32 @@ function EmployeeHome() {
                                 <p className='p-2 title'>Your Requested Leave</p>
                                 <div className='body   p-2 text-start'>
                                     <div className='m-4 ti-home-ti-status p-4'>
-                                        <p className=''> Requested Leave Period :</p>
-                                        <p className=''>Created On :</p>
-                                        <div className='d-flex justify-content-around flex-wrap '>
-                                            <button className='status-btn p-2 m-2'>Status</button>
-                                            <button className='view-btn p-2 m-2'>View</button>
+                                        <h5 className=''> Leave Request Period </h5>
+
+                                        <div className='d-flex flex-column ms-4'>
+                                            <div className='d-flex align-items-center mb-2'>
+                                                <p className='mb-0 me-2'>Start date :</p>
+                                                <p className='mb-0'>{leaveSubmitStartDate}</p>
+                                            </div>
+                                            <div className='d-flex align-items-center mb-2'>
+                                                <p className='mb-0 me-2'>End date :</p>
+                                                <p className='mb-0'>{leaveSubmitEndDate}</p>
+                                            </div>
+                                            <div className='d-flex align-items-center'>
+                                                <p className='mb-0 me-2'>STATUS :</p>
+                                                {leaveSubmitStatus && <button className='view-btn p-2' style={{
+                                                    backgroundColor:
+                                                        leaveSubmitStatus === "APPROVED" ? "green" :
+                                                            leaveSubmitStatus === "REJECTED" ? "red" :
+                                                                "blue",
+                                                    color: "white"  // Set the text color to white for better visibility
+                                                }} >{leaveSubmitStatus}</button>}
+                                            </div>
                                         </div>
+
                                     </div>
                                 </div>
+                               
                             </div>
 
 

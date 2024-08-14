@@ -10,7 +10,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function EmployeeEditLeaveRequest() {
-  const [lastLeaveRequestData, setLastLeaveRequestData] = useState(null);
+  const [lastLeaveRequestData, setLastLeaveRequestData] = useState({});
   const [editId, setEditId] = useState(null);
   const [confirmationModal, setConfirmationModal] = useState(false);
   const [successModal, setSuccessModal] = useState(false);
@@ -32,17 +32,17 @@ function EmployeeEditLeaveRequest() {
     onSubmit: editLeaveRequest,
   });
 
-  useEffect(() => {
-    fetchLeaveData();
-  }, []);
+ 
 
   async function fetchLeaveData() {
     try {
       const response = await axios.get("http://localhost:8002/leave-requests");
       const leaveRequest = response.data;
+      const pendingItems = leaveRequest.filter(item => item.status === "PENDING");
+      console.log(pendingItems);
     
-      if (leaveRequest.length > 0) {
-        const lastRequest = leaveRequest[leaveRequest.length - 1];
+      if (pendingItems.length > 0) {
+        const lastRequest = pendingItems[pendingItems.length - 1];
         console.log("last",lastRequest)
         setLastLeaveRequestData(lastRequest);
         setEditId(lastRequest.id);
@@ -59,6 +59,10 @@ function EmployeeEditLeaveRequest() {
       console.error("Error fetching leave request:", error);
     }
   }
+console.log("last State",lastLeaveRequestData)
+  useEffect(() => {
+    fetchLeaveData();
+  }, []);
 
   useEffect(() => {
     if (formik.values.endDate && formik.values.startDate) {
@@ -94,8 +98,9 @@ function EmployeeEditLeaveRequest() {
   return (
     <>
        <div className="ti-background-clr">
-            <h5 className="text-center pt-4">EDIT LEAVE REQUEST</h5>
-                <div className="ti-leave-management-container  ">
+            
+                { lastLeaveRequestData && Object.keys(lastLeaveRequestData).length > 0 ?( <div className="ti-leave-management-container  ">
+                  <h5 className="text-center pt-4">EDIT LEAVE REQUEST</h5>
                     <div className='bg-white  '>
                         
                         <div className="row ">
@@ -178,7 +183,7 @@ function EmployeeEditLeaveRequest() {
                                         </div>
 
                                         <div className='my-5 text-end'>
-                                            <button type='submit' disabled={formik.isSubmitting} className='btn btn-success mx-2' onClick={() => setConfirmationModal(true)}>Save</button>
+                                            <button type='submit' disabled={formik.isSubmitting} className='btn btn-success mx-2' onClick={() => setConfirmationModal(true)}>Submit</button>
                                             <button type='button' className='btn btn-secondary mx-2' onClick={() => { navigate('/employee') }}>Cancel</button>
                                         </div>
 
@@ -193,7 +198,10 @@ function EmployeeEditLeaveRequest() {
                     </div>
 
 
-                </div>
+                </div> ): (<div className="no-timesheet">
+                    <h3>No Leave Request Available</h3>
+                    <p>Please create a new one.</p>
+                </div>)}
                 <div>
                     {/* <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={leaveSuccessModal}  >
                         <div className="d-flex flex-column modal-success p-4 align-items-center ">

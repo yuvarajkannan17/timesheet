@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFormik } from "formik";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -7,18 +7,24 @@ import { schemaLeave } from './EmployeeLeaveSchema';
 import leaveUrl from '../../Api/leaveRequest';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Modal,Button } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 import successCheck from '../../Image/checked.png'
+import { leaveSubmitON, leaveSubmitOFF } from '../../features/empLeaveSubmit';
+import { useSelector, useDispatch } from 'react-redux';
+
 export function EmployeeLeaveRequest() {
-  const [leaveSuccessModal,setLeaveSuccessModal]=useState(false);
-  const [numberOfDays, setNumberOfDays] = useState(0); 
+    const [leaveSuccessModal, setLeaveSuccessModal] = useState(false);
+    const [numberOfDays, setNumberOfDays] = useState(0);
+    let dispatch = useDispatch();
+    let { isSubmit } = useSelector((state) => state.empLeaveSubmit.value);
+    console.log("sssssssss", isSubmit)
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
-            empId:"", 
+            empId: "",
             startDate: new Date(),
             endDate: new Date(),
-            noOfDays:0,
+            noOfDays: 0,
             reason: "",
             comments: "",
 
@@ -26,34 +32,45 @@ export function EmployeeLeaveRequest() {
         validationSchema: schemaLeave,
         onSubmit
     })
- console.log("date",typeof formik.values.startDate)
+    console.log("date", typeof formik.values.startDate)
     // Calculate the last day of June
     // const lastDayOfJune = new Date(new Date().getFullYear(), 5, 30); // Note: Month index is zero-based, so June is 5
-    
-console.log(formik.values)
+
+    console.log(formik.values)
     useEffect(() => {
         if (formik.values.endDate && formik.values.startDate) {
-          const start = new Date(formik.values.startDate);
-          const end = new Date(formik.values.endDate);
-          const difference = Math.max(end - start, 0); // Ensure no negative days
-          // Use Math.ceil to round up to the nearest whole number
-          const days = Math.ceil(difference / (1000 * 60 * 60 * 24)) + 1; // +1 to include the start date as a full day
-          setNumberOfDays(days);
-          formik.setFieldValue('noOfDays', days);
-        
+            const start = new Date(formik.values.startDate);
+            const end = new Date(formik.values.endDate);
+            const difference = Math.max(end - start, 0); // Ensure no negative days
+            // Use Math.ceil to round up to the nearest whole number
+            const days = Math.ceil(difference / (1000 * 60 * 60 * 24)) + 1; // +1 to include the start date as a full day
+            setNumberOfDays(days);
+            formik.setFieldValue('noOfDays', days);
+
         }
     }, [formik.values.startDate, formik.values.endDate]);
-    
+
 
     async function onSubmit() {
 
-        try{
+        try {
             const leaveData = await axios.post("http://localhost:8002/leave-requests", formik.values);
-           setLeaveSuccessModal(true);
-        
-        formik.resetForm();
-        
-        }catch(error){
+            if (leaveData.data) {
+                const {empId,status,id,startDate,endDate} =leaveData.data
+                setLeaveSuccessModal(true);
+                localStorage.setItem("leaveSubmitEmpId",empId);
+                localStorage.setItem("leaveStatus",status);
+                localStorage.setItem("isLeaveSubmit","true");
+                localStorage.setItem("leaveObjectId",id);
+                localStorage.setItem("leaveStartDate",startDate);
+                localStorage.setItem("leaveEndDate",endDate);
+                dispatch(leaveSubmitON(true));
+                formik.resetForm();
+                navigate("/employee")
+            }
+
+
+        } catch (error) {
             console.log(error)
 
         }
@@ -67,22 +84,22 @@ console.log(formik.values)
     return (
         <>
             <div className="ti-background-clr">
-            <h5 className="text-center pt-4">LEAVE REQUEST</h5>
+                <h5 className="text-center pt-4">LEAVE REQUEST</h5>
                 <div className="ti-leave-management-container  ">
                     <div className='bg-white  '>
-                        
+
                         <div className="row ">
 
                             <div className="col " >
                                 <div className="p-5 center-align">
                                     <form onSubmit={formik.handleSubmit}>
-                                    <div className="my-3 leave-row">
+                                        <div className="my-3 leave-row">
                                             <label> <span style={{ color: 'red' }}>*</span>Emp Id :</label>
-                                            <input type='text'  className='w-25' name="empId" value={formik.values.empId} onChange={formik.handleChange} ></input>
+                                            <input type='text' className='w-25' name="empId" value={formik.values.empId} onChange={formik.handleChange} ></input>
 
-                                  </div>
-                                       <div>
-                                            {formik.touched.empId&&formik.errors.empId ? <p className='text-danger small'>{formik.errors.empId}</p> : ""}
+                                        </div>
+                                        <div>
+                                            {formik.touched.empId && formik.errors.empId ? <p className='text-danger small'>{formik.errors.empId}</p> : ""}
                                         </div>
                                         <div className="my-3 leave-row  ">
                                             <label className="pe-1"><span style={{ color: 'red' }}>*</span> Start Date :</label>
@@ -91,10 +108,10 @@ console.log(formik.values)
                                                 onChange={date => {
                                                     const startDate = date.toLocaleDateString('en-US'); // Example: "4/4/2024"
                                                     formik.setFieldValue("startDate", date);
-                                                    
+
                                                 }}
                                                 minDate={new Date()}
-                                        
+
                                                 placeholderText="dd/mm/yyyy"
                                                 dateFormat="dd/MM/yyyy"
                                                 className='w-50'
@@ -109,7 +126,7 @@ console.log(formik.values)
                                                     formik.setFieldValue("endDate", date);
                                                 }}
                                                 minDate={new Date()}
-                                                
+
                                                 placeholderText="dd/mm/yyyy"
                                                 dateFormat="dd/MM/yyyy"
                                                 className='w-50'
@@ -148,11 +165,11 @@ console.log(formik.values)
                                             <textarea type="text" id='leave-comment' name='comments' onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.comments}></textarea>
                                         </div>
                                         <div>
-                                            {formik.touched.comments&&formik.errors.comments ? <p className='text-danger small'>{formik.errors.comments}</p> : ""}
+                                            {formik.touched.comments && formik.errors.comments ? <p className='text-danger small'>{formik.errors.comments}</p> : ""}
                                         </div>
 
                                         <div className='my-5 text-end'>
-                                            <button type='submit' disabled={formik.isSubmitting} className='btn btn-success mx-2'>Submit</button>
+                                            <button type='submit' disabled={ isSubmit} className='btn btn-success mx-2'>Submit</button>
                                             <button type='button' className='btn btn-secondary mx-2' onClick={() => { navigate('/employee') }}>Cancel</button>
                                         </div>
 

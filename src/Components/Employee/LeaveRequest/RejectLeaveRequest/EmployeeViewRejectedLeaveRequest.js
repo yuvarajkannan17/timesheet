@@ -15,8 +15,8 @@ function ViewRejectedLeaveRequests() {
             try {
                 const response = await axios.get("http://localhost:8002/leave-requests");
                
-                setRejectedLeaveRequests(response.data.filter(leave => leave.status == "REJECTED"));
-                
+                   let rejectedOne= response.data.filter(leave => leave.status == "REJECTED");
+                    setRejectedLeaveRequests(rejectedOne.slice(-3));
 
             } catch (error) {
                 console.error('Error fetching rejected leave requests:', error);
