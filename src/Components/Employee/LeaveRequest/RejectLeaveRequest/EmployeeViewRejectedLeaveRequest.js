@@ -2,20 +2,24 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-import leaveUrl from "../../../Api/leaveRequest";
+
 
 function ViewRejectedLeaveRequests() {
     const [rejectedLeaveRequests, setRejectedLeaveRequests] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
+    const employeeValue = useSelector(state=>state.employeeLogin.value);
+    const employeeId=employeeValue.employeeId;
 
     useEffect(() => {
         async function getRejectedLeaveRequests() {
             try {
                 const response = await axios.get("http://localhost:8002/leave-requests");
+               let filteringEmployeeId=response.data.filter(item=>item.empId===employeeId)
                
-                   let rejectedOne= response.data.filter(leave => leave.status == "REJECTED");
+                   let rejectedOne= filteringEmployeeId.filter(leave => leave.status == "REJECTED");
                     setRejectedLeaveRequests(rejectedOne.slice(-3));
 
             } catch (error) {
@@ -25,14 +29,14 @@ function ViewRejectedLeaveRequests() {
         }
         getRejectedLeaveRequests();
     }, []);
-    console.log(rejectedLeaveRequests)
+    
     const handleCancel = () => {
         navigate("/employee");
     }
 
     return (
         <div className="ti-background-clr">
-            <Container>
+            {rejectedLeaveRequests.length > 0  ? (<Container>
                 <div className="py-3 ">
                     <p className="text-center spr-approval-title">Rejected Leave Requests</p>
                 </div>
@@ -66,7 +70,10 @@ function ViewRejectedLeaveRequests() {
                 <div className="d-flex justify-content-center mt-3">
                     <button className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
                 </div>
-            </Container>
+            </Container>):(<div className="no-timesheet">
+                    <h3>No Rejected Timesheet Available</h3>
+                    
+                </div>)}
         </div>
     );
 }

@@ -10,7 +10,7 @@ import { submitON,submitOFF } from '../../features/submitBtn';
 
 function EmployeeEditTimesheet() {
     const employeeValue = useSelector(state=>state.employeeLogin.value);
- const employeeId=employeeValue.employeeId;
+    const employeeId=employeeValue.employeeId;
     const [overallLength, setOverallLength] = useState("");
     const [inputs, setInputs] = useState({
         startDate: "",
@@ -247,7 +247,7 @@ function EmployeeEditTimesheet() {
 
     const updateTimesheetData = () => {
         if (!error) {
-            const savedTimesheetDataList = JSON.parse(localStorage.getItem('timesheetData')) || [];
+            const savedTimesheetDataList = JSON.parse(localStorage.getItem(employeeId)) || [];
             const updatedTimesheetData = savedTimesheetDataList.map((data, index) => {
                 if (index === savedTimesheetDataList.length - objectPositionRef.current) {
                     return editableData;
@@ -255,7 +255,7 @@ function EmployeeEditTimesheet() {
                 return data;
             });
 
-            localStorage.setItem('timesheetData', JSON.stringify(updatedTimesheetData));
+            localStorage.setItem(employeeId, JSON.stringify(updatedTimesheetData));
             setSaveSuccessModalForTimesheet(true);
 
             console.log("editable", editableData)
@@ -275,19 +275,23 @@ function EmployeeEditTimesheet() {
         try {
             let response = await axios.post("http://localhost:8002/api/working-hours", editableData);
 
+            console.log(response.data);
+
             if (response.data) {
                 // Show success modal
+                const status=response.data[0].status;
                 setSuccessModalForTimesheet(true);
-                    dispatch(submitOFF(true));
+                    dispatch(submitON(true));
                     setIsSubmitTimesheet(true)
                 // Remove the submitted data from local storage
-                const savedTimesheetDataList = JSON.parse(localStorage.getItem('timesheetData')) || [];
+                const savedTimesheetDataList = JSON.parse(localStorage.getItem(employeeId)) || [];
                 const updatedTimesheetData = savedTimesheetDataList.filter((_, index) => index !== savedTimesheetDataList.length - objectPositionRef.current);
-                localStorage.setItem('isSubmitOn', 'true');
-                localStorage.setItem('startSubmitDate', inputs.startDate);
-                localStorage.setItem('endSubmitDate', inputs.endDate);
-                localStorage.setItem('submitEmployeeId', inputs.employeeId);
-                localStorage.setItem('timesheetData', JSON.stringify(updatedTimesheetData));
+                localStorage.setItem(`isSubmitOn${employeeId}`, 'true');
+                localStorage.setItem(`startSubmitDate${employeeId}`, inputs.startDate);
+                localStorage.setItem(`endSubmitDate${employeeId}`, inputs.endDate);
+                localStorage.setItem(`submitEmployeeId${employeeId}`, inputs.employeeId);
+                localStorage.setItem(`statusValue${employeeId}`,status);
+                localStorage.setItem(employeeId, JSON.stringify(updatedTimesheetData));
             }
         } catch (error) {
             console.error("Error submitting timesheet data:", error);

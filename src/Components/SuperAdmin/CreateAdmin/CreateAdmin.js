@@ -22,7 +22,7 @@ function CreateAdmin() {
     const [phoneError, setPhoneError] = useState('');
     const [aadharError, setAadharError] = useState('');
     const [panError, setPanError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
+    
     const [showPassword, setShowPassword] = useState(false);
     const [createAdminError, setCreateAdminError] = useState('');
     // redux state 
@@ -57,17 +57,12 @@ function CreateAdmin() {
             aadharNumber: "",
             panNumber: "",
             password: "",
-            employeeAccess: {
-                create: false,
-                edit: false,
-                delete: false
-            },
-
-            projectAccess: {
-                create: false,
-                edit: false,
-                delete: false
-            }
+            canCreateEmployee:false,
+            canEditEmployee:false,
+            canDeleteEmployee:false,
+            canCreateProject:false,
+            canEditProject:false,
+            canDeleteProject:false
 
         },
         validationSchema: basicSchema,
@@ -90,12 +85,7 @@ function CreateAdmin() {
         }
 
     }, [values.panNumber]);
-    useEffect(() => {
-        if (values.password && touched.password) {
-            setPanError(''); // Clear custom phone error when input changes
-        }
-
-    }, [values.password]);
+ 
 
     useEffect(() => {
         if (values.aadharNumber && touched.aadharNumber) {
@@ -153,22 +143,15 @@ function CreateAdmin() {
             formHasErrors = true;
         }
 
-        // Checking if the PAN number is already in use
-        const passwordExists = adminDatas.some(admin => admin.password === values.password);
-        if (passwordExists) {
-            // Assuming you have a state setter for PAN error
-            setPasswordError('Password already in use');
-
-            formHasErrors = true;
-        }
+      
 
         if (formHasErrors) {
             return; // Stop the form submission if there are errors
         }
 
-        // Convert boolean values to string for API compatibility
-        values.employeeAccess = JSON.stringify(values.employeeAccess);
-        values.projectAccess = JSON.stringify(values.projectAccess);
+        // // Convert boolean values to string for API compatibility
+        // values.employeeAccess = JSON.stringify(values.employeeAccess);
+        // values.projectAccess = JSON.stringify(values.projectAccess);
 
         try {
             const response = await axios.post("http://localhost:8080/admins/saveadmin", values);
@@ -266,7 +249,7 @@ function CreateAdmin() {
                                         </div>
                                         {errors.password && touched.password && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.password}</p>}
 
-                                        {passwordError && <p className="sprAdmin-createAdmin-error-message small mt-1">{passwordError}</p>}
+                                        
                                     </div>
                                     {/* checkboxes */}
                                     <div className="form-group">
@@ -275,16 +258,16 @@ function CreateAdmin() {
 
                                             <label htmlFor="checkBoxGroupTitle d-block" >Access Permission for Employee details </label>
                                             <div className="form-check ">
-                                                <input className="form-check-input sprAdmin-createAdmin-checkbox-create" name="employeeAccess.create" type="checkbox" id="empcreate" checked={values.employeeAccess.create} onBlur={handleBlur} onChange={handleChange}></input>
+                                                <input className="form-check-input sprAdmin-createAdmin-checkbox-create" name="canCreateEmployee" type="checkbox" id="empcreate" checked={values.canCreateEmployee} onBlur={handleBlur} onChange={handleChange}></input>
                                                 <label className="form-check-label" htmlFor="empcreate">Create</label>
 
                                             </div>
                                             <div className="form-check ">
-                                                <input className="form-check-input sprAdmin-createAdmin-checkbox-edit" name="employeeAccess.edit" type="checkbox" id="empedit" checked={values.employeeAccess.edit} onBlur={handleBlur} onChange={handleChange}></input>
+                                                <input className="form-check-input sprAdmin-createAdmin-checkbox-edit" name="canEditEmployee" type="checkbox" id="empedit" checked={values.canEditEmployee} onBlur={handleBlur} onChange={handleChange}></input>
                                                 <label className="form-check-label" htmlFor="empedit">Edit</label>
                                             </div>
                                             <div className="form-check form-check-inline">
-                                                <input className="form-check-input sprAdmin-createAdmin-checkbox-delete" name="employeeAccess.delete" type="checkbox" id="empdelete" checked={values.employeeAccess.delete} onBlur={handleBlur} onChange={handleChange}></input>
+                                                <input className="form-check-input sprAdmin-createAdmin-checkbox-delete" name="canDeleteEmployee" type="checkbox" id="empdelete" checked={values.canDeleteEmployee} onBlur={handleBlur} onChange={handleChange}></input>
                                                 <label className="form-check-label" htmlFor="empdelete">Delete</label>
                                             </div>
 
@@ -294,15 +277,15 @@ function CreateAdmin() {
 
                                             <label htmlFor="checkBoxGroupTitle d-block">Access Permission for Project details </label>
                                             <div className="form-check ">
-                                                <input className="form-check-input sprAdmin-createAdmin-checkbox-create" name="projectAccess.create" type="checkbox" id="pjcreate" checked={values.projectAccess.create} onBlur={handleBlur} onChange={handleChange}></input>
+                                                <input className="form-check-input sprAdmin-createAdmin-checkbox-create" name="canCreateProject" type="checkbox" id="pjcreate" checked={values.canCreateProject} onBlur={handleBlur} onChange={handleChange}></input>
                                                 <label className="form-check-label" htmlFor="pjcreate">Create</label>
                                             </div>
                                             <div className="form-check ">
-                                                <input className="form-check-input sprAdmin-createAdmin-checkbox-edit" name="projectAccess.edit" type="checkbox" id="pjedit" checked={values.projectAccess.edit} onBlur={handleBlur} onChange={handleChange}></input>
+                                                <input className="form-check-input sprAdmin-createAdmin-checkbox-edit" name="canEditProject" type="checkbox" id="pjedit" checked={values.canEditProject} onBlur={handleBlur} onChange={handleChange}></input>
                                                 <label className="form-check-label" htmlFor="pjedit">Edit</label>
                                             </div>
                                             <div className="form-check form-check-inline">
-                                                <input className="form-check-input sprAdmin-createAdmin-checkbox-delete" name="projectAccess.delete" type="checkbox" id="pjdelete" checked={values.projectAccess.delete} onBlur={handleBlur} onChange={handleChange}></input>
+                                                <input className="form-check-input sprAdmin-createAdmin-checkbox-delete" name="canDeleteProject" type="checkbox" id="pjdelete" checked={values.canDeleteProject} onBlur={handleBlur} onChange={handleChange}></input>
                                                 <label className="form-check-label" htmlFor="pjdelete">Delete</label>
                                             </div>
 

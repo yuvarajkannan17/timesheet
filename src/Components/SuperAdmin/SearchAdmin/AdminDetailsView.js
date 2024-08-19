@@ -149,6 +149,10 @@ function AdminDetailsView() {
                                     <div className='col-md-6'>Pan Number</div>
                                     <div className='col-md-6 text-secondary'>{adminDetails.panNumber}</div>
                                 </div>
+                                <div className='row mb-2'>
+                                    <div className='col-md-6'>Password</div>
+                                    <div className='col-md-6 text-secondary'>{adminDetails.password}</div>
+                                </div>
                             </div>
 
                             <div className="col-md-6   ">

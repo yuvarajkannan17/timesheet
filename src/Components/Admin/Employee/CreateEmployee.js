@@ -8,6 +8,7 @@ import '../../css/style.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons from react-icons (or any other icon library)
  
 
+
 const AddEmployeeData = () => {
   const [formValues, setFormValues] = useState({
     firstName: "",

@@ -32,6 +32,8 @@ function AdminEdit() {
     const [editAdminData, setEditAdminData] = useState("");
     // date and time
     const [currentDateTime, setCurrentDateTime] = useState(new Date());
+    const [showPassword, setShowPassword] = useState(false);
+    
 
 
     // fetch the edit admin data once come from the search page
@@ -40,7 +42,7 @@ function AdminEdit() {
             try {
                 const response = await axios.get(`http://localhost:8080/admins/${id}`); // backend url fetch the admin
                 setEditAdminData(response.data);
-                
+
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -87,24 +89,20 @@ function AdminEdit() {
             emailId: "",
             aadharNumber: "",
             panNumber: "",
-            employeeAccess: {
-                create: false,
-                edit: false,
-                delete: false
-            },
-
-            projectAccess: {
-                create: false,
-                edit: false,
-                delete: false
-            }
+            password: "",
+            canCreateEmployee: false,
+            canEditEmployee: false,
+            canDeleteEmployee: false,
+            canCreateProject: false,
+            canEditProject: false,
+            canDeleteProject: false
 
         },
         validationSchema: basicSchema,
         onSubmit
     })
-   console.log(errors)
-    
+    console.log(errors)
+
 
 
     useEffect(() => {
@@ -113,6 +111,8 @@ function AdminEdit() {
         }
 
     }, [values.mobileNumber]);
+
+ 
 
     useEffect(() => {
         if (values.panNumber && touched.panNumber) {
@@ -141,15 +141,12 @@ function AdminEdit() {
     // Assuming that editAdminData contains the data retrieved from the backend
     useEffect(() => {
         if (editAdminData) {
-            // Parse the employeeAccess and projectAccess strings into objects
-            const employeeAccessObject = JSON.parse(editAdminData.employeeAccess);
-            const projectAccessObject = JSON.parse(editAdminData.projectAccess);
+
 
             // Set the parsed objects as initial values
             setValues({
                 ...editAdminData,
-                employeeAccess: employeeAccessObject,
-                projectAccess: projectAccessObject
+
             });
         }
     }, [editAdminData, setValues]);
@@ -160,7 +157,7 @@ function AdminEdit() {
     function onSubmit() {
 
         setConfirmationForEdit(true);
-        
+
 
     }
 
@@ -210,9 +207,9 @@ function AdminEdit() {
             return; // Stop the form submission if there are errors
         }
 
-        // Convert boolean values to string for API compatibility
-        values.employeeAccess = JSON.stringify(values.employeeAccess);
-        values.projectAccess = JSON.stringify(values.projectAccess);
+        // // Convert boolean values to string for API compatibility
+        // values.employeeAccess = JSON.stringify(values.employeeAccess);
+        // values.projectAccess = JSON.stringify(values.projectAccess);
 
         try {
 
@@ -234,6 +231,8 @@ function AdminEdit() {
         resetForm();
         navigate('/superadmin/searchAdmin/adminDetailsView/' + id)
     };
+
+    const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
     return (
         <>
@@ -307,22 +306,33 @@ function AdminEdit() {
                                                 {errors.panNumber && touched.panNumber && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.panNumber}</p>}
                                                 {panError && <p className="sprAdmin-createAdmin-error-message small mt-1">{panError}</p>}
                                             </div>
+                                            <div className="mb-3">
+                                                <label htmlFor="password" className="form-label">Password<span style={{ color: 'red' }}>*</span> </label>
+                                                <div className="d-flex">
+                                                    <input type={showPassword ? "text" : "password"} maxLength={10} className={`form-control  ${errors.password && touched.password ? "sprAdmin-createAdmin-input-br-error" : ""}`} name="password" id="password" onChange={handleChange} onBlur={handleBlur} value={values.password} ></input>
+                                                    <i className={`bi ${!showPassword ? "bi-eye-slash-fill" : "bi-eye-fill"} text-primary mt-2 ms-2 `} style={{ cursor: 'pointer' }} onClick={togglePasswordVisibility}></i>
+                                                </div>
+                                                {errors.password && touched.password && <p className="sprAdmin-createAdmin-error-message small mt-1">{errors.password}</p>}
+
+                                                
+                                            </div>
+
                                             {/* checkboxes */}
                                             <div className="form-group">
                                                 <div>
 
                                                     <label htmlFor="checkBoxGroupTitle d-block" >Access Permission for Employee details </label>
                                                     <div className="form-check ">
-                                                        <input className=" sprAdmin-createAdmin-checkbox-create form-check-input " name="employeeAccess.create" type="checkbox" id="empcreate" checked={values.employeeAccess.create} onBlur={handleBlur} onChange={handleChange}></input>
+                                                        <input className=" sprAdmin-createAdmin-checkbox-create form-check-input " name="canCreateEmployee" type="checkbox" id="empcreate" checked={values.canCreateEmployee} onBlur={handleBlur} onChange={handleChange}></input>
                                                         <label className="form-check-label" htmlFor="empcreate">Create</label>
 
                                                     </div>
                                                     <div className="form-check ">
-                                                        <input className="form-check-input sprAdmin-createAdmin-checkbox-edit" name="employeeAccess.edit" type="checkbox" id="empedit" checked={values.employeeAccess.edit} onBlur={handleBlur} onChange={handleChange}></input>
+                                                        <input className="form-check-input sprAdmin-createAdmin-checkbox-edit" name="canEditEmployee" type="checkbox" id="empedit" checked={values.canEditEmployee} onBlur={handleBlur} onChange={handleChange}></input>
                                                         <label className="form-check-label" htmlFor="empedit">Edit</label>
                                                     </div>
                                                     <div className="form-check form-check-inline">
-                                                        <input className="form-check-input sprAdmin-createAdmin-checkbox-delete" name="employeeAccess.delete" type="checkbox" id="empdelete" checked={values.employeeAccess.delete} onBlur={handleBlur} onChange={handleChange}></input>
+                                                        <input className="form-check-input sprAdmin-createAdmin-checkbox-delete" name="canDeleteEmployee" type="checkbox" id="empdelete" checked={values.canDeleteEmployee} onBlur={handleBlur} onChange={handleChange}></input>
                                                         <label className="form-check-label" htmlFor="empdelete">Delete</label>
                                                     </div>
 
@@ -331,15 +341,15 @@ function AdminEdit() {
 
                                                     <label htmlFor="checkBoxGroupTitle d-block">Access Permission for Project details </label>
                                                     <div className="form-check ">
-                                                        <input className="form-check-input sprAdmin-createAdmin-checkbox-create" name="projectAccess.create" type="checkbox" id="pjcreate" checked={values.projectAccess.create} onBlur={handleBlur} onChange={handleChange}></input>
+                                                        <input className="form-check-input sprAdmin-createAdmin-checkbox-create" name="canCreateProject" type="checkbox" id="pjcreate" checked={values.canCreateProject} onBlur={handleBlur} onChange={handleChange}></input>
                                                         <label className="form-check-label" htmlFor="pjcreate">Create</label>
                                                     </div>
                                                     <div className="form-check ">
-                                                        <input className="form-check-input sprAdmin-createAdmin-checkbox-edit" name="projectAccess.edit" type="checkbox" id="pjedit" checked={values.projectAccess.edit} onBlur={handleBlur} onChange={handleChange}></input>
+                                                        <input className="form-check-input sprAdmin-createAdmin-checkbox-edit" name="canEditProject" type="checkbox" id="pjedit" checked={values.canEditProject} onBlur={handleBlur} onChange={handleChange}></input>
                                                         <label className="form-check-label" htmlFor="pjedit">Edit</label>
                                                     </div>
                                                     <div className="form-check form-check-inline">
-                                                        <input className="form-check-input sprAdmin-createAdmin-checkbox-delete" name="projectAccess.delete" type="checkbox" id="pjdelete" checked={values.projectAccess.delete} onBlur={handleBlur} onChange={handleChange}></input>
+                                                        <input className="form-check-input sprAdmin-createAdmin-checkbox-delete" name="canDeleteProject" type="checkbox" id="pjdelete" checked={values.canDeleteProject} onBlur={handleBlur} onChange={handleChange}></input>
                                                         <label className="form-check-label" htmlFor="pjdelete">Delete</label>
                                                     </div>
 
