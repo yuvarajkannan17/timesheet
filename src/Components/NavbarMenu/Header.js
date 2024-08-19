@@ -5,9 +5,25 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import chiselonLogo from '../Image/logochiselon.png'
 import './Header.css'
+import { useSelector } from 'react-redux';
 
 import React, { useState, useEffect } from 'react';
 function Header() {
+
+    
+  
+  
+  const employeeValue = useSelector(state=>state.employeeLogin.value);
+  const employeeId=employeeValue.employeeId;
+
+  const adminValue = useSelector(state=>state.adminLogin.value);
+  const adminId=adminValue.adminId;
+  const superadminValue = useSelector(state=>state.superadminLogin.value);
+  const superadminId=superadminValue.superadminId;
+  
+
+ 
+  
 
     const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
@@ -50,8 +66,10 @@ function Header() {
                         <div className='ti-time text-warning'>
                             {formattedDateTime}
                         </div>
-                        <div className='h3 ti-sign-in'>
-                            <a href='#' className='nav-link'>C</a>
+                        <div className=' ti-sign-in'>
+                            { employeeId && <a href='#' className='nav-link'>{employeeId}</a>}
+                            { adminId && <a href='#' className='nav-link'>{adminId}</a>}
+                            { superadminId && <a href='#' className='nav-link'>{superadminId}</a>}
                         </div>
                     </div>
 

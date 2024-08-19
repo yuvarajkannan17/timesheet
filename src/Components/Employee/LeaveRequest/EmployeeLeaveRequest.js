@@ -13,6 +13,9 @@ import { leaveSubmitON, leaveSubmitOFF } from '../../features/empLeaveSubmit';
 import { useSelector, useDispatch } from 'react-redux';
 
 export function EmployeeLeaveRequest() {
+     
+ const employeeValue = useSelector(state=>state.employeeLogin.value);
+ const employeeId=employeeValue.employeeId;
     const [leaveSuccessModal, setLeaveSuccessModal] = useState(false);
     const [numberOfDays, setNumberOfDays] = useState(0);
     let dispatch = useDispatch();
@@ -21,7 +24,7 @@ export function EmployeeLeaveRequest() {
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
-            empId: "",
+            empId:employeeId, 
             startDate: new Date(),
             endDate: new Date(),
             noOfDays: 0,
@@ -58,12 +61,12 @@ export function EmployeeLeaveRequest() {
             if (leaveData.data) {
                 const {empId,status,id,startDate,endDate} =leaveData.data
                 setLeaveSuccessModal(true);
-                localStorage.setItem("leaveSubmitEmpId",empId);
-                localStorage.setItem("leaveStatus",status);
-                localStorage.setItem("isLeaveSubmit","true");
-                localStorage.setItem("leaveObjectId",id);
-                localStorage.setItem("leaveStartDate",startDate);
-                localStorage.setItem("leaveEndDate",endDate);
+                localStorage.setItem(`leaveSubmitEmpId${employeeId}`,empId);
+                localStorage.setItem(`leaveStatus${employeeId}`,status);
+                localStorage.setItem(`isLeaveSubmit${employeeId}`,"true");
+                localStorage.setItem(`leaveObjectId${employeeId}`,id);
+                localStorage.setItem(`leaveStartDate${employeeId}`,startDate);
+                localStorage.setItem(`leaveEndDate${employeeId}`,endDate);
                 dispatch(leaveSubmitON(true));
                 formik.resetForm();
                 navigate("/employee")
@@ -95,7 +98,7 @@ export function EmployeeLeaveRequest() {
                                     <form onSubmit={formik.handleSubmit}>
                                         <div className="my-3 leave-row">
                                             <label> <span style={{ color: 'red' }}>*</span>Emp Id :</label>
-                                            <input type='text' className='w-25' name="empId" value={formik.values.empId} onChange={formik.handleChange} ></input>
+                                            <input type='text' className='w-25' name="empId" value={employeeId} readOnly ></input>
 
                                         </div>
                                         <div>
