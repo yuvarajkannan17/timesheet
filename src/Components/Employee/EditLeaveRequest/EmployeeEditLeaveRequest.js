@@ -8,6 +8,7 @@ import { Modal, Button } from "react-bootstrap";
 import successCheck from "../../Image/checked.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function EmployeeEditLeaveRequest() {
   const [lastLeaveRequestData, setLastLeaveRequestData] = useState({});
@@ -16,7 +17,8 @@ function EmployeeEditLeaveRequest() {
   const [successModal, setSuccessModal] = useState(false);
   const navigate = useNavigate();
 
-
+  const employeeValue = useSelector(state=>state.employeeLogin.value);
+  const employeeId=employeeValue.employeeId;
   
 
   const formik = useFormik({
@@ -26,6 +28,7 @@ function EmployeeEditLeaveRequest() {
       endDate: new Date(),
       noOfDays: "",
       reason: "",
+      status:"",
       comments: "",
     },
     validationSchema: schemaLeave,
@@ -38,7 +41,8 @@ function EmployeeEditLeaveRequest() {
     try {
       const response = await axios.get("http://localhost:8002/leave-requests");
       const leaveRequest = response.data;
-      const pendingItems = leaveRequest.filter(item => item.status === "PENDING");
+       const filteringEmployeeId = leaveRequest.filter(item => item.empId === employeeId);
+       const pendingItems= filteringEmployeeId.filter(item=>item.status==="PENDING")
       console.log(pendingItems);
     
       if (pendingItems.length > 0) {

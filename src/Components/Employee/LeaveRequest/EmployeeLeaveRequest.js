@@ -61,12 +61,12 @@ export function EmployeeLeaveRequest() {
             if (leaveData.data) {
                 const {empId,status,id,startDate,endDate} =leaveData.data
                 setLeaveSuccessModal(true);
-                localStorage.setItem(`leaveSubmitEmpId${employeeId}`,empId);
-                localStorage.setItem(`leaveStatus${employeeId}`,status);
-                localStorage.setItem(`isLeaveSubmit${employeeId}`,"true");
+                // localStorage.setItem(`leaveSubmitEmpId${employeeId}`,empId);
+                // localStorage.setItem(`leaveStatus${employeeId}`,status);
+                // localStorage.setItem(`isLeaveSubmit${employeeId}`,"true");
                 localStorage.setItem(`leaveObjectId${employeeId}`,id);
-                localStorage.setItem(`leaveStartDate${employeeId}`,startDate);
-                localStorage.setItem(`leaveEndDate${employeeId}`,endDate);
+                // localStorage.setItem(`leaveStartDate${employeeId}`,startDate);
+                // localStorage.setItem(`leaveEndDate${employeeId}`,endDate);
                 dispatch(leaveSubmitON(true));
                 formik.resetForm();
                 navigate("/employee")

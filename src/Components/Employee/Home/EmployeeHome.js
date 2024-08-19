@@ -52,13 +52,13 @@ function EmployeeHome() {
             setSubmitEmployeeId(submitEmployeeId)
             setStatusValue(status)
             dispatch(submitON(true)); // Set the Redux state if needed
-            setCountTimesheet(1);
+            
         } else {
             setStartSubmitDate(startSubmitDate);
             setEndSubmitDate(endSubmitDate);
             setStatusValue(status)
             setSubmitEmployeeId(submitEmployeeId)
-            setCountTimesheet(0);
+            
         }
     }, []);
 
