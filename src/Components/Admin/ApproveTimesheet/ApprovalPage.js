@@ -126,6 +126,7 @@ function AdminApprovalPage() {
         // Make a PUT request to update the status of the sheet in the API
         const response = await axios.put(
           `http://localhost:8081/admin/working-hours/approve/${updatedSheet.id}`,
+          // `http://localhost:8081/admin/working-hours/${}/approve-range?startDate=2023-07-01&endDate=2023-07-15`,
           updatedSheet
         );
         const responseData = response.data;

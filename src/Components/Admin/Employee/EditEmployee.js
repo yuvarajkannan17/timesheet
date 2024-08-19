@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { getEmployeeDetails, updateEmployeeData } from './EmployeeService'; // Adjusted import for update
 
 import successCheck from '../../Image/checked.png';
@@ -9,6 +10,8 @@ import successCheck from '../../Image/checked.png';
 export default function EditEmployee() {
   const { id } = useParams(); // Get the employee id from the route parameters
   const navigate = useNavigate();
+  const adminValue = useSelector(state=>state.adminLogin.value);
+  const adminId=adminValue.adminId;
 
   // State for form values, initial values, errors, and success modal
   const [formValues, setFormValues] = useState({

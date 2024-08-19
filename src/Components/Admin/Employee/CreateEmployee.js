@@ -3,8 +3,10 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useNavigate, useLocation } from "react-router-dom";
 import { checkEmployeeDuplicates } from "../Employee/EmployeeService";
+import { useSelector } from "react-redux";
 import '../../css/style.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons from react-icons (or any other icon library)
+ 
 
 const AddEmployeeData = () => {
   const [formValues, setFormValues] = useState({
@@ -24,6 +26,8 @@ const AddEmployeeData = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const adminValue = useSelector(state=>state.adminLogin.value);
+  const adminId=adminValue.adminId;
   
 
   useEffect(() => {

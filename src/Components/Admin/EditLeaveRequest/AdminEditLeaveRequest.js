@@ -32,17 +32,17 @@ function AdminEditLeaveRequest() {
     onSubmit: editLeaveRequest,
   });
 
-  useEffect(() => {
-    fetchLeaveData();
-  }, []);
+  
 
   async function fetchLeaveData() {
     try {
       const response = await axios.get("http://localhost:8081/admin/leave-requests");
       const leaveRequest = response.data;
+      const pendingItems = leaveRequest.filter(item => item.status === "PENDING");
+      console.log(pendingItems);
     
-      if (leaveRequest.length > 0) {
-        const lastRequest = leaveRequest[leaveRequest.length - 1];
+      if (pendingItems.length > 0) {
+        const lastRequest = pendingItems[pendingItems.length - 1];
         console.log("last",lastRequest)
         setLastLeaveRequestData(lastRequest);
         setEditId(lastRequest.id);
@@ -52,6 +52,7 @@ function AdminEditLeaveRequest() {
           endDate: new Date(lastRequest.endDate),
           noOfDays: lastRequest.noOfDays,
           reason: lastRequest.reason,
+          status:lastRequest.status,
           comments: lastRequest.comments,
         });
       }
@@ -59,6 +60,9 @@ function AdminEditLeaveRequest() {
       console.error("Error fetching leave request:", error);
     }
   }
+  useEffect(() => {
+    fetchLeaveData();
+  }, []);
 
   useEffect(() => {
     if (formik.values.endDate && formik.values.startDate) {
@@ -91,8 +95,9 @@ function AdminEditLeaveRequest() {
   return (
     <>
        <div className="ti-background-clr">
-            <h5 className="text-center pt-4">EDIT LEAVE REQUEST</h5>
-                <div className="ti-leave-management-container  ">
+            
+                { lastLeaveRequestData && Object.keys(lastLeaveRequestData).length > 0 ?( <div className="ti-leave-management-container  ">
+                  <h5 className="text-center pt-4">EDIT LEAVE REQUEST</h5>
                     <div className='bg-white  '>
                         
                         <div className="row ">
@@ -175,8 +180,8 @@ function AdminEditLeaveRequest() {
                                         </div>
 
                                         <div className='my-5 text-end'>
-                                            <button type='submit' disabled={formik.isSubmitting} className='btn btn-success mx-2' onClick={() => setConfirmationModal(true)}>Save</button>
-                                            <button type='button' className='btn btn-secondary mx-2' onClick={() => { navigate('/admin') }}>Cancel</button>
+                                            <button type='submit' disabled={formik.isSubmitting} className='btn btn-success mx-2' onClick={() => setConfirmationModal(true)}>Submit</button>
+                                            <button type='button' className='btn btn-secondary mx-2' onClick={() => { navigate('/employee') }}>Cancel</button>
                                         </div>
 
                                     </form>
@@ -190,7 +195,10 @@ function AdminEditLeaveRequest() {
                     </div>
 
 
-                </div>
+                </div> ): (<div className="no-timesheet">
+                    <h3>No Leave Request Available</h3>
+                    <p>Please create a new one.</p>
+                </div>)}
                 <div>
                     {/* <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={leaveSuccessModal}  >
                         <div className="d-flex flex-column modal-success p-4 align-items-center ">

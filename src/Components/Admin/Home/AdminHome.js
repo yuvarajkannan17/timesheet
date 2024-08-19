@@ -7,11 +7,13 @@ import { leaveSubmitON,leaveSubmitOFF } from '../../features/empLeaveSubmit';
 import axios from "axios";
 
 function AdminHome() {
+  const adminValue = useSelector(state=>state.adminLogin.value);
+  const adminId=adminValue.adminId;
   const [isOpenTimesheet, setIsOpenTimesheet] = useState(false);
   const [isOpenLeaveManagement, setIsOpenLeaveManagement] = useState(false);
   const [startSubmitDate, setStartSubmitDate] = useState("");
   const [endSubmitDate, setEndSubmitDate] = useState("");
-  const [submitEmployeeId, setSubmitEmployeeId] = useState("");
+  const [submitAdminId, setSubmitAdminId] = useState("");
   const [statusValue, setStatusValue] = useState("");
   const [countTimesheet, setCountTimesheet] = useState(0);
   const [rejectTimesheetCount, setRejectTimesheetCount] = useState(0);
@@ -31,20 +33,20 @@ function AdminHome() {
 
   
   useEffect(()=>{
-    setLeaveObjectId(localStorage.getItem("leaveObjectId"));
+    setLeaveObjectId(localStorage.getItem(`leaveObjectId${adminId}`));
    },[])
 
   useEffect(() => {
     // Retrieve the submit state from local storage when the component mounts
-    const savedSubmitState = localStorage.getItem("isSubmitOn");
-    const startSubmitDate = localStorage.getItem("startSubmitDate");
-    const endSubmitDate = localStorage.getItem("endSubmitDate");
-    const submitEmployeeId = localStorage.getItem("submitEmployeeId");
-    const status = localStorage.getItem("statusValue");
+    const savedSubmitState = localStorage.getItem(`isSubmitOn${adminId}`);
+    const startSubmitDate = localStorage.getItem(`startSubmitDate${adminId}`);
+    const endSubmitDate = localStorage.getItem(`endSubmitDate${adminId}`);
+    const submitAdminId = localStorage.getItem(`submitAdminId${adminId}`);
+    const status = localStorage.getItem(`statusValue${adminId}`);
     if (savedSubmitState === "true") {
       setStartSubmitDate(startSubmitDate);
       setEndSubmitDate(endSubmitDate);
-      setSubmitEmployeeId(submitEmployeeId);
+      setSubmitAdminId(submitAdminId);
       setStatusValue(status);
       dispatch(submitON(true)); // Set the Redux state if needed
       setCountTimesheet(1);
@@ -52,45 +54,48 @@ function AdminHome() {
       setStartSubmitDate(startSubmitDate);
       setEndSubmitDate(endSubmitDate);
       setStatusValue(status);
+      setSubmitAdminId(submitAdminId)
       setCountTimesheet(0);
     }
   }, []);
 
-  async function count(){
-    let response=  await axios.get("http://localhost:8081/admin/leave-requests");
-    let data= response.data;
-  if(data){
-    let pendingCount= data.filter((obj)=>obj.status==="PENDING");
+//   async function count(){
+//     let response=  await axios.get("http://localhost:8081/admin/leave-requests");
+//     let data= response.data;
+//   if(data){
+//     let pendingCount= data.filter((obj)=>obj.status==="PENDING");
     
-    let rejectCount= data.filter((obj)=>obj.status==="REJECTED");
-    setLeavePending(pendingCount.length);
-    setRejectLeave(rejectCount.length);
-  }
-}
+//     let rejectCount= data.filter((obj)=>obj.status==="REJECTED");
+//     setLeavePending(pendingCount.length);
+//     setRejectLeave(rejectCount.length);
+//   }
+// }
 
-useEffect(()=>{
-    count();
-},[])
+// useEffect(()=>{
+//     count();
+// },[])
 
      async  function leaveStatus(){
             let response=  await axios.get("http://localhost:8081/admin/leave-requests");
             let data= response.data;
            
-             let submitLeaveRequest=data.filter(obj=>obj.id==leaveObjectId);
-                            
-             submitLeaveRequest.map((obj)=>{
-                setLeaveSubmitStartDate(obj.startDate);
-                setLeaveSubmitEndDate(obj.endDate);
-                setLeaveSubmitStatus(obj.status);
-        })
-             let leaveStatus = submitLeaveRequest.some(obj => obj.status === "PENDING");
-            console.log(leaveStatus)
-              if(leaveStatus){
-                 dispatch(leaveSubmitON(true));
-           
-              }else{
-                dispatch(leaveSubmitOFF(false));          
-                 
+            let submitLeaveRequest=data.filter(obj=>obj.id==leaveObjectId);
+
+            console.log("uuuuuuuuuuu",submitLeaveRequest);
+                           
+            submitLeaveRequest.map((obj)=>{
+               setLeaveSubmitStartDate(obj.startDate);
+               setLeaveSubmitEndDate(obj.endDate);
+               setLeaveSubmitStatus(obj.status);
+       })
+            let leaveStatus = submitLeaveRequest.some(obj => obj.status === "PENDING");
+           console.log(leaveStatus)
+             if(leaveStatus){
+                dispatch(leaveSubmitON(true));
+          
+             }else{
+               dispatch(leaveSubmitOFF(false));
+              
               }
             
        }
@@ -100,46 +105,38 @@ useEffect(()=>{
        },[leaveObjectId])
 
   async function timesheetState() {
-    if (startSubmitDate && endSubmitDate && submitEmployeeId) {
+    if (startSubmitDate && endSubmitDate && submitAdminId) {
       try {
         let response = await axios.get(
           `http://localhost:8081/api/working-hours/all/range?startDate=${startSubmitDate}&endDate=${endSubmitDate}`
         );
-        let data = response.data;
-        console.log("timesheetData", data)
-        let statusValue = data[0].status;
+        let data = response.data;        
+        let status = data[0].status;
+        console.log(statusValue);
 
-        if (statusValue === "APPROVED") {
-          setCountTimesheet(0);
-        } else if (statusValue === "REJECTED") {
-          setRejectTimesheetCount(1);
-          setCountTimesheet(0);
-        }
-
-        // Check if all objects in the array have a status other than "NEW"
-        const allApproved = data.every((obj) => obj.status !== "NEW");
-
-        if (allApproved) {
-          console.log(allApproved);
+        if(status ==="APPROVED"){
+          setStatusValue(status);
           dispatch(submitOFF(false));
-          localStorage.removeItem("isSubmitOn");
-          localStorage.setItem("statusValue", statusValue);
-          localStorage.removeItem("submitEmployeeId");
-          setStatusValue(statusValue);
+          localStorage.setItem(`isSubmitOn${adminId}`, 'false');
+          localStorage.setItem(`statusValue${adminId}`, status);
+     }else if(status ==="REJECTED"){
+         setStatusValue(status)
+         dispatch(submitOFF(false));
+          localStorage.setItem(`isSubmitOn${adminId}`, 'false');
+          localStorage.setItem(`statusValue${adminId}`, status);
+     }
 
-          setSubmitEmployeeId("");
-          clearInterval(intervalId);
-        } else {
-          setStatusValue("PENDING");
-        }
-      } catch (error) {
-        console.error("Error fetching timesheet data:", error);
-      }
-    }
-  }
+    
+} catch (error) {
+    console.error("Error fetching timesheet data:", error);
+}
+}
+}
 
-  // Call the timesheetState function every second
-  const intervalId = setInterval(timesheetState, 1000);
+useEffect(()=>{
+timesheetState();
+},[startSubmitDate,endSubmitDate,adminId])
+
 
   return (
     <>
@@ -265,25 +262,24 @@ useEffect(()=>{
             </div>
           </div>
 
-          <div className="right-details">
-            <div className="row text-center ti-home-notification">
+           <div className="right-details">
+            {/* <div className="row text-center ti-home-notification">
               <div className="col   mx-5 my-2 p-2 ">
                 Timesheet to be approved : {countTimesheet}
               </div>
               <div className="col  mx-5  my-2 p-2  ">Rejected Timesheets : {rejectTimesheetCount}</div>
-            </div>
+            </div> */}
 
             {/* notification about leave  */}
-            <div className="row text-center ti-home-notification">
+            {/* <div className="row text-center ti-home-notification">
               <div className="col   mx-5 my-2 p-2 ">
                 Leaves to be approved : {leavePending}
               </div>
-              <div className="col  mx-5  my-2 p-2  ">
-                Rejected Leave Request : {rejectLeave}
-              </div>
-            </div>
+              <div className="col  mx-5  my-2 p-2  "> */}
+                {/* Rejected Leave Request : {rejectLeave} */}
+              {/* </div> */}
+            {/* </div> */} 
 
-            {/* timesheet content */}
             <div className="row text-center ti-home-content mt-2">
               {/* timesheet status */}
               <div className="col mx-5 my-2 p-2 ">
