@@ -52,6 +52,7 @@ function EmployeeEditLeaveRequest() {
           endDate: new Date(lastRequest.endDate),
           noOfDays: lastRequest.noOfDays,
           reason: lastRequest.reason,
+          status:lastRequest.status,
           comments: lastRequest.comments,
         });
       }
