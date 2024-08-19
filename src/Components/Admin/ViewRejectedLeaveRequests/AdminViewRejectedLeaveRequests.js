@@ -14,7 +14,8 @@ function AdminViewRejectedLeaveRequests() {
         async function getRejectedLeaveRequests() {
             try {
                 const response = await axios.get('http://localhost:8081/admin/leave-requests');
-                setRejectedLeaveRequests(response.data.filter(leave => leave.status === "REJECTED"));
+                let rejectedOne= response.data.filter(leave => leave.status == "REJECTED");
+                    setRejectedLeaveRequests(rejectedOne.slice(-3));
             } catch (error) {
                 console.error('Error fetching rejected leave requests:', error);
                 setErrorMessage('Error fetching rejected leave requests. Please try again.');

@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import '../../Supervisor/Home/supervisor.css'
 import { useSelector, useDispatch } from 'react-redux';
 import { submitON, submitOFF } from '../../features/submitBtn';
-
 import { leaveSubmitON,leaveSubmitOFF } from '../../features/empLeaveSubmit';
 import axios from 'axios';
+
 function EmployeeHome() {
     const [isOpenTimesheet, setIsOpenTimesheet] = useState(true);
     const [isOpenLeaveManagement, setIsOpenLeaveManagement] = useState(true);

@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import '../ApproveTimesheet/approvalPage.css'
 import { editTimesheetSuccessModal, editTimesheetRejectModal } from '../../features/modal';
 
-function SupervisorModifyTimesheet() {
+function EmployeeModifyTimesheet() {
     const [timesheetData, setTimesheetData] = useState('');
     const { id } = useParams();
     const navigate = useNavigate();
@@ -33,10 +33,10 @@ function SupervisorModifyTimesheet() {
         setEditApproveConfirmationModal(false);
 
         try {
-            await axios.put(`${employeeSheetUrl}/${id}`, timesheetData);
+            await axios.put(`http://localhost:8081/admin/working-hours/approve/${id}`, timesheetData);
             setTimesheetData({ ...timesheetData, status: "Your timesheet has been approved" })
             dispatch(editTimesheetSuccessModal(true));
-            navigate('/admin/approvelList');
+            navigate('/admin');
         } catch (error) {
             console.log(error)
         }
@@ -56,7 +56,7 @@ function SupervisorModifyTimesheet() {
 
         try {
 
-            await axios.put(`${employeeSheetUrl}/${id}`, timesheetData);
+            await axios.put(`http://localhost:8081/admin/working-hours/reject/${id}`, timesheetData);
             setTimesheetData({ ...timesheetData, status: "Your timesheet has been rejected" })
             dispatch(editTimesheetRejectModal(true));
             navigate('/admin')
@@ -89,8 +89,8 @@ function SupervisorModifyTimesheet() {
     };
     const handleWorkHoursChange = (index, value) => {
         if(!isNaN(value)){
-            if (value < 0 || value > 12) {
-                // If the value is less than 0 or greater than 12, we don't need to do anything
+            if (value < 0 || value > 15) {
+                // If the value is less than 0 or greater than 15, we don't need to do anything
                 
               }else{
                 const newWorkHour = [...timesheetData.timesheetData];
@@ -236,4 +236,4 @@ function SupervisorModifyTimesheet() {
     );
 }
 
-export default SupervisorModifyTimesheet;
+export default EmployeeModifyTimesheet;
