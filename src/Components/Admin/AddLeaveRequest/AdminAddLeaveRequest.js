@@ -8,10 +8,16 @@ import leaveUrl from '../../Api/leaveRequest';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Modal,Button } from 'react-bootstrap';
-import successCheck from '../../Image/checked.png'
+import successCheck from '../../Image/checked.png';
+import { leaveSubmitON, leaveSubmitOFF } from '../../features/empLeaveSubmit';
+import { useSelector, useDispatch } from 'react-redux';
+
 function AdminAddLeaveRequest() {
   const [leaveSuccessModal,setLeaveSuccessModal]=useState(false);
-  const [numberOfDays, setNumberOfDays] = useState(0); 
+  const [numberOfDays, setNumberOfDays] = useState(0);
+  let dispatch = useDispatch();
+    let { isSubmit } = useSelector((state) => state.empLeaveSubmit.value);
+    console.log("sss", isSubmit) 
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
@@ -47,22 +53,29 @@ console.log(formik.values)
 
     async function onSubmit() {
 
-        try{
+        try {
             const leaveData = await axios.post("http://localhost:8081/admin/leave-requests", formik.values);
-           setLeaveSuccessModal(true);
-        
-        formik.resetForm();
-        
-        }catch(error){
+            if (leaveData.data) {
+                const {empId,status,id,startDate,endDate} =leaveData.data
+                setLeaveSuccessModal(true);
+                localStorage.setItem("leaveSubmitEmpId",empId);
+                localStorage.setItem("leaveStatus",status);
+                localStorage.setItem("isLeaveSubmit","true");
+                localStorage.setItem("leaveObjectId",id);
+                localStorage.setItem("leaveStartDate",startDate);
+                localStorage.setItem("leaveEndDate",endDate);
+                dispatch(leaveSubmitON(true));
+                formik.resetForm();
+                navigate("/admin")
+            }
+
+
+        } catch (error) {
             console.log(error)
 
         }
 
     }
-
-
-
-
 
     return (
         <>

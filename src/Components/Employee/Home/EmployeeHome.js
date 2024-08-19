@@ -3,10 +3,10 @@ import { Link,useLocation } from 'react-router-dom';
 import '../../Supervisor/Home/supervisor.css'
 import { useSelector, useDispatch } from 'react-redux';
 import { submitON, submitOFF } from '../../features/submitBtn';
-import { setEmployeeId } from '../../features/employeeLogin';
 
 import { leaveSubmitON,leaveSubmitOFF } from '../../features/empLeaveSubmit';
 import axios from 'axios';
+
 function EmployeeHome() {
     
     const employeeValue = useSelector(state=>state.employeeLogin.value);

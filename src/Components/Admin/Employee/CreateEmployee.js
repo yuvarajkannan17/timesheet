@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { useNavigate, useLocation } from "react-router-dom";
 import { checkEmployeeDuplicates } from "../Employee/EmployeeService";
 import '../../css/style.css';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons from react-icons (or any other icon library)
 
 const AddEmployeeData = () => {
   const [formValues, setFormValues] = useState({
@@ -17,10 +18,13 @@ const AddEmployeeData = () => {
     password: ""
   });
   const [formErrors, setFormErrors] = useState({});
+  
   const [validationErrors, setValidationErrors] = useState({});
   const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  
 
   useEffect(() => {
     if (location.state && location.state.employee) {
@@ -39,7 +43,8 @@ const AddEmployeeData = () => {
     setFormErrors((prevErrors) => ({
       ...prevErrors,
       [name]: "",
-    }));
+    })); 
+    
 
     // Clear duplicate errors for the field being edited
     setValidationErrors((prevErrors) => ({
@@ -117,6 +122,9 @@ const AddEmployeeData = () => {
   const handleCancel = () => {
     navigate('/admin');
   };
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
 
   return (
     <div className="background-clr">
@@ -164,16 +172,27 @@ const AddEmployeeData = () => {
                   {(formErrors.emailId || validationErrors.emailId) && <div className="invalid-feedback">{formErrors.emailId || validationErrors.emailId}</div>}
                 </div>
                 <div className="col-md-6 form-group">
-                  <label className="label">Password<span className="required">*</span></label>
-                  <input
-                    type="password"
-                    name="password"
-                    className={`form-control ${formErrors.password || validationErrors.password ? 'is-invalid' : ''}`}
-                    value={formValues.password}
-                    onChange={handleChange}
-                  />
-                  {(formErrors.password || validationErrors.password) && <div className="invalid-feedback">{formErrors.password || validationErrors.password}</div>}
-                </div>
+      <label className="label">Password<span className="required">*</span></label>
+      <div className="input-group">
+        <input
+          type={passwordVisible ? "text" : "password"}
+          name="password"
+          className={`form-control ${formErrors.password || validationErrors.password ? 'is-invalid' : ''}`}
+          value={formValues.password}
+          onChange={handleChange}
+        />
+        <div className="input-group-append">
+          <span className="input-group-text" onClick={togglePasswordVisibility} style={{ cursor: 'pointer' }}>
+            {passwordVisible ? <FaEye /> : <FaEyeSlash />}
+          </span>
+        </div>
+        {(formErrors.password || validationErrors.password) && (
+          <div className="invalid-feedback">
+            {formErrors.password || validationErrors.password}
+          </div>
+        )}
+      </div>
+    </div>
                 <div className="col-md-6 form-group">
                   <label className="label">Aadhar Number<span className="required">*</span></label>
                   <input

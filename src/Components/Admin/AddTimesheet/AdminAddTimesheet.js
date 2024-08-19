@@ -290,9 +290,7 @@ const AdminAddTimesheet = () => {
       
     }
     
-  };
-  
-  
+  }; 
   
  
   const submitTimesheetData = async () => {
@@ -360,8 +358,6 @@ const AdminAddTimesheet = () => {
         });
       }
     });
-  
-  
     
   
     // Check if there is any data to send

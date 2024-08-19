@@ -8,10 +8,16 @@ export default function SearchEmployee() {
   const [items, setItems] = useState([]);
   const [searchText, setSearchText] = useState('');
   const [result, setResult] = useState(false); // Whether to display "No record found"
+  
   const navigate = useNavigate();
 
   const handleFilter = useCallback(async () => {
     try {
+      if (searchText.trim() === '') {
+        setItems([]);
+        setResult(false);
+        return;
+      }
       const allEmployees = await getEmployeeData();
       const filteredEmployees = allEmployees.filter(
         (employee) =>
@@ -33,14 +39,11 @@ export default function SearchEmployee() {
     }
   }, [searchText]); // Use searchText as dependency
 
-  useEffect(() => {
-    handleFilter();
-  }, [handleFilter]); // Include handleFilter in the dependency array
+  // useEffect(() => {
+  //   handleFilter();
+  // }, [handleFilter]); // Include handleFilter in the dependency array
 
-  const handleClear = () => {
-    setSearchText('');
-    handleFilter(); // Optionally trigger filter after clearing the search text
-  };
+  
 
   const handleCancel = () => {
     navigate('/admin');
@@ -50,12 +53,17 @@ export default function SearchEmployee() {
     if (e.key === 'Backspace') {
       // Trigger filtering when backspace key is pressed
       handleFilter();
+      setItems([]);
     }
   };
 
   const handleRowClick = (employeeId) => {
     navigate(`/admin/employeedetails/${employeeId}`);
   };
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value);
+    handleFilter();
+  };
 
   return (
     <div className='background-clr'>
@@ -63,20 +71,19 @@ export default function SearchEmployee() {
       <h3> Search Employee </h3>
       <div className='container employee-form'>
         <div className='d-flex justify-content-end py-2' style={{ backgroundColor: 'rgb(251, 250, 250)' }}>
-          <span className='me-2'>EMPLOYEE</span>
+          {/* <span className='me-2'>EMPLOYEE</span> */}
           <div>
             <form className='no-focus-outline'>
               <input
                 className='w-75 search-control'
-                type='text'
+                type='search'
                 value={searchText}
                 placeholder='Search employee'
-                onChange={(e) => setSearchText(e.target.value)}
+                // onChange={(e) => setSearchText(e.target.value)}
+                onChange={handleSearchChange} // Handle input change here
                 onKeyDown={handleKeyDown}
               />
-              <button className='border-0 bg-white' type='button' onClick={handleClear}>
-                <i className='bi bi-x'></i>
-              </button>
+              
               <button className='border-0 bg-white' type='button' onClick={handleFilter}>
                 <i className='bi bi-search'></i>
               </button>
