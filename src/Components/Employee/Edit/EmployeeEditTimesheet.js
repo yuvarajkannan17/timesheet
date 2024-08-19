@@ -9,6 +9,8 @@ import { useSelector,useDispatch } from 'react-redux';
 import { submitON,submitOFF } from '../../features/submitBtn';
 
 function EmployeeEditTimesheet() {
+    const employeeValue = useSelector(state=>state.employeeLogin.value);
+ const employeeId=employeeValue.employeeId;
     const [overallLength, setOverallLength] = useState("");
     const [inputs, setInputs] = useState({
         startDate: "",
@@ -36,7 +38,7 @@ function EmployeeEditTimesheet() {
     const dispatch= useDispatch();
 
     const loadRecentTimesheetData = () => {
-        const savedTimesheetDataList = JSON.parse(localStorage.getItem('timesheetData')) || [];
+        const savedTimesheetDataList = JSON.parse(localStorage.getItem(employeeId)) || [];
         if (savedTimesheetDataList.length > 0) {
             const recentIndices = savedTimesheetDataList.slice(-3);
             setOverallLength(recentIndices.length);

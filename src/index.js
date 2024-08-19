@@ -10,13 +10,19 @@ import modalReducer from './Components/features/modal'
 import adminDetailReducer from './Components/features/adminDetails';
 import submitBtn from './Components/features/submitBtn';
 import empLeaveSubmit from './Components/features/empLeaveSubmit';
+import employeeLogin from './Components/features/employeeLogin';
+import adminLogin from './Components/features/adminLogin';
+import superadminLogin from './Components/features/superadminLogin';
   const store=configureStore({
 
     reducer:{
       modal:modalReducer,
       adminDetails:adminDetailReducer,
       submitBtn,
-      empLeaveSubmit
+      empLeaveSubmit,
+      employeeLogin,
+      adminLogin,
+      superadminLogin
     }
 
   })

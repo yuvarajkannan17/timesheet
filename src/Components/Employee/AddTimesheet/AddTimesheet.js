@@ -17,13 +17,13 @@ const AddTimesheet = () => {
   const [submitEmployeeId,setSubmitEmployeeId]=useState("")
   const [hoursError, setHoursError] = useState("");
   const [selectedMonth, setSelectedMonth] = useState('');
-  const [employeeIdError, setEmployeeIdError] = useState("");
+
   const [projectIdError, setProjectIdError] = useState("");
   const [timesheetData, setTimesheetData] = useState([]);
   const [availableProjects, setAvailableProjects] = useState([]);
   const [projectRows, setProjectRows] = useState([{}]);
   const [showFirstHalf, setShowFirstHalf] = useState(true);
-  const [employeeId, setEmployeeId] = useState("");
+  
   const [addDataSubmitConfirmation,setAddDataSubmitConfirmation]=useState(false);
   const [successModalForTimesheet,setSuccessModalForTimesheet]=useState(false);
   const [saveModalForTimesheet,setSaveModalForTimesheet]=useState(false)
@@ -34,7 +34,8 @@ const AddTimesheet = () => {
  const dispatch= useDispatch();
   
   
- 
+ const employeeValue = useSelector(state=>state.employeeLogin.value);
+ const employeeId=employeeValue.employeeId;
 
   useEffect(() => {
     generateTimesheetData(selectedMonth);
@@ -57,20 +58,7 @@ const AddTimesheet = () => {
     fetchProjects();
   }, []);
 
-  function updatingEmployeeId(e) {
-    const id = e.target.value.trim();
-    setEmployeeId(id);
-  
-    const regex = /^EMP\d+$/;
-
-    if (id.trim() === "") {
-      setEmployeeIdError("Employee ID is required");
-    } else if (!regex.test(id)) {
-      setEmployeeIdError('Employee ID must start with "EMP" followed by digits');
-    } else {
-      setEmployeeIdError("");
-    }
-  }
+ 
 
   const handleForward = () => {
     if (selectedMonth) {
@@ -196,11 +184,7 @@ const AddTimesheet = () => {
   const validateTimesheetData = () => {
     let isValid = true;
 
-    if (!employeeId || employeeIdError) {
-      setEmployeeIdError("Employee Id is required");
-      isValid = false;
-    }
-
+   
     const invalidRows = projectRows.filter(row => !row.projectId || !Object.values(row.workHours || {}).some(hours => hours > 0));
     if (invalidRows.length > 0) {
       setProjectIdError("Please select a valid project and enter work hours.");
@@ -277,13 +261,13 @@ const AddTimesheet = () => {
       });
     
       // Retrieve existing data from local storage
-      const existingData = JSON.parse(localStorage.getItem('timesheetData')) || [];
+      const existingData = JSON.parse(localStorage.getItem(employeeId)) || [];
     
       // Append new data to the existing data
       existingData.push(formattedData);
     
       // Save updated data back to local storage
-      localStorage.setItem('timesheetData', JSON.stringify(existingData));
+      localStorage.setItem(employeeId, JSON.stringify(existingData));
         setSaveModalForTimesheet(true);
       // Log the data for debugging
       
@@ -372,7 +356,7 @@ const AddTimesheet = () => {
             let data=response.data;
            let statusValue= data[0].status;
              dispatch(submitON(true));
-              localStorage.setItem('isSubmitOn', 'true');
+              localStorage.setItem(`isSubmitOn${employeeId}`, 'true');
               let receviedData=response.data;
              let lengthOfData=receviedData.length;
             let last=receviedData[lengthOfData-1];
@@ -383,10 +367,10 @@ const AddTimesheet = () => {
             setSubmitEmployeeId(empId);
             setStartSubmitDate(firstDate);
             setEndSubmitDate(lastDate);
-            localStorage.setItem('startSubmitDate', firstDate);
-            localStorage.setItem('endSubmitDate', lastDate);
-            localStorage.setItem('submitEmployeeId', empId);
-            localStorage.setItem('statusValue', statusValue);
+            localStorage.setItem(`startSubmitDate${employeeId}`, firstDate);
+            localStorage.setItem(`endSubmitDate${employeeId}`, lastDate);
+            localStorage.setItem(`submitEmployeeId${employeeId}`, empId);
+            localStorage.setItem(`statusValue${employeeId}`, statusValue);
          
            setSuccessModalForTimesheet(true);
            
@@ -428,6 +412,7 @@ const AddTimesheet = () => {
               className="mx-1"
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
+
             />
           </div>
           {selectedMonth && <div>
@@ -454,13 +439,12 @@ const AddTimesheet = () => {
               id="emp-id"
               className="mx-1"
               value={employeeId}
-              onChange={updatingEmployeeId}
-              placeholder=' EMPXXX'
+              readOnly
             />
           </div>}
         </div>
 
-        {employeeIdError && <small style={{ color: 'red', fontWeight: "bold" }}>{employeeIdError}</small>}
+        
 
         {selectedMonth && <div>
           <div className="table-responsive border border-1 rounded p-4 border-black my-4" style={{ position: 'relative', zIndex: 1 }}>
