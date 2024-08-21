@@ -368,7 +368,7 @@ const AdminAddTimesheet = () => {
           if(response.data){
             let data=response.data;
            let statusValue= data[0].status;
-             dispatch(submitON(true));
+            //  dispatch(submitON(true));
               localStorage.setItem('isSubmitOn', 'true');
               let receviedData=response.data;
              let lengthOfData=receviedData.length;

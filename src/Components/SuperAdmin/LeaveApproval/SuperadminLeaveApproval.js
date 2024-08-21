@@ -24,11 +24,15 @@ function SuperadminLeaveApproval() {
   async function getLeaveData() {
     try {
       const response = await axios.get("http://localhost:8080/superadmin");
-      const leaveList = response.data;
+      const datas= response.data;
+     
+
+    
       
-      const filteredLeaveList = leaveList.filter(leave => leave.status === "PENDING");
+      const filteredLeaveList = datas.filter(leave => leave.status === "PENDING");
+      const leaveList= filteredLeaveList.slice(-5);
       
-      setleaveDatas(filteredLeaveList.map((leave) => ({
+      setleaveDatas(leaveList.map((leave) => ({
         ...leave,
         checked: false,
       })));
@@ -125,15 +129,18 @@ function SuperadminLeaveApproval() {
         const updatePromises = approvedLeavesRequest.map(async (admin) => {
             // Perform the PUT request
             const response = await axios.put(`http://localhost:8080/superadmin/${admin.id}/approve`);
-            return response.data; // Return the response data if needed
-        });
 
-        // Wait for all the promises to complete
-        const updatedLeaves = await Promise.all(updatePromises);
-
-          getLeaveData();
+            if(response.data){
+              getLeaveData();
         // Show success modal
         setSuccessModalForApprove(true);
+            }
+          
+        });
+
+       
+
+          
     } catch (error) {
         console.error('Error updating leave status:', error);
     }
@@ -145,7 +152,7 @@ function SuperadminLeaveApproval() {
     setAskConfirmationForApprove(false);
 
   }
-
+console.log(rejectReason);
   // reject the timesheet
   async function rejectSaveConfirmation() {
     // First validate the rejection reason
@@ -170,17 +177,22 @@ function SuperadminLeaveApproval() {
           reasonForRejection:rejectReason
         });
         
+        if(response.data){
 
-        return response.data;
+          getLeaveData();
+          setRejectReason("");
+        // Show success modal
+        setSuccessModalForReject(true);
+
+        }
+
+      
       });
 
-      // Wait for all updates to finish
-      const updatedLeaves = await Promise.all(updates);
+      // // Wait for all updates to finish
+      // const updatedLeaves = await Promise.all(updates);
 
-      getLeaveData();
-        setRejectReason("");
-      // Show success modal
-      setSuccessModalForReject(true);
+     
     } catch (error) {
       console.log('API error', error);
     }
@@ -192,19 +204,7 @@ function SuperadminLeaveApproval() {
 
   }
 
-  function goToLeaveDetails(id, check) {
-
-    if (check) {
-      console.log(id)
-      navigate('/superadmin/leavedetails/' + id)
-    } else {
-      setErrorMessage("Please select the person you wish to view !!!")
-    }
-
-    console.log(id)
-
-
-  }
+ 
 
   function selectAllCheckbox(event) {
     const check = event.target.checked;
@@ -223,7 +223,7 @@ function SuperadminLeaveApproval() {
     <>
        <SuperAdminNav/>
       <div className="ti-background-clr">
-        <Container>
+         {leaveDatas.length > 0 ? (<Container>
           <div className="py-3 ">
             <p className=" text-center spr-approval-title ">Leave List</p>
           </div>
@@ -279,7 +279,10 @@ function SuperadminLeaveApproval() {
             <button className="btn btn-danger m-2" onClick={rejectLeaveFun}>Reject</button>
             <button className="btn btn-secondary m-2" onClick={cancelLeaveFun} >Cancel</button>
           </div>
-        </Container>
+        </Container>):(<div className="no-timesheet">
+                    <h3>No Submitted Leave Request</h3>
+                    
+                </div>)}
 
 
         {/* confirmation modal for approvel */}
@@ -322,7 +325,7 @@ function SuperadminLeaveApproval() {
                   <option value="excessive requests">Excessive Requests</option>
                   <option value="busy periods">Busy Periods</option>
                   <option value="incomplete work">Incomplete Works</option>
-                  <option value="maternity-leave">Policy Violations</option>
+                  <option value="Policy Violations">Policy Violations</option>
                   
                 </select>
 

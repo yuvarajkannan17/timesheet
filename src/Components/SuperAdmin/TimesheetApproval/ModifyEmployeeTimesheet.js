@@ -6,15 +6,25 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import { Modal, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-
 import successCheck from '../../Image/checked.png'
 import './approvalPage.css'
 import { editTimesheetSuccessModal, editTimesheetRejectModal } from '../../features/modal';
+import { useLocation } from 'react-router-dom';
 function ModifyAdminTimesheet() {
-    const [timesheetData, setTimesheetData] = useState('');
+    const [timesheetData, setTimesheetData] = useState([]);
     const { id } = useParams();
+    const location = useLocation();
+    const { startDate, endDate } = location.state || {};
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [uniqueDates, setUniqueDates] = useState("");
+    const [uniqueProjectIds, setUniqueProjectIds] = useState("");
+    const [projectDatas, setProjectDatas] = useState({})
+    const [availableProjects, setAvailableProjects] = useState([]);
+    const [error, setError] = useState("");
+    const [editableData, setEditableData] = useState([]);
+    const [workHourError, setWorkHourError] = useState("")
+    let [totalWorkHours, setTotalWorkHours] = useState(0)
 
     const [editApproveConfirmationModal, setEditApproveConfirmationModal] = useState(false);
     const [editRejectConfirmationModal, setEditRejectConfirmationModal] = useState(false);
@@ -33,15 +43,22 @@ function ModifyAdminTimesheet() {
 
     async function editTimesheetApproveSave() {
         setEditApproveConfirmationModal(false);
+        
 
         try {
-            await axios.put(`${employeeSheetUrl}/${id}`, timesheetData);
-            setTimesheetData({ ...timesheetData, status: "Your timesheet has been approved" })
+            await axios.put(`http://localhost:8080/admins/working-hours/${id}/approve-range?startDate=${startDate}&endDate=${endDate}`);
+            
             dispatch(editTimesheetSuccessModal(true));
 
         } catch (error) {
             console.log(error)
         }
+    }
+
+    function navigateToApproveTimesheet(){
+        dispatch(editTimesheetSuccessModal(false));
+         navigate('/superadmin/timesheetapproval')
+
     }
 
     function editTimesheetRejectConfirmation() {
@@ -52,15 +69,15 @@ function ModifyAdminTimesheet() {
         setEditRejectConfirmationModal(false);
 
     }
-    console.log("modi",timesheetData)
+
 
     async function editTimesheetRejectSave() {
         setEditRejectConfirmationModal(false);
 
         try {
 
-            await axios.put(`${employeeSheetUrl}/${id}`, timesheetData);
-            setTimesheetData({ ...timesheetData, status: "Your timesheet has been rejected" })
+            await axios.put(`http://localhost:8080/admins/working-hours/${id}/reject-range?startDate=${startDate}&endDate=${endDate}`);
+            
             dispatch(editTimesheetRejectModal(true));
 
         } catch (error) {
@@ -69,60 +86,184 @@ function ModifyAdminTimesheet() {
 
     }
 
+    useEffect(() => {
+        const fetchProjects = async () => {
+            try {
+                const response = await axios.get('https://6638af3a4253a866a24ec473.mockapi.io/cart');
+                setAvailableProjects(response.data);
+            } catch (error) {
+                console.error('Error fetching projects:', error);
+            }
+        };
+
+        fetchProjects();
+    }, []);
+
+    const groupByProject = () => {
+        const projectMap = {};
+        timesheetData.forEach(entry => {
+            if (!projectMap[entry.projectId]) {
+                projectMap[entry.projectId] = {};
+            }
+            projectMap[entry.projectId][entry.date] = entry.hours;
+        });
+        setProjectDatas(projectMap);
+    };
+
+
+    const spiltingProject = () => {
+        const uniqueDates = [...new Set(timesheetData.map(item => item.date))];
+        const uniqueProjectIds = [...new Set(timesheetData.map(item => item.projectId))];
+        setUniqueDates(uniqueDates);
+        setUniqueProjectIds(uniqueProjectIds);
+    };
+
+    useEffect(() => {
+
+        spiltingProject();
+        groupByProject();
+
+    }, [timesheetData])
+
+
 
 
     async function getEditTimesheet() {
-        const response = await axios.get(`${employeeSheetUrl}/${id}`);
+        const response = await axios.get(`http://localhost:8080/admins/working-hours/${id}/range?startDate=${startDate}&endDate=${endDate}`);
         const datas = response.data;
         setTimesheetData(datas);
+        setEditableData(datas)
+
+
 
     }
 
     useEffect(() => {
         getEditTimesheet();
-    }, []);
+    }, [id, startDate, endDate]);
 
-
-
-    const handleChange = (selectedOptions) => {
-        setTimesheetData((preValue) => ({
-            ...preValue, workingProject: selectedOptions
-        }));
-
-    };
-    const handleWorkHoursChange = (index, value) => {
-        if (!isNaN(value)) {
-            if (value < 0 || value > 12) {
-                // If the value is less than 0 or greater than 12, we don't need to do anything
-
-            } else {
-                const newWorkHour = [...timesheetData.timesheetData];
-                newWorkHour[index].hoursWorked = Number(value); // Update the hoursWorked property at the specified index
-                setTimesheetData(prevState => ({
-                    ...prevState,
-                    timesheetData: newWorkHour // Update the timesheetData state with the modified array
-
-                }));
-            }
-        }
-
-    };
-    function calculateTotalWorkHours() {
-        if (timesheetData.timesheetData) {
-            const totalWorkHours = timesheetData.timesheetData.reduce((acc, cur) => acc + parseInt(cur.hoursWorked), 0);
-
-            setTimesheetData(prevState => ({
-                ...prevState,
-                noOfHoursWorked: totalWorkHours
-            }));
-        }
-        return 0; // Return 0 if timesheetData.timesheetData is not available
+    function findOutDay(date) {
+        const givenDate = new Date(date);
+        const dayOftheweek = givenDate.toLocaleDateString('default', { weekday: "short" });
+        return dayOftheweek;
     }
 
+    const formatDate = (dateStr) => {
+        const date = new Date(dateStr);
+        const month = date.toLocaleString('default', { month: 'short' });
+        return `${month} ${date.getDate()}`;
+    };
 
-    useEffect(() => {
-        calculateTotalWorkHours();
-    }, [timesheetData.timesheetData])
+    const getDay = (dateStr) => {
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('default', { weekday: 'short' });
+    };
+
+    const updateProject = (newProjectId, index) => {
+        console.log(newProjectId)
+        console.log(index)
+        // Check if the new project ID already exists
+        if (uniqueProjectIds.includes(newProjectId) && uniqueProjectIds[index] !== newProjectId) {
+            setError("Project already in use.");
+            return;
+        } else {
+            setError(""); // Clear error if valid
+        }
+
+        // Capture the old projectId before it changes
+        const oldProjectId = uniqueProjectIds[index];
+
+        setUniqueProjectIds(prevUniqueProjectIds => {
+            const newProjectIds = [...prevUniqueProjectIds];
+            newProjectIds[index] = newProjectId;
+            return newProjectIds;
+        });
+
+        setEditableData(prevEditableData => {
+            return prevEditableData.map(entry => {
+                if (entry.projectId === oldProjectId) {
+                    return { ...entry, projectId: newProjectId };
+                }
+                return entry;
+            });
+        });
+    };
+
+    const handleHoursChange = (projectId, date, newHours) => {
+        // Allow only numeric input
+        if (/^\d*$/.test(newHours)) {
+
+            setEditableData(prevData =>
+                prevData.map(entry =>
+                    entry.projectId === projectId && entry.date === date
+                        ? { ...entry, hours: Number(newHours) }
+                        : entry
+                )
+            );
+            setWorkHourError("")
+            // Calculate total hours for the date
+            const totalHours = editableData
+                .filter(entry => entry.date === date)
+                .reduce((sum, entry) => sum + (entry.projectId === projectId ? parseInt(newHours) : parseInt(entry.hours)), 0);
+
+            if (totalHours > 15) {
+                setWorkHourError("Maximum work hours per day is 15.")
+                setEditableData(prevData =>
+                    prevData.map(entry =>
+                        entry.projectId === projectId && entry.date === date
+                            ? { ...entry, hours: 0 }
+                            : entry
+                    )
+                );
+            }
+        }
+    };
+
+    const addProjectRow = () => {
+        const newProjectId = ""; // Placeholder for new project ID
+        setUniqueProjectIds([...uniqueProjectIds, newProjectId]);
+
+        // Add entries for the new project in editableData with 0 hours for each date
+        const newEntries = uniqueDates.map(date => ({
+            employeeId: id,
+            projectId: newProjectId,
+            date: date,
+            hours: 0,
+
+        }));
+
+        setEditableData(prevEditableData => [...prevEditableData, ...newEntries]);
+    };
+
+
+
+    const deleteProjectRow = (index) => {
+        const newUniqueProjectIds = [...uniqueProjectIds];
+        const [removedProjectId] = newUniqueProjectIds.splice(index, 1);
+        setUniqueProjectIds(newUniqueProjectIds);
+
+        setEditableData(prevEditableData =>
+            prevEditableData.filter(entry => entry.projectId !== removedProjectId)
+        );
+    };
+
+
+
+    const calculateTotalWorkHours = () => {
+        const total = editableData.reduce((acc, entry) => acc + entry.hours, 0);
+        setTotalWorkHours(total);
+    };
+
+      useEffect(()=>{
+      calculateTotalWorkHours();
+      },[editableData])
+
+
+
+
+
+
+
 
 
     function goToHomePage() {
@@ -130,7 +271,7 @@ function ModifyAdminTimesheet() {
     }
 
 
-   
+
 
     return (
         <>
@@ -139,57 +280,97 @@ function ModifyAdminTimesheet() {
                     <div>
                         <p className='fs-4 '>Edit Timesheet</p>
                     </div>
+                    <div className="d-flex justify-content-between">
+                        <div className="m-1">
+                            <label htmlFor="emp_id">Emp Id :  </label>
+                            <input type="text" id="emp_id" className="mx-1" value={id} readOnly />
+                        </div>
+                    </div>
 
                     <div className="d-flex justify-content-between">
                         <div className="m-1">
-                            <label htmlFor="fromDate"> Date :  </label>
-                            <input type="date" id="fromDate" className="mx-1" value={timesheetData.StartDate} readOnly></input>
+                            <label htmlFor="fromDate">Start Date: </label>
+                            <input type="text" id="fromDate" className="mx-1" value={startDate} readOnly />
                         </div>
+                    </div>
 
+                    <div className="d-flex justify-content-between">
+                        <div className="m-1">
+                            <label htmlFor="fromDate">End Date :  </label>
+                            <input type="text" id="fromDate" className="mx-1" value={endDate} readOnly />
+                        </div>
                     </div>
 
 
                     <div className=" border border-1 rounded p-4 border-black my-4" style={{ position: 'relative', zIndex: 1 }}>
+                    {error && <div style={{ color: "red", marginLeft: "20px", fontWeight: 900 }}>{error}</div>}
                         <table className="table table-bordered border-dark text-center">
                             <thead>
                                 <tr>
-                                    <th style={{ backgroundColor: '#c8e184' }} >Date</th>
-                                    {timesheetData && timesheetData.timesheetData.map((date) => (
-                                        <th style={{ backgroundColor: '#c8e184' }} key={date.date}>{date.date}</th>
+                                    <th style={{ backgroundColor: '#c8e184' }}>Date</th>
+                                    {uniqueDates && uniqueDates.map((date) => (
+                                        <th style={{ backgroundColor: '#c8e184' }} key={date}>{formatDate(date)}</th>
                                     ))}
+                                    <td style={{ backgroundColor: '#c8e184' }}></td>
+                                </tr>
+                                <tr>
+                                    <th style={{ backgroundColor: '#c8e184' }}>Day</th>
+                                    {uniqueDates && uniqueDates.map((date) => (
+                                        <td key={date} style={{ backgroundColor: getDay(date).toLowerCase() === 'sun' ? 'yellow' : '#c8e184' }}>{getDay(date)}</td>
+                                    ))}
+                                    <td style={{ backgroundColor: '#c8e184' }}></td>
                                 </tr>
                             </thead>
                             <tbody>
-
-                                <tr>
-                                    <th style={{ backgroundColor: '#c8e184' }} >Day</th>
-                                    {timesheetData && timesheetData.timesheetData.map((date) => (
-                                        <td key={date.date} style={{ backgroundColor: date.day.toLowerCase() === 'sunday' ? 'yellow' : ' #c8e184' }}>{date.day}</td>
-                                    ))}
-                                </tr>
-                                <tr>
-                                    <th style={{ backgroundColor: '#e8fcaf' }}  >
-
-                                        <div>
+                                {uniqueProjectIds && uniqueProjectIds.map((projectId, index) => (
+                                    <tr key={index}>
+                                        <td style={{ width: "120px", backgroundColor: '#e8fcaf' }}>
                                             <Select
-                                                options={timesheetData.projectOptions}
-
-                                                value={timesheetData.workingProject}
-                                                onChange={handleChange}
-                                                placeholder="choose the project"
-                                                className="my-2"
+                                                value={availableProjects.find(project => project.projectId === projectId) ? { value: projectId, label: projectId } : null}
+                                                options={availableProjects.map(project => ({
+                                                    value: project.projectId,
+                                                    label: project.projectId,
+                                                }))}
+                                                className="AddTimesheet my-2"
+                                                onChange={(selectedOption) => updateProject(selectedOption.value, index)}
                                             />
-                                        </div>
-                                    </th>
-                                    {timesheetData && timesheetData.timesheetData.map((date, index) => (
-                                        <td key={date.date} style={{ backgroundColor: '#e8fcaf' }}  ><input type="text" inputMode="numeric" min={0} max={12} className="ti-workInput-edit border border-none text-center mt-3" value={date.hoursWorked} onChange={(e) => handleWorkHoursChange(index, e.target.value)}></input></td>
-                                    ))}
-                                </tr>
+
+                                        </td>
+                                        {uniqueDates.map(date => (
+                                            <td key={date} style={{ backgroundColor: '#e8fcaf' }}>
+                                                <input
+                                                    type="text"
+                                                    inputMode="numeric"
+                                                    className="AddTimesheet form-control my-3 text-center"
+                                                    min={0}
+                                                    max={12}
+                                                    placeholder="0"
+                                                    disabled={findOutDay(date).toLowerCase() === "sun"}
+                                                    value={editableData.find(entry => entry.projectId === projectId && entry.date === date)?.hours || ""}
+                                                    onChange={(e) => handleHoursChange(projectId, date, e.target.value)}
+                                                />
+                                            </td>
+                                        ))}
+                                        <td style={{ backgroundColor: '#e8fcaf' }}>
+                                            <button type="button" className="AddTimesheet btn btn-danger my-3" onClick={() => deleteProjectRow(index)}>
+                                                X
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                ))}
+
                             </tbody>
                         </table>
+                        <div className="d-flex ">
+                            <button type="button" className="AddTimesheet btn btn-success ms-2" onClick={addProjectRow}>+</button>
+
+                            {workHourError && <div className="mt-2" style={{ color: "red", marginLeft: "20px", fontWeight: 900 }}>{workHourError}</div>}
+
+                        </div>
                     </div>
                     <div>
-                        <span className='fw-bold'>Total Hours Worked : </span> <span className='fw-bold'>{timesheetData.noOfHoursWorked}</span>
+                        <span className='fw-bold'>Total Hours Worked : </span> <span className='fw-bold'>{totalWorkHours}</span>
                     </div>
                     <div className="d-flex justify-content-center" >
 
@@ -247,7 +428,7 @@ function ModifyAdminTimesheet() {
                         <div className="d-flex flex-column modal-success p-4 align-items-center ">
                             <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
                             <p className="mb-4 text-center">Timesheet have been approved.</p>
-                            <button className="btn  w-100 text-white" onClick={() => { dispatch(editTimesheetSuccessModal(false)) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+                            <button className="btn  w-100 text-white" onClick={navigateToApproveTimesheet} style={{ backgroundColor: '#5EAC24' }}>Close</button>
                         </div>
                     </Modal>
 
@@ -263,6 +444,7 @@ function ModifyAdminTimesheet() {
                 </div>
             </div>)}
         </>
+
     );
 }
 

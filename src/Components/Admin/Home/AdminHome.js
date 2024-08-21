@@ -46,7 +46,7 @@ function AdminHome() {
       setEndSubmitDate(endSubmitDate);
       setSubmitEmployeeId(submitEmployeeId);
       setStatusValue(status);
-      dispatch(submitON(true)); // Set the Redux state if needed
+      // dispatch(submitON(true)); // Set the Redux state if needed
       setCountTimesheet(1);
     } else {
       setStartSubmitDate(startSubmitDate);
