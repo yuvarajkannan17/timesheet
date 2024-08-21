@@ -341,7 +341,7 @@ function EmployeeEditTimesheet() {
                             </div>
                             <div className="d-flex justify-content-between">
                                 <div className="m-1">
-                                    <label htmlFor="emp_id">Emp Id :  </label>
+                                    <label htmlFor="emp_id"> Id :  </label>
                                     <input type="text" id="emp_id" className="mx-1" value={inputs.employeeId} readOnly />
                                 </div>
                             </div>

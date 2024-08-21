@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useParams, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { getEmployeeDetails, updateEmployeeData } from './EmployeeService'; // Adjusted import for update
 
 import successCheck from '../../Image/checked.png';
@@ -9,6 +10,8 @@ import successCheck from '../../Image/checked.png';
 export default function EditEmployee() {
   const { id } = useParams(); // Get the employee id from the route parameters
   const navigate = useNavigate();
+  const adminValue = useSelector(state=>state.adminLogin.value);
+  const adminId = adminValue.adminId;
 
   // State for form values, initial values, errors, and success modal
   const [formValues, setFormValues] = useState({
@@ -126,10 +129,10 @@ export default function EditEmployee() {
     navigate('/admin/searchemployee');
   };
 
-  const handleSubmitClick = () => {
-    setSuccessConfirmation(false);
-    navigate('/admin/searchemployee'); // Navigate after closing the modal
-  };
+  // const handleSubmitClick = () => {
+  //   setSuccessConfirmation(false);
+  //   navigate('/admin/searchemployee'); // Navigate after closing the modal
+  // };
 
   const isFormChanged = () => {
     // Check if any form values have changed from initialFormValues
@@ -269,7 +272,7 @@ export default function EditEmployee() {
         </div>
 
         <div className="buttons">
-          <button type="submit" className="btn btn-success mx-2">
+          <button type="submit" className="btn btn-success mx-2" onClick={handleSubmit} >
             Submit
           </button>
           <button type="button" className="btn btn-secondary mx-2" onClick={handleCancelSuccess}>
@@ -284,7 +287,7 @@ export default function EditEmployee() {
           <div className="d-flex flex-column modal-success p-4 align-items-center ">
             <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
             <p className="mb-4 text-center">Employee Profile Updated Successfully</p>
-            <button className="btn w-100 text-white" onClick={handleSubmitClick} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+            <button className="btn w-100 text-white" onClick={handleConfirmClose} style={{ backgroundColor: '#5EAC24' }}>Close</button>
           </div>
         </Modal.Body>
       </Modal>

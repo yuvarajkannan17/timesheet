@@ -11,6 +11,8 @@ import { submitON,submitOFF } from '../../features/submitBtn';
 
 
 function AdminEditTimesheet(){
+    const adminValue = useSelector(state=>state.adminLogin.value);
+    const adminId=adminValue.adminId;
     const [overallLength, setOverallLength] = useState("");
     const [inputs, setInputs] = useState({
         startDate: "",
@@ -38,7 +40,7 @@ function AdminEditTimesheet(){
     const dispatch= useDispatch();
 
     const loadRecentTimesheetData = () => {
-        const savedTimesheetDataList = JSON.parse(localStorage.getItem('timesheetData')) || [];
+        const savedTimesheetDataList = JSON.parse(localStorage.getItem(adminId)) || [];
         if (savedTimesheetDataList.length > 0) {
             const recentIndices = savedTimesheetDataList.slice(-3);
             setOverallLength(recentIndices.length);
@@ -56,13 +58,13 @@ function AdminEditTimesheet(){
 
             let arrayLength = getValueFromLocal.length;
             let startDate = getValueFromLocal[0].date;
-            let employeeId = getValueFromLocal[0].employeeId;
+            let adminId = getValueFromLocal[0].adminId;
             let endDate = getValueFromLocal[arrayLength - 1].date;
 
             setInputs({
                 startDate,
                 endDate,
-                employeeId
+                adminId
             })
         }
 
@@ -212,7 +214,7 @@ function AdminEditTimesheet(){
 
         // Add entries for the new project in editableData with 0 hours for each date
         const newEntries = uniqueDates.map(date => ({
-            employeeId: inputs.employeeId,
+            adminId: inputs.adminId,
             projectId: newProjectId,
             date: date,
             hours: 0,
@@ -242,7 +244,7 @@ function AdminEditTimesheet(){
 
     const updateTimesheetData = () => {
         if (!error) {
-            const savedTimesheetDataList = JSON.parse(localStorage.getItem('timesheetData')) || [];
+            const savedTimesheetDataList = JSON.parse(localStorage.getItem(adminId)) || [];
             const updatedTimesheetData = savedTimesheetDataList.map((data, index) => {
                 if (index === savedTimesheetDataList.length - objectPositionRef.current) {
                     return editableData;
@@ -250,7 +252,7 @@ function AdminEditTimesheet(){
                 return data;
             });
 
-            localStorage.setItem('timesheetData', JSON.stringify(updatedTimesheetData));
+            localStorage.setItem(adminId, JSON.stringify(updatedTimesheetData));
             setSaveSuccessModalForTimesheet(true);
 
             console.log("editable", editableData)
@@ -269,20 +271,23 @@ function AdminEditTimesheet(){
 
         try {
             let response = await axios.post("http://localhost:8081/api/working-hours", editableData);
+            console.log(response.data);
 
             if (response.data) {
                 // Show success modal
+                const status=response.data[0].status;
                 setSuccessModalForTimesheet(true);
                     dispatch(submitOFF(true));
                     setIsSubmitTimesheet(true)
                 // Remove the submitted data from local storage
-                const savedTimesheetDataList = JSON.parse(localStorage.getItem('timesheetData')) || [];
+                const savedTimesheetDataList = JSON.parse(localStorage.getItem(adminId)) || [];
                 const updatedTimesheetData = savedTimesheetDataList.filter((_, index) => index !== savedTimesheetDataList.length - objectPositionRef.current);
-                localStorage.setItem('isSubmitOn', 'true');
-                localStorage.setItem('startSubmitDate', inputs.startDate);
-                localStorage.setItem('endSubmitDate', inputs.endDate);
-                localStorage.setItem('submitEmployeeId', inputs.employeeId);
-                localStorage.setItem('timesheetData', JSON.stringify(updatedTimesheetData));
+                localStorage.setItem(`isSubmitOn${adminId}`, 'true');
+                localStorage.setItem(`startSubmitDate${adminId}`, inputs.startDate);
+                localStorage.setItem(`endSubmitDate${adminId}`, inputs.endDate);
+                localStorage.setItem(`submitAdminId${adminId}`, inputs.adminId);
+                localStorage.setItem(`statusValue${adminId}`,status);
+                localStorage.setItem(adminId, JSON.stringify(updatedTimesheetData));
             }
         } catch (error) {
             console.error("Error submitting timesheet data:", error);
@@ -331,8 +336,8 @@ function AdminEditTimesheet(){
                             </div>
                             <div className="d-flex justify-content-between">
                                 <div className="m-1">
-                                    <label htmlFor="emp_id">Emp Id :  </label>
-                                    <input type="text" id="emp_id" className="mx-1" value={inputs.employeeId} readOnly />
+                                    <label htmlFor="ad_id">Admin Id :  </label>
+                                    <input type="text" id="ad_id" className="mx-1" value={inputs.adminId} readOnly />
                                 </div>
                             </div>
                             <div className="border table-responsive border-1 rounded p-4 border-black my-4" style={{ position: 'relative', zIndex: 1 }}>

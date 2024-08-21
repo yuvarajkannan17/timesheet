@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 import successCheck from '../../Image/checked.png';
 import '../../css/style.css';
 import { addEmployeeData } from './EmployeeService';
+import { useSelector } from 'react-redux';
 
 export default function EmployeeProfile() {
   const [employeeData, setEmployeeData] = useState(null);
@@ -14,6 +15,8 @@ export default function EmployeeProfile() {
   const [successConfirmation, setSuccessConfirmation] = useState(false);
   const [error, setError] = useState(null);
   const [isEditConfirmationOpen, setEditConfirmationOpen] = useState(false);
+  const adminValue = useSelector(state=>state.adminLogin.value);
+  const adminId=adminValue.adminId;
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -41,7 +44,7 @@ export default function EmployeeProfile() {
 
   const handleSubmitClick = async () => {
     try {
-      await addEmployeeData(employeeData);
+      await addEmployeeData(employeeData, adminId);
       setSuccessConfirmation(true);
     } catch (error) {
       setError('Error submitting employee data. Please try again.');

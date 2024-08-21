@@ -13,6 +13,8 @@ import { leaveSubmitON, leaveSubmitOFF } from '../../features/empLeaveSubmit';
 import { useSelector, useDispatch } from 'react-redux';
 
 function AdminAddLeaveRequest() {
+    const adminValue = useSelector(state=>state.adminLogin.value);
+  const adminId=adminValue.adminId;
   const [leaveSuccessModal,setLeaveSuccessModal]=useState(false);
   const [numberOfDays, setNumberOfDays] = useState(0);
   let dispatch = useDispatch();
@@ -58,12 +60,12 @@ console.log(formik.values)
             if (leaveData.data) {
                 const {empId,status,id,startDate,endDate} =leaveData.data
                 setLeaveSuccessModal(true);
-                localStorage.setItem("leaveSubmitEmpId",empId);
-                localStorage.setItem("leaveStatus",status);
-                localStorage.setItem("isLeaveSubmit","true");
-                localStorage.setItem("leaveObjectId",id);
-                localStorage.setItem("leaveStartDate",startDate);
-                localStorage.setItem("leaveEndDate",endDate);
+                localStorage.setItem(`leaveSubmitEmpId${adminId}`,empId);
+                localStorage.setItem(`leaveStatus${adminId}`,status);
+                localStorage.setItem(`isLeaveSubmit${adminId}`,"true");
+                localStorage.setItem(`leaveObjectId${adminId}`,id);
+                localStorage.setItem(`leaveStartDate${adminId}`,startDate);
+                localStorage.setItem(`leaveEndDate${adminId}`,endDate);
                 dispatch(leaveSubmitON(true));
                 formik.resetForm();
                 navigate("/admin")

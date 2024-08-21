@@ -52,7 +52,7 @@ function EmployeeHome() {
             setSubmitEmployeeId(submitEmployeeId)
             setStatusValue(status)
             dispatch(submitON(true)); // Set the Redux state if needed
-            
+            setCountTimesheet(1);
         } else {
             setStartSubmitDate(startSubmitDate);
             setEndSubmitDate(endSubmitDate);
@@ -103,7 +103,7 @@ function EmployeeHome() {
                 let response = await axios.get(`http://localhost:8002/api/working-hours/${submitEmployeeId}/range?startDate=${startSubmitDate}&endDate=${endSubmitDate}`);
                 let data = response.data;
                 let status = data[0].status;
-                console.log(statusValue);
+                // console.log(statusValue);
 
                  if(status==="APPROVED"){
                       setStatusValue(status);

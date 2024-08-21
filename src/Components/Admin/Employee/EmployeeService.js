@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { useSelector } from 'react-redux';
+
 //Get employee data
 export const getEmployeeData = async () => {
   try {
@@ -20,9 +22,11 @@ export const getEmployeeDetails = async (employeeId) => {
   }
 };
 //create employee
-export const addEmployeeData = async (formValues) => {
+
+export const addEmployeeData = async (formValues, adminId) => {
+  
     try {
-      const response = await axios.post('http://localhost:8081/employee/saveemployee', formValues);
+      const response = await axios.post(`http://localhost:8081/employee/saveemployee?adminId=${adminId}`, formValues);
       // Assuming the response contains the newly created employee data
       const createdEmployee = response.data;
       // You can handle the response as needed
@@ -60,10 +64,10 @@ export const checkEmployeeDuplicates = async (employeeData) => {
       if (employee.panNumber === employeeData.panNumber) {
         duplicates.panNumber = true;
       }
-      if (employeeMobile === inputMobile) {
+      if (employee.Mobile === inputMobile) {
         duplicates.mobileNumber = true;
       }
-      if (employeeAadhar === inputAadhar) {
+      if (employee.Aadhar === inputAadhar) {
         duplicates.aadharNumber = true;
       }
     });
@@ -107,9 +111,9 @@ export const getLastEnteredEmployee = async () => {
     }
   };
 //edit employee
-export const updateEmployeeData = async (employeeId, updatedData) => {
+export const updateEmployeeData = async (employeeId, adminId, updatedData) => {
   try {
-    const response = await axios.put(`http://localhost:8081/employee/${employeeId}`, updatedData);
+    const response = await axios.put(`http://localhost:8081/employee/${employeeId}?adminId=${adminId}`, updatedData);
     return response.data; // Assuming the response.data contains the updated employee data
   } catch (error) {
     console.error('Error updating employee data:', error);
