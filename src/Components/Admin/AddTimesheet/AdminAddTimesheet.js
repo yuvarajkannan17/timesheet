@@ -5,17 +5,19 @@ import Select from 'react-select';
 import './AddTimesheet.css';
 import { Modal, Button } from "react-bootstrap";
 import { useSelector,useDispatch } from 'react-redux';
-import { submitON,submitOFF } from '../../features/submitBtn';
+import { submitAdminON, submitAdminOFF } from '../../features/submitAdminButton';
 
 import { useNavigate } from "react-router-dom";
 import successCheck from '../../Image/checked.png'
 import checkedImage from '../../Image/checked.png';
 
 const AdminAddTimesheet = () => {
+  const adminValue = useSelector(state=>state.adminLogin.value);
+  const adminId=adminValue.adminId;
   const [total, setTotal] = useState(0);
   const [startSubmitDate,setStartSubmitDate]=useState("");
   const [endSubmitDate,setEndSubmitDate]=useState("");
-  const [submitEmployeeId,setSubmitEmployeeId]=useState("")
+  const [submitAdminId,setSubmitAdminId]=useState("")
   const [hoursError, setHoursError] = useState("");
   const [selectedMonth, setSelectedMonth] = useState('');
   const [employeeIdError, setEmployeeIdError] = useState("");
@@ -31,7 +33,7 @@ const AdminAddTimesheet = () => {
 
   let navigate = useNavigate();
 
-  let {isSubmit} =useSelector((state)=>state.submitBtn.value);
+  let {isSubmit} = useSelector((state)=>state.submitAdminButton.value);
  const dispatch= useDispatch();
   
   
@@ -58,20 +60,20 @@ const AdminAddTimesheet = () => {
     fetchProjects();
   }, []);
 
-  function updatingEmployeeId(e) {
-    const id = e.target.value.trim();
-    setEmployeeId(id);
+  // function updatingEmployeeId(e) {
+  //   const id = e.target.value.trim();
+  //   setEmployeeId(id);
   
-    const regex = /^AD\d+$/;
+  //   const regex = /^AD\d+$/;
 
-    if (id.trim() === "") {
-      setEmployeeIdError("Employee ID is required");
-    } else if (!regex.test(id)) {
-      setEmployeeIdError('Employee ID must start with "AD" followed by digits');
-    } else {
-      setEmployeeIdError("");
-    }
-  }
+  //   if (id.trim() === "") {
+  //     setEmployeeIdError("Employee ID is required");
+  //   } else if (!regex.test(id)) {
+  //     setEmployeeIdError('Employee ID must start with "AD" followed by digits');
+  //   } else {
+  //     setEmployeeIdError("");
+  //   }
+  // }
 
   const handleForward = () => {
     if (selectedMonth) {
@@ -197,10 +199,10 @@ const AdminAddTimesheet = () => {
   const validateTimesheetData = () => {
     let isValid = true;
 
-    if (!employeeId || employeeIdError) {
-      setEmployeeIdError("Employee Id is required");
-      isValid = false;
-    }
+    // if (!employeeId || employeeIdError) {
+    //   setEmployeeIdError("Employee Id is required");
+    //   isValid = false;
+    // }
 
     const invalidRows = projectRows.filter(row => !row.projectId || !Object.values(row.workHours || {}).some(hours => hours > 0));
     if (invalidRows.length > 0) {
@@ -236,7 +238,7 @@ const AdminAddTimesheet = () => {
           if (row.projectId) {
             // Ensure that each date for each project has an entry
             formattedData.push({
-              employeeId,
+              adminId,
               projectId: row.projectId,
               date: dateStr,
               hours: 0, // Default to zero hours
@@ -257,7 +259,7 @@ const AdminAddTimesheet = () => {
               // Find and update existing entry or add new one if not present
               const existingEntry = formattedData.find(
                 (entry) =>
-                  entry.employeeId === employeeId &&
+                  entry.adminId === adminId &&
                   entry.projectId === row.projectId &&
                   entry.date === dateStr
               );
@@ -266,7 +268,7 @@ const AdminAddTimesheet = () => {
                 existingEntry.hours = parseFloat(hours);
               } else {
                 formattedData.push({
-                  employeeId,
+                  adminId,
                   projectId: row.projectId,
                   date: dateStr,
                   hours: parseFloat(hours),
@@ -278,13 +280,13 @@ const AdminAddTimesheet = () => {
       });
     
       // Retrieve existing data from local storage
-      const existingData = JSON.parse(localStorage.getItem('timesheetData')) || [];
+      const existingData = JSON.parse(localStorage.getItem(adminId)) || [];
     
       // Append new data to the existing data
       existingData.push(formattedData);
     
       // Save updated data back to local storage
-      localStorage.setItem('timesheetData', JSON.stringify(existingData));
+      localStorage.setItem(adminId, JSON.stringify(existingData));
         setSaveModalForTimesheet(true);
       // Log the data for debugging
       
@@ -318,7 +320,7 @@ const AdminAddTimesheet = () => {
         if (row.projectId) {
           // Ensure that each date for each project has an entry
           formattedData.push({
-            employeeId,
+            adminId,
             projectId: row.projectId,
             date: dateStr,
             hours: 0, // Default to zero hours
@@ -339,7 +341,7 @@ const AdminAddTimesheet = () => {
             // Find and update existing entry or add new one if not present
             const existingEntry = formattedData.find(
               (entry) =>
-                entry.employeeId === employeeId &&
+                entry.adminId === adminId &&
                 entry.projectId === row.projectId &&
                 entry.date === dateStr
             );
@@ -348,7 +350,7 @@ const AdminAddTimesheet = () => {
               existingEntry.hours = parseFloat(hours);
             } else {
               formattedData.push({
-                employeeId,
+                adminId,
                 projectId: row.projectId,
                 date: dateStr,
                 hours: parseFloat(hours),
@@ -368,22 +370,22 @@ const AdminAddTimesheet = () => {
           if(response.data){
             let data=response.data;
            let statusValue= data[0].status;
-             dispatch(submitON(true));
-              localStorage.setItem('isSubmitOn', 'true');
+             dispatch(submitAdminON(true));
+              localStorage.setItem(`isSubmitOn${adminId}`, 'true');
               let receviedData=response.data;
              let lengthOfData=receviedData.length;
             let last=receviedData[lengthOfData-1];
             let lastDate=last.date;
            let first= receviedData[0];
-          let empId=  first.employeeId;
+          let adminId=  first.adminId;
            let firstDate=first.date;
-            setSubmitEmployeeId(empId);
+            setSubmitAdminId(adminId);
             setStartSubmitDate(firstDate);
             setEndSubmitDate(lastDate);
-            localStorage.setItem('startSubmitDate', firstDate);
-            localStorage.setItem('endSubmitDate', lastDate);
-            localStorage.setItem('submitEmployeeId', empId);
-            localStorage.setItem('statusValue', statusValue);
+            localStorage.setItem(`startSubmitDate${adminId}`, firstDate);
+            localStorage.setItem(`endSubmitDate${adminId}`, lastDate);
+            localStorage.setItem(`submitAdminId${adminId}`, adminId);
+            localStorage.setItem(`statusValue,${adminId}`, statusValue);
          
            setSuccessModalForTimesheet(true);
            
@@ -444,19 +446,18 @@ const AdminAddTimesheet = () => {
 
         <div className='d-flex justify-content-between'>
           {selectedMonth && <div className="m-1">
-            <label htmlFor="emp-id">EMP ID : </label>
+            <label htmlFor="ad-id">Admin ID : </label>
             <input
               type="text"
-              id="emp-id"
+              id="ad-id"
               className="mx-1"
-              value={employeeId}
-              onChange={updatingEmployeeId}
-              placeholder='ADXXX'
+              value={adminId}
+              readOnly
             />
           </div>}
         </div>
 
-        {employeeIdError && <small style={{ color: 'red', fontWeight: "bold" }}>{employeeIdError}</small>}
+        {/* {employeeIdError && <small style={{ color: 'red', fontWeight: "bold" }}>{employeeIdError}</small>} */}
 
         {selectedMonth && <div>
           <div className="table-responsive border border-1 rounded p-4 border-black my-4" style={{ position: 'relative', zIndex: 1 }}>

@@ -17,13 +17,11 @@ const AddTimesheet = () => {
   const [submitEmployeeId,setSubmitEmployeeId]=useState("")
   const [hoursError, setHoursError] = useState("");
   const [selectedMonth, setSelectedMonth] = useState('');
-
   const [projectIdError, setProjectIdError] = useState("");
   const [timesheetData, setTimesheetData] = useState([]);
   const [availableProjects, setAvailableProjects] = useState([]);
   const [projectRows, setProjectRows] = useState([{}]);
-  const [showFirstHalf, setShowFirstHalf] = useState(true);
-  
+  const [showFirstHalf, setShowFirstHalf] = useState(true);  
   const [addDataSubmitConfirmation,setAddDataSubmitConfirmation]=useState(false);
   const [successModalForTimesheet,setSuccessModalForTimesheet]=useState(false);
   const [saveModalForTimesheet,setSaveModalForTimesheet]=useState(false)

@@ -15,15 +15,15 @@ const CreateProject = () => {
     projectID: '',
     projectTitle: '',
     projectDescription: '',
-    teamMembers: [{ employeeID: '', employeeName: '' }],
-    supervisorEmployees: [{ employeeID: '', employeeName: '' }],
+    teamMembers: [{ employeeID: '' }],
+    supervisorEmployees: [{ employeeID: '' }],
   });
 
   // Error state for each field
   const [projectIDError, setProjectIDError] = useState('');
   const [projectTitleError, setProjectTitleError] = useState('');
   const [projectDescriptionError, setProjectDescriptionError] = useState('');
-  const initialErrorState = { idError: '', nameError: '' };
+  const initialErrorState = { idError: ''};
   const [teamMembersError, setTeamMembersError] = useState([initialErrorState]);
   const [supervisorEmployeesError, setSupervisorEmployeesError] = useState([initialErrorState]);
 
@@ -33,8 +33,10 @@ const CreateProject = () => {
   // State for showing the success modal
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  const validateProjectID = (id) => /^CP\d{5}$/.test(id);
-  const validateEmployeeID = (id) => /^CTPL\d{5}$/.test(id);
+  const validateProjectID = (id) => /^PROJ\d{5}$/.test(id);
+  const validateEmployeeID = (id) => /^EMP\d{3}$/.test(id);
+  // const validateSupervisorID = (id) => /^STPL\d{5}$/.test(id);
+
 
   const handleTeamMemberChange = (index, field, value) => {
     const updatedTeamMembers = [...formData.teamMembers];
@@ -57,9 +59,9 @@ const CreateProject = () => {
   const handleAddTeamMember = () => {
     setFormData({
       ...formData,
-      teamMembers: [...formData.teamMembers, { employeeID: '', employeeName: '' }],
+      teamMembers: [...formData.teamMembers, { employeeID: '' }],
     });
-    setTeamMembersError([...teamMembersError, { idError: '', nameError: '' }]);
+    setTeamMembersError([...teamMembersError, { idError: '' }]);
   };
 
   const handleRemoveTeamMember = (index) => {
@@ -74,9 +76,9 @@ const CreateProject = () => {
   const handleAddSupervisor = () => {
     setFormData({
       ...formData,
-      supervisorEmployees: [...formData.supervisorEmployees, { employeeID: '', employeeName: '' }],
+      supervisorEmployees: [...formData.supervisorEmployees, { employeeID: '' }],
     });
-    setSupervisorEmployeesError([...supervisorEmployeesError, { idError: '', nameError: '' }]);
+    setSupervisorEmployeesError([...supervisorEmployeesError, { idError: '' }]);
   };
 
   const handleRemoveSupervisor = (index) => {
@@ -92,6 +94,7 @@ const CreateProject = () => {
     if (!validateFields()) {
       return;
     }
+    
     setFormSubmitted(true);
   };
 
@@ -106,14 +109,18 @@ const CreateProject = () => {
     const { projectID, projectTitle, projectDescription, teamMembers, supervisorEmployees } = formData;
 
     const postData = {
-      projectID,
-      projectTitle,
-      projectDescription,
-      teamMembers,
-      supervisorEmployees,
+      projectID: formData.projectID,              // Ensure this is a string
+      projectTitle: formData.projectTitle,        // Ensure this is a non-empty string
+      projectDescription: formData.projectDescription,  // Ensure this is a non-empty string
+      teamMembers: formData.teamMembers.map(member => ({ employeeID: member.employeeID })), // Ensure this is an array of objects
+      supervisorEmployees: formData.supervisorEmployees.map(supervisor => ({ employeeID: supervisor.employeeID })), // Ensure this is an array of objects
     };
+    
+    
 
     try {
+      
+      console.log('Payload being sent:', postData);
       const response = await axios.post('http://localhost:8081/projects/saveproject', postData);
 
       console.log('API Response:', response.data);
@@ -152,10 +159,10 @@ const CreateProject = () => {
     setTeamMembersError([]);
     setSupervisorEmployeesError([]);
 
-    if (!validateProjectID(formData.projectID)) {
-      setProjectIDError('Project ID format is incorrect. Please use the format CPXXXXX.');
-      isValid = false;
-    }
+    // if (!validateProjectID(formData.projectID)) {
+    //   setProjectIDError('Project ID format is incorrect. Please use the format CPXXXXX.');
+    //   isValid = false;
+    // }
 
     if (!formData.projectTitle) {
       setProjectTitleError('Project Title is required.');
@@ -169,34 +176,28 @@ const CreateProject = () => {
 
     const teamMembersErrors = formData.teamMembers.map((member, index) => {
       let idError = '';
-      let nameError = '';
+      
       if (!validateEmployeeID(member.employeeID)) {
         idError = 'Type valid employee ID. ';
       }
-      if (!member.employeeName) {
-        nameError = 'Fill the required field.';
-      }
-      if (idError || nameError) {
+      
+      if (idError) {
         isValid = false;
       }
-      return { idError, nameError };
+      return { idError};
     });
 
     setTeamMembersError(teamMembersErrors);
 
     const supervisorEmployeesErrors = formData.supervisorEmployees.map((supervisor, index) => {
       let idError = '';
-      let nameError = '';
-      if (!validateEmployeeID(supervisor.employeeID)) {
-        idError = 'Type valid employee ID. ';
-      }
-      if (!supervisor.employeeName) {
-        nameError = 'Fill the required field.';
-      }
-      if (idError || nameError) {
-        isValid = false;
-      }
-      return { idError, nameError };
+      
+      // if (!validateSupervisorID(supervisor.employeeID)) {
+      //   idError = 'Type valid employee ID. ';
+      // }
+      
+      
+      return { idError };
     });
 
     setSupervisorEmployeesError(supervisorEmployeesErrors);
@@ -230,7 +231,7 @@ const CreateProject = () => {
                   <p>Team Members:</p>
                   <ul>
                     {formData.teamMembers.map((member, index) => (
-                      <li key={index}>{`ID: ${member.employeeID}, Name: ${member.employeeName}`}</li>
+                      <li key={index}>{`ID: ${member.employeeID}`}</li>
                     ))}
                   </ul>
                 </div>
@@ -238,7 +239,7 @@ const CreateProject = () => {
                   <p>Supervisor Employees:</p>
                   <ul>
                     {formData.supervisorEmployees.map((supervisor, index) => (
-                      <li key={index}>{`ID: ${supervisor.employeeID}, Name: ${supervisor.employeeName}`}</li>
+                      <li key={index}>{`ID: ${supervisor.employeeID}`}</li>
                     ))}
                   </ul>
                 </div>
@@ -263,7 +264,7 @@ const CreateProject = () => {
                   value={formData.projectID}
                   onChange={(e) => handleInputChange('projectID', e.target.value)}
                 />
-                {projectIDError && <p className="error-message-ProjectForm">{projectIDError}</p>}
+                {/* {projectIDError && <p className="error-message-ProjectForm">{projectIDError}</p>} */}
 
                 <label>Project Title:</label>
                 <input
@@ -300,7 +301,7 @@ const CreateProject = () => {
                         )}
                       </div>
 
-                      <div className="col">
+                      {/* <div className="col">
                         <input
                           type="text"
                           placeholder="Employee Name"
@@ -311,7 +312,7 @@ const CreateProject = () => {
                         {teamMembersError[index].nameError && (
                           <p className="error-message-ProjectForm">{teamMembersError[index].nameError}</p>
                         )}
-                      </div>
+                      </div> */}
 
                       {index === 0 && (
                         <button
@@ -353,7 +354,7 @@ const CreateProject = () => {
                         )}
                       </div>
 
-                      <div className="col">
+                      {/* <div className="col">
                         <input
                           type="text"
                           placeholder="Supervisor Name"
@@ -364,7 +365,7 @@ const CreateProject = () => {
                         {supervisorEmployeesError[index].nameError && (
                           <p className="error-message-ProjectForm">{supervisorEmployeesError[index].nameError}</p>
                         )}
-                      </div>
+                      </div> */}
 
                       {index === 0 && (
                         <button

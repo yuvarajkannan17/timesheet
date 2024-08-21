@@ -18,7 +18,8 @@ function EmployeeModifyTimesheet() {
     const [editApproveConfirmationModal, setEditApproveConfirmationModal] = useState(false);
     const [editRejectConfirmationModal, setEditRejectConfirmationModal] = useState(false);
     const [rejectReason, setRejectReason] = useState('Please reach out supervisor regarding your timesheet.');
-
+    const employeeValue = useSelector(state=>state.employeeLogin.value);
+    const employeeId=employeeValue.employeeId;
 
 
     function editTimesheetApproveConfirmation() {
@@ -29,11 +30,11 @@ function EmployeeModifyTimesheet() {
         setEditApproveConfirmationModal(false);
     }
 
-    async function editTimesheetApproveSave() {
+    async function editTimesheetApproveSave(startDate, endDate) {
         setEditApproveConfirmationModal(false);
 
         try {
-            await axios.put(`http://localhost:8081/admin/working-hours/approve/${id}`, timesheetData);
+            await axios.put(`http://localhost:8081/admin/working-hours/${timesheetData.id}/approve-range?startDate=${startDate}&endDate=${endDate}`, timesheetData);
             setTimesheetData({ ...timesheetData, status: "Your timesheet has been approved" })
             dispatch(editTimesheetSuccessModal(true));
             navigate('/admin');
@@ -51,12 +52,12 @@ function EmployeeModifyTimesheet() {
 
     }
 
-    async function editTimesheetRejectSave() {
+    async function editTimesheetRejectSave(startDate, endDate) {
         setEditRejectConfirmationModal(false);
 
         try {
 
-            await axios.put(`http://localhost:8081/admin/working-hours/reject/${id}`, timesheetData);
+            await axios.put(`http://localhost:8081/admin/working-hours/${timesheetData.id}/reject-range?startDate=${startDate}&endDate=${endDate}`, timesheetData);
             setTimesheetData({ ...timesheetData, status: "Your timesheet has been rejected" })
             dispatch(editTimesheetRejectModal(true));
             navigate('/admin')
@@ -69,14 +70,14 @@ function EmployeeModifyTimesheet() {
 
 
     async function getEditTimesheet() {
-        const response = await axios.get(`${employeeSheetUrl}/${id}`);
+        const response = await axios.get(`http://localhost:8081/admin/working-hours/${id}}`);
         const datas = response.data;
         setTimesheetData(datas);
 
     }
 
     useEffect(() => {
-        getEditTimesheet();
+        // getEditTimesheet();
     }, []);
 
 

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "../../Supervisor/Home/supervisor.css";
 import { useSelector, useDispatch } from "react-redux";
 import { submitON, submitOFF } from "../../features/submitBtn";
+import { submitAdminON, submitAdminOFF } from '../../features/submitAdminButton';
 import { leaveSubmitON,leaveSubmitOFF } from '../../features/empLeaveSubmit';
 import axios from "axios";
 
@@ -55,7 +56,7 @@ function AdminHome() {
       setEndSubmitDate(endSubmitDate);
       setStatusValue(status);
       setSubmitAdminId(submitAdminId)
-      setCountTimesheet(0);
+      
     }
   }, []);
 
@@ -108,11 +109,11 @@ function AdminHome() {
     if (startSubmitDate && endSubmitDate && submitAdminId) {
       try {
         let response = await axios.get(
-          `http://localhost:8081/api/working-hours/all/range?startDate=${startSubmitDate}&endDate=${endSubmitDate}`
+          `http://localhost:8081/api/working-hours/${submitAdminId}/range?startDate=${startSubmitDate}&endDate=${endSubmitDate}`
         );
         let data = response.data;        
         let status = data[0].status;
-        console.log(statusValue);
+        // console.log(statusValue);
 
         if(status ==="APPROVED"){
           setStatusValue(status);

@@ -23,24 +23,67 @@ function AdminApprovalPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [datasOfTimesheet, setDatasOfTimesheet] = useState([]);
+  const employeeValue = useSelector(state=>state.employeeLogin.value);
+  const employeeId=employeeValue.employeeId;
 
 
-  // console.log(timesheetDatas)
   useEffect(() => {
     async function getTimesheet() {
-      try {
-        const response = await axios.get("http://localhost:8081/admin/working-hours/new");
-        // Ensure response data is an array
-        if (Array.isArray(response.data)) {
-          setTimesheetDatas(response.data);
-          console.log("timesheetData", response.data)
-        } else {
-          console.error("Expected an array but got:", response.data);
+        try {
+            const response = await axios.get("http://localhost:8081/admin/working-hours/new");
+            const timesheets = response.data.map((sheet, index) => ({
+                ...sheet,
+                id: sheet.id, // Use employeeId as id if there's no other unique id
+                checked: false, // Initialize checked as false
+            }));
+            setTimesheetDatas(timesheets);
+            console.log("timesheetData", timesheets);
+        } catch (error) {
+            console.error("Error fetching timesheet data:", error);
         }
-      } catch (error) {
-        console.error("Error fetching timesheet data:", error);
-      }
     }
+
+    getTimesheet();
+}, []);
+
+//   useEffect(() => {
+//     async function getTimesheet() {
+//         try {
+//             const response = await axios.get("http://localhost:8081/admin/working-hours/new");
+//             const timesheets = response.data.map((sheet) => ({
+//                 ...sheet,
+//                 checked: false, // Initialize with checked as false
+//             }));
+//             setTimesheetDatas(timesheets);
+//         } catch (error) {
+//             console.error("Error fetching timesheet data:", error);
+//         }
+//     }
+
+//     getTimesheet();
+// }, []);
+
+  
+  // useEffect(() => {
+  //   async function getTimesheet() {      
+  //     try {
+  //       const response = await axios.get("http://localhost:8081/admin/working-hours/new");
+  //       // Ensure response data is an array
+        
+  //       if (response.data && typeof response.data === 'object' && !Array.isArray(response.data)) {
+  //         const timesheetArray = Object.values(response.data);
+  //         setTimesheetDatas(timesheetArray);
+  //         console.log("timesheetData", timesheetArray);
+  //       } else if (Array.isArray(response.data)) {
+  //         setTimesheetDatas(response.data);
+  //         console.log("timesheetData", response.data);
+  //       } else {
+  //         console.error("Unexpected data format:", response.data);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching timesheet data:", error);
+  //     }
+  //   }
   //   async function getTimesheet() {
   //     const timesheets = await axios.get(
   //       "http://localhost:8081/admin/working-hours/new"
@@ -54,8 +97,8 @@ function AdminApprovalPage() {
   //     );
   //   }
 
-    getTimesheet();
-  }, []);
+  //   getTimesheet();
+  // }, []);
 
   
   
@@ -94,10 +137,10 @@ function AdminApprovalPage() {
   }
 
   // update the timesheetCheckBox
-  function handleCheckboxChange(id) {
+  function handleCheckboxChange(employeeId) {
     setTimesheetDatas((prevData) =>
       prevData.map((sheet) =>
-        sheet.id === id
+        sheet.id === employeeId
           ? {
               ...sheet,
               checked: !sheet.checked,
@@ -108,7 +151,8 @@ function AdminApprovalPage() {
   }
 
   // timesheet approvel
-  async function approveSaveConfirmation() {
+  async function approveSaveConfirmation(startDate, endDate) {
+    
     setAskConfirmationForApprove(false);
     const approvedSheets = timesheetDatas.filter(
       (sheet) => sheet.checked === true
@@ -125,8 +169,8 @@ function AdminApprovalPage() {
 
         // Make a PUT request to update the status of the sheet in the API
         const response = await axios.put(
-          `http://localhost:8081/admin/working-hours/approve/${updatedSheet.id}`,
-          // `http://localhost:8081/admin/working-hours/${}/approve-range?startDate=2023-07-01&endDate=2023-07-15`,
+          // `http://localhost:8081/admin/working-hours/approve/${updatedSheet.id}`,
+          `http://localhost:8081/admin/working-hours/${sheet.id}/approve-range?startDate=${startDate}&endDate=${endDate}`,
           updatedSheet
         );
         const responseData = response.data;
@@ -158,13 +202,15 @@ function AdminApprovalPage() {
     }
   }
 
+  
+
   // cancel the approvel
   function approveCancelConfirmation() {
     setAskConfirmationForApprove(false);
   }
 
   // reject the timesheet
-  async function rejectSaveConfirmation() {
+  async function rejectSaveConfirmation(startDate,endDate) {
     setAskConfirmationForReject(false);
     const rejectSheets = timesheetDatas.filter(
       (sheet) => sheet.checked === true
@@ -181,7 +227,7 @@ function AdminApprovalPage() {
 
         // Make a PUT request to update the status of the sheet in the API
         const response = await axios.put(
-          `http://localhost:8081/admin/working-hours/reject/${updatedSheet.id}`,
+          `http://localhost:8081/admin/working-hours/${sheet.id}/reject-range?startDate=${startDate}&endDate=${endDate}`,
           updatedSheet
         );
         // console.log("Updated reject sheet:", response.data);
@@ -217,8 +263,10 @@ function AdminApprovalPage() {
   }
 
   function goEditPage(id, check) {
+    console.log("Button clicked. ID:", id, "Checked:", check);
     if (check) {
       console.log(id);
+      console.log("Navigating to edit page with ID:", id);
       navigate("/admin/modifyEmployeeTimesheet/" + id);
     } else {
       setErrorMessage("Please select the timesheet you wish to edit!!!");
@@ -265,8 +313,10 @@ function AdminApprovalPage() {
                     />
                     Select{" "}
                   </th>
-                  <th> Emp Id </th> <th> Emp Name </th>{" "}
-                  <th> Timesheet Period </th> <th> No hrs Submitted </th>{" "}
+                  <th> Emp Id </th> 
+                  <th> Emp Name </th>{" "}
+                  <th> Timesheet Period </th> 
+                  <th> No hrs Submitted </th>{" "}
                   <th> Action </th>{" "}
                 </tr>{" "}
               </thead>{" "}
@@ -274,7 +324,9 @@ function AdminApprovalPage() {
                 {" "}
                 {/* table body */}{" "}
                 {/* {timesheetDatas */}
-                   {timesheetDatas.map((sheet) => (
+                   {timesheetDatas.map((sheet) => {
+                    console.log("Mapping sheet:", sheet);
+                    // return (
                       <tr key={sheet.id} className="text-center">
                         <td>
                           <input
@@ -284,9 +336,10 @@ function AdminApprovalPage() {
                             onChange={() => handleCheckboxChange(sheet.id)}
                           ></input>{" "}
                         </td>{" "}
-                        <td> {sheet.empId} </td> <td> {sheet.empName} </td>{" "}
+                        <td> {sheet.employeeId} </td> 
+                        <td> {sheet.empName} </td>{" "}
                         <td> {sheet.StartDate} </td>{" "}
-                        <td> {sheet.noOfHoursWorked} </td>{" "}
+                        <td> {sheet.totalHours} </td>{" "}
                         <td>
                           {" "}
                           <button
@@ -300,7 +353,8 @@ function AdminApprovalPage() {
                           </button>
                         </td>
                       </tr>
-                    ))}
+                    // )
+})}
                   {/* // : ""} */}
               </tbody>{" "}
             </table>{" "}
