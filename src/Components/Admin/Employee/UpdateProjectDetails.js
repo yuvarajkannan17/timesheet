@@ -2,8 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './UpdateProjectDetails.css';
 import axios from 'axios';
+import { useSelector } from "react-redux";
+
 
 const UpdateProjectDetails = () => {
+  const adminValue = useSelector(state=>state.adminLogin.value);
+  const adminId = adminValue.adminId;
+
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResult, setSearchResult] = useState(null);
   const [editing, setEditing] = useState(false);
@@ -13,6 +18,7 @@ const UpdateProjectDetails = () => {
     projectDescription: '',
     teamMembers: [],
     supervisorEmployees: [],
+    adminId: []
   });
 
   const navigate = useNavigate();
@@ -93,7 +99,7 @@ const UpdateProjectDetails = () => {
   const handleAddTeamMember = () => {
     setUpdatedProject({
       ...updatedProject,
-      teamMembers: [...updatedProject.teamMembers, { employeeID: '', employeeName: '' }],
+      teamMembers: [...updatedProject.teamMembers, { employeeID: ''}],
     });
   };
 
@@ -106,7 +112,7 @@ const UpdateProjectDetails = () => {
   const handleAddSupervisor = () => {
     setUpdatedProject({
       ...updatedProject,
-      supervisorEmployees: [...updatedProject.supervisorEmployees, { employeeID: '', employeeName: '' }],
+      supervisorEmployees: [...updatedProject.supervisorEmployees, { employeeID: ''}],
     });
   };
 
@@ -116,10 +122,10 @@ const UpdateProjectDetails = () => {
     setUpdatedProject({ ...updatedProject, supervisorEmployees: updatedSupervisorEmployees });
   };
 
-  const handleArchive = () => {
+  const handleArchive = (projectId, adminId) => {
     const projectIdToDelete = searchResult.projectID;
 
-    axios.delete(`http://localhost:3001/projects/${projectIdToDelete}`)
+    axios.delete(`http://localhost:8081/projects/${projectId}?adminId=${adminId}}`)
       .then((response) => {
         console.log('Project archived successfully:', response.data);
         alert('Project archived successfully!');

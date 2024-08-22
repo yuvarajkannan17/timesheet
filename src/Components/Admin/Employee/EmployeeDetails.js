@@ -4,6 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { getEmployeeDetails, deleteEmployeeData } from './EmployeeService';
 import successCheck from '../../Image/checked.png';
+import { useSelector } from 'react-redux';
 
 export default function EmployeeDetails() {
   const { id } = useParams(); // Get the employee id from the route parameters
@@ -13,6 +14,8 @@ export default function EmployeeDetails() {
   const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [successConfirmation, setSuccessConfirmation] = useState(false);
+  const adminValue = useSelector(state=>state.adminLogin.value);
+  const adminId = adminValue.adminId;
 
   useEffect(() => {
     const fetchEmployeeData = async () => {
@@ -42,7 +45,7 @@ export default function EmployeeDetails() {
 
   const handleDeleteSuccess = async () => {
     try {
-      await deleteEmployeeData(id); // Call delete employee data API
+      await deleteEmployeeData(id, adminId); // Call delete employee data API
       setSuccessConfirmation(true);
     } catch (error) {
       console.error('Error deleting employee:', error);

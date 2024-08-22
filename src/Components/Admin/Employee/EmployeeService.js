@@ -96,10 +96,10 @@ export const getLastEnteredEmployee = async () => {
 };
 
 //delete employee
-  export const deleteEmployeeData = async (employeeId) => {
+  export const deleteEmployeeData = async (employeeId, adminId) => {
     try {
       // Make DELETE request to the API endpoint with the employeeId
-      await axios.delete(`http://localhost:8081/employee/${employeeId}`);
+      await axios.delete(`http://localhost:8081/employee/${employeeId}?adminId=${adminId}`);
   
       // Retrieve updated employee data from the API and return it
       const updatedEmployeeData = await getEmployeeData();
@@ -111,9 +111,9 @@ export const getLastEnteredEmployee = async () => {
     }
   };
 //edit employee
-export const updateEmployeeData = async (employeeId, adminId, updatedData) => {
+export const updateEmployeeData = async (id, adminId, updatedData) => {
   try {
-    const response = await axios.put(`http://localhost:8081/employee/${employeeId}?adminId=${adminId}`, updatedData);
+    const response = await axios.put(`http://localhost:8081/employee/${id}?adminId=${adminId}`, updatedData);
     return response.data; // Assuming the response.data contains the updated employee data
   } catch (error) {
     console.error('Error updating employee data:', error);

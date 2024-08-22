@@ -66,7 +66,7 @@ export default function EditEmployee() {
     }
 
     try {
-      await updateEmployeeData(id, formValues); // Update employee data
+      await updateEmployeeData(id, adminId, formValues); // Update employee data
       setSuccessConfirmation(true); // Show success modal
     } catch (error) {
       console.error('Error updating employee:', error);

@@ -6,6 +6,8 @@ import './CreateProject.css';
 import NavPages from '../NavPages';
 import successImage from '../../Image/checked.png'; // Import your success image here
 import { Modal} from 'react-bootstrap';
+import { useSelector } from "react-redux";
+
 
 const CreateProject = () => {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ const CreateProject = () => {
     projectDescription: '',
     teamMembers: [{ employeeID: '' }],
     supervisorEmployees: [{ employeeID: '' }],
+    adminId: '',
   });
 
   // Error state for each field
@@ -26,6 +29,8 @@ const CreateProject = () => {
   const initialErrorState = { idError: ''};
   const [teamMembersError, setTeamMembersError] = useState([initialErrorState]);
   const [supervisorEmployeesError, setSupervisorEmployeesError] = useState([initialErrorState]);
+  const adminValue = useSelector(state=>state.adminLogin.value);
+  const adminId = adminValue.adminId;
 
   // State for confirmation page
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -106,14 +111,15 @@ const CreateProject = () => {
   };
 
   const handleConfirmSubmit = async () => {
-    const { projectID, projectTitle, projectDescription, teamMembers, supervisorEmployees } = formData;
+    const { projectID, projectTitle, projectDescription, teamMembers, supervisorEmployees,adminId } = formData;
 
     const postData = {
       projectID: formData.projectID,              // Ensure this is a string
       projectTitle: formData.projectTitle,        // Ensure this is a non-empty string
       projectDescription: formData.projectDescription,  // Ensure this is a non-empty string
       teamMembers: formData.teamMembers.map(member => ({ employeeID: member.employeeID })), // Ensure this is an array of objects
-      supervisorEmployees: formData.supervisorEmployees.map(supervisor => ({ employeeID: supervisor.employeeID })), // Ensure this is an array of objects
+      supervisorEmployees: formData.supervisorEmployees.map(supervisor => ({ employeeID: supervisor.employeeID })),
+      adminId: formData.adminId // Ensure this is an array of objects
     };
     
     
@@ -121,7 +127,7 @@ const CreateProject = () => {
     try {
       
       console.log('Payload being sent:', postData);
-      const response = await axios.post('http://localhost:8081/projects/saveproject', postData);
+      const response = await axios.post(`http://localhost:8081/projects/saveproject?adminId=${adminId}`, postData);
 
       console.log('API Response:', response.data);
       setShowSuccessModal(true); // Show success modal when form is successfully submitted
