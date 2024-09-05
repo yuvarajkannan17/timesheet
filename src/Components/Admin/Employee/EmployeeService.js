@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 //Get employee data
 export const getEmployeeData = async () => {
   try {
-    const response = await axios.get('http://localhost:8081/employee/getemployees');
+    const response = await axios.get('http://localhost:8002/employee/getemployees');
     return response.data; // Assuming the response.data contains the array of employee data
   } catch (error) {
     console.error('Error fetching employee data:', error);
@@ -14,7 +14,7 @@ export const getEmployeeData = async () => {
 // Get Employee Detail
 export const getEmployeeDetails = async (employeeId) => {
   try {
-    const response = await axios.get(`http://localhost:8081/employee/${employeeId}`);
+    const response = await axios.get(`http://localhost:8002/employee/${employeeId}`);
     return response.data; // Assuming the response.data contains the array of employee data
   } catch (error) {
     console.error('Error fetching employee data:', error);
@@ -26,7 +26,7 @@ export const getEmployeeDetails = async (employeeId) => {
 export const addEmployeeData = async (formValues, adminId) => {
   
     try {
-      const response = await axios.post(`http://localhost:8081/employee/saveemployee?adminId=${adminId}`, formValues);
+      const response = await axios.post(`http://localhost:8002/employee/saveemployee?adminId=${adminId}`, formValues);
       // Assuming the response contains the newly created employee data
       const createdEmployee = response.data;
       // You can handle the response as needed
@@ -41,7 +41,7 @@ export const addEmployeeData = async (formValues, adminId) => {
 // Check for duplicate employee details
 export const checkEmployeeDuplicates = async (employeeData) => {
   try {
-    const response = await axios.get('http://localhost:8081/employee/getemployees');
+    const response = await axios.get('http://localhost:8002/employee/getemployees');
     const allEmployees = response.data;
 
     const duplicates = {
@@ -82,7 +82,7 @@ export const checkEmployeeDuplicates = async (employeeData) => {
 ///last entered  employee
 export const getLastEnteredEmployee = async () => {
   try {
-    const response = await axios.get('http://localhost:8081/employee/getemployees');
+    const response = await axios.get('http://localhost:8002/employee/getemployees');
     const allEmployees = response.data;
     if (allEmployees.length === 0) {
       return null;
@@ -99,7 +99,7 @@ export const getLastEnteredEmployee = async () => {
   export const deleteEmployeeData = async (employeeId, adminId) => {
     try {
       // Make DELETE request to the API endpoint with the employeeId
-      await axios.delete(`http://localhost:8081/employee/${employeeId}?adminId=${adminId}`);
+      await axios.delete(`http://localhost:8002/employee/${employeeId}?adminId=${adminId}`);
   
       // Retrieve updated employee data from the API and return it
       const updatedEmployeeData = await getEmployeeData();
@@ -113,7 +113,7 @@ export const getLastEnteredEmployee = async () => {
 //edit employee
 export const updateEmployeeData = async (id, adminId, updatedData) => {
   try {
-    const response = await axios.put(`http://localhost:8081/employee/${id}?adminId=${adminId}`, updatedData);
+    const response = await axios.put(`http://localhost:8002/employee/${id}?adminId=${adminId}`, updatedData);
     return response.data; // Assuming the response.data contains the updated employee data
   } catch (error) {
     console.error('Error updating employee data:', error);

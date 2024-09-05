@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../../Supervisor/Home/supervisor.css";
 import { useSelector, useDispatch } from "react-redux";
-import { submitON, submitOFF } from "../../features/submitBtn";
+// import { submitON, submitOFF } from "../../features/submitBtn";
 import { submitAdminON, submitAdminOFF } from '../../features/submitAdminButton';
 import { leaveSubmitON,leaveSubmitOFF } from '../../features/empLeaveSubmit';
 import axios from "axios";
@@ -49,7 +49,7 @@ function AdminHome() {
       setEndSubmitDate(endSubmitDate);
       setSubmitAdminId(submitAdminId);
       setStatusValue(status);
-      // dispatch(submitON(true)); // Set the Redux state if needed
+      dispatch(submitAdminON(true)); // Set the Redux state if needed
       setCountTimesheet(1);
     } else {
       setStartSubmitDate(startSubmitDate);
@@ -60,21 +60,7 @@ function AdminHome() {
     }
   }, []);
 
-//   async function count(){
-//     let response=  await axios.get("http://localhost:8081/admin/leave-requests");
-//     let data= response.data;
-//   if(data){
-//     let pendingCount= data.filter((obj)=>obj.status==="PENDING");
-    
-//     let rejectCount= data.filter((obj)=>obj.status==="REJECTED");
-//     setLeavePending(pendingCount.length);
-//     setRejectLeave(rejectCount.length);
-//   }
-// }
 
-// useEffect(()=>{
-//     count();
-// },[])
 
      async  function leaveStatus(){
             let response=  await axios.get("http://localhost:8081/admin/leave-requests");
@@ -117,12 +103,12 @@ function AdminHome() {
 
         if(status ==="APPROVED"){
           setStatusValue(status);
-          dispatch(submitOFF(false));
+          dispatch(submitAdminOFF(false));
           localStorage.setItem(`isSubmitOn${adminId}`, 'false');
           localStorage.setItem(`statusValue${adminId}`, status);
      }else if(status ==="REJECTED"){
          setStatusValue(status)
-         dispatch(submitOFF(false));
+         dispatch(submitAdminOFF(false));
           localStorage.setItem(`isSubmitOn${adminId}`, 'false');
           localStorage.setItem(`statusValue${adminId}`, status);
      }

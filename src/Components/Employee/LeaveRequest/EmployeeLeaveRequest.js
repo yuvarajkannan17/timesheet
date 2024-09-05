@@ -57,7 +57,7 @@ export function EmployeeLeaveRequest() {
     async function onSubmit() {
 
         try {
-            const leaveData = await axios.post("http://localhost:8002/leave-requests", formik.values);
+            const leaveData = await axios.post("http://localhost:8087/leaverequests", formik.values);
             if (leaveData.data) {
                 const {empId,status,id,startDate,endDate} =leaveData.data
                 setLeaveSuccessModal(true);

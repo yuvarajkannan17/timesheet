@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './UpdateProjectDetails.css';
 import axios from 'axios';
 import { useSelector } from "react-redux";
@@ -8,122 +8,309 @@ import { useSelector } from "react-redux";
 const UpdateProjectDetails = () => {
   const adminValue = useSelector(state=>state.adminLogin.value);
   const adminId = adminValue.adminId;
-
-  const [searchTerm, setSearchTerm] = useState('');
+  const { id } = useParams();
+  const [projectId, setprojectId] = useState('');
   const [searchResult, setSearchResult] = useState(null);
   const [editing, setEditing] = useState(false);
   const [updatedProject, setUpdatedProject] = useState({
-    projectID: '',
+    
     projectTitle: '',
     projectDescription: '',
-    teamMembers: [],
-    supervisorEmployees: [],
-    adminId: []
+    employeeTeamMembers: [""],
+    supervisorTeamMembers: [""],
+    
   });
+
+  const fetchProjectDetails = async (projectId) => {
+    console.log('Search Term:', projectId);
+    if (projectId) {
+      try {
+        const response = await axios.get(`http://localhost:8081/admin/projects/${projectId}`);
+        console.log('API Response:', response.data); // Log the entire response to see what it contains
+
+        
+        const foundProject = response.data;
+
+        if (foundProject) {
+          setSearchResult(foundProject);
+          setUpdatedProject({ ...foundProject, projectId: foundProject.projectId });
+        } else {
+          console.log('No matching project found.');
+          setSearchResult(null);
+        }
+      } catch (error) {
+        console.error('Error fetching project details:', error.message);
+        setSearchResult(null);
+      }
+    }
+  };
+
+  
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (searchTerm) {
-      axios.get(`http://localhost:8081/projects/getprojects`)
-        .then((response) => {
-          const foundProject = response.data.find(
-            (project) => project.projectID === searchTerm || project.projectTitle === searchTerm
-          );
-
-          if (foundProject) {
-            setSearchResult(foundProject);
-            setUpdatedProject({ ...foundProject, projectID: foundProject.id });
-          } else {
-            setSearchResult(null);
-          }
-        })
-        .catch((error) => {
-          console.error('Error fetching project details:', error.message);
-          setSearchResult(null);
-        });
-    }
-  }, [searchTerm]);
-
+ 
   const handleSearch = (e) => {
     e.preventDefault();
-    setSearchTerm(searchTerm);
+    setprojectId(projectId);
+    console.log('Searching for:', projectId);
     console.log('Search Result:', searchResult);
   };
 
+  const handleClick = (e) => {
+    e.preventDefault(); // Prevent the form from submitting
+    fetchProjectDetails(projectId);
+  };
+
+  // useEffect(() => {
+  //   console.log('Search Term:', projectId);
+  //   if (projectId) {
+  //     axios.get(`http://localhost:8081/admin/projects/${projectId}`)
+  //       .then((response) => {
+  //         console.log('API Response:',response.data); // Log the entire response to see what it contains
+  //         const foundProject = response.data.find(
+  //           (project) => project.projectId.toString() === projectId ||
+  //           project.projectTitle.toLowerCase() === projectId.toLowerCase()
+  //         );
+  
+  //         if (foundProject) {
+  //           setSearchResult(foundProject);
+  //           setUpdatedProject({ ...foundProject, projectId: foundProject.projectId });
+  //         } else {
+  //           console.log('No matching project found.');
+  //           setSearchResult(null);
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error('Error fetching project details:', error.message);
+  //         setSearchResult(null);
+  //       });
+  //   }
+  // }, [projectId, projectId]);
+  
+  // useEffect(() => {
+  //   console.log('Search Term:', projectId);
+  //   const fetchProjectDetails = async () => {
+  //     if (projectId) {
+  //       try {
+  //         const response = await axios.get(`http://localhost:8081/admin/projects/${id}`);
+  //         console.log('API Response:', response.data); // Log the entire response to see what it contains
+          
+  //         const foundProject = response.data.find(
+  //           (project) =>
+  //             project.projectId.toString() === projectId ||
+  //             project.projectTitle.toLowerCase() === projectId.toLowerCase()
+  //         );  
+  //         if (foundProject) {
+  //           setSearchResult(foundProject);
+  //           setUpdatedProject({ ...foundProject, projectId: foundProject.projectId });
+  //         } else {
+  //           console.log('No matching project found.');
+  //           setSearchResult(null);
+  //         }
+  //       } catch (error) {
+  //         console.error('Error fetching project details:', error.message);
+  //         setSearchResult(null);
+  //       }
+  //     }
+  //   };
+  
+  //   fetchProjectDetails();
+  // }, [projectId, id]);
+  
+  
   const handleNavigateAdminHome = () => {
     navigate('/admin');
   };
 
-  const handleTeamMemberChange = (index, field, value) => {
-    const updatedTeamMembers = [...updatedProject.teamMembers];
-    updatedTeamMembers[index][field] = value;
-    setUpdatedProject({ ...updatedProject, teamMembers: updatedTeamMembers });
+  const handleEmployeeIdChange = (index, value) => {
+    const updatedEmployeeTeamMembers = [...updatedProject.employeeTeamMembers];
+    updatedEmployeeTeamMembers[index] = value; // Update the employeeId at the specific index
+    setUpdatedProject({ ...updatedProject, employeeTeamMembers: updatedEmployeeTeamMembers });
   };
 
-  const handleSupervisorChange = (index, field, value) => {
-    const updatedSupervisorEmployees = [...updatedProject.supervisorEmployees];
-    updatedSupervisorEmployees[index][field] = value;
-    setUpdatedProject({ ...updatedProject, supervisorEmployees: updatedSupervisorEmployees });
+  const handleSupervisorIdChange = (index, value) => {
+    const updatedSupervisorTeamMembers = [...updatedProject.supervisorTeamMembers];
+    updatedSupervisorTeamMembers[index] = value; // Update the supervisorId at the specific index
+    setUpdatedProject({ ...updatedProject, supervisorTeamMembers: updatedSupervisorTeamMembers });
   };
 
   const handleEdit = () => {
     setEditing(true);
   };
 
-  const handleSave = () => {
-    fetch(`https://65c0706125a83926ab964c6f.mockapi.io/api/projectdetails/projectDetails/${updatedProject.projectID}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedProject),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('Updated Project Details:', data);
-        setEditing(false);
-        alert('Project details updated successfully!');
-      })
-      .catch((error) => {
-        console.error('Error updating project details:', error.message);
-        alert('Error updating project details. Please try again.');
-      });
+  const handleCancel = () => {
+    navigate('/admin');
   };
+
+  // const handleSave = () => {
+  //   fetch(`http://localhost:8081/admin/projects/${adminId}?adminId=${adminId}`, {
+  //     method: 'PUT',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(updatedProject),
+  //   })
+  //     .then((response) => {
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! Status: ${response.status}`);
+  //       }
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       console.log('Updated Project Details:', data);
+  //       setEditing(false);
+  //       alert('Project details updated successfully!');
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error updating project details:', error.message);
+  //       alert('Error updating project details. Please try again.');
+  //     });
+  // };
+
+  // const handleSave = async () => {
+  //   try {
+  //     console.log('Payload being sent:', JSON.stringify(updatedProject, null, 2)); // Log the payload
+  //     const response = await fetch(`http://localhost:8081/admin/projects/${projectId}?adminId=${adminId}`, {
+  //       method: 'PUT',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(updatedProject),
+  //     });
+  
+  //     if (!response.ok) {
+  //       const errorText = await response.text(); // Capture the response body text for more details
+  //     console.error('Error from server:', errorText);
+  //       throw new Error(`HTTP error! Status: ${response.status}`);
+  //     }
+  
+  //     const data = await response.json();
+  //     console.log('Updated Project Details:', data);
+  //     setEditing(false);
+  //     alert('Project details updated successfully!');
+  //   } catch (error) {
+  //     console.error('Error updating project details:', error.message);
+  //     alert('Error updating project details. Please try again.');
+  //   }
+  // };
+  
+
+
+
+// const handleSave = async () => {
+//   try {
+//     console.log('Payload being sent:', JSON.stringify(updatedProject, null, 2)); // Log the payload
+
+//     const response = await axios.put(
+//       `http://localhost:8081/admin/projects/${projectId}?adminId=${adminId}`, 
+//       updatedProject, 
+//       {
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//       }
+//     );
+
+//     console.log('Updated Project Details:', response.data);
+//     setEditing(false);
+//     alert('Project details updated successfully!');
+//   } catch (error) {
+//     if (error.response) {
+//       // Server responded with a status other than 200
+//       console.error('Error from server:', error.response.data);
+//       alert(`Error: ${error.response.data.message}`);
+//     } else if (error.request) {
+//       // Request was made but no response received
+//       console.error('No response received:', error.request);
+//       alert('No response from server. Please try again later.');
+//     } else {
+//       // Something else happened
+//       console.error('Error updating project details:', error.message);
+//       alert('Error updating project details. Please try again.');
+//     }
+//   }
+// };
+ 
+
+// const transformedProject = {
+//   ...updatedProject,
+//   employeeTeamMembers: updatedProject.employeeTeamMembers.map(employee => employee.employeeId),
+//   supervisorTeamMembers: updatedProject.supervisorTeamMembers.map(supervisor => supervisor.supervisorId),
+// };
+const handleSave = async () => {
+  const { projectTitle, projectDescription, employeeTeamMembers, supervisorTeamMembers } = updatedProject;
+
+    // Convert lists to arrays of strings
+    const employeeIDs = employeeTeamMembers.map(member => member.employeeID);
+    const supervisorIDs = supervisorTeamMembers.map(supervisor => supervisor.employeeID);
+  try {
+    console.log('Payload being sent:', JSON.stringify(updatedProject, null, 2));
+    const response = await axios.put(
+      `http://localhost:8081/admin/projects/${projectId}?adminId=${adminId}`, 
+      updatedProject,
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+
+    if (response.status !== 200) {
+      console.error('Error from server:', response.data);
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    console.log('Updated Project Details:', response.data);
+    setEditing(false);
+    alert('Project details updated successfully!');
+  } catch (error) {
+    if (error.response) {
+        // The server responded with a status other than 2xx
+        console.error('Error from server:', error.response.data);
+        console.error('Status:', error.response.status);
+        console.error('Headers:', error.response.headers);
+    } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received:', error.request);
+    } else {
+        // Something else happened in setting up the request
+        console.error('Error setting up the request:', error.message);
+    }
+    alert('Error updating project details. Please try again.');
+}
+
+};
+
 
   const handleAddTeamMember = () => {
     setUpdatedProject({
       ...updatedProject,
-      teamMembers: [...updatedProject.teamMembers, { employeeID: ''}],
+      employeeTeamMembers: [...updatedProject.employeeTeamMembers, ''],
     });
   };
 
   const handleRemoveTeamMember = (index) => {
-    const updatedTeamMembers = [...updatedProject.teamMembers];
-    updatedTeamMembers.splice(index, 1);
-    setUpdatedProject({ ...updatedProject, teamMembers: updatedTeamMembers });
+    const updatedemployeeTeamMembers = [...updatedProject.employeeTeamMembers];
+    updatedemployeeTeamMembers.splice(index, 1);
+    setUpdatedProject({ ...updatedProject, employeeTeamMembers: updatedemployeeTeamMembers });
   };
+  
+  
 
   const handleAddSupervisor = () => {
     setUpdatedProject({
       ...updatedProject,
-      supervisorEmployees: [...updatedProject.supervisorEmployees, { employeeID: ''}],
+      supervisorTeamMembers: [...updatedProject.supervisorTeamMembers, ''],
     });
   };
 
   const handleRemoveSupervisor = (index) => {
-    const updatedSupervisorEmployees = [...updatedProject.supervisorEmployees];
-    updatedSupervisorEmployees.splice(index, 1);
-    setUpdatedProject({ ...updatedProject, supervisorEmployees: updatedSupervisorEmployees });
+    const updatedsupervisorTeamMembers = [...updatedProject.supervisorTeamMembers];
+    updatedsupervisorTeamMembers.splice(index, 1);
+    setUpdatedProject({ ...updatedProject, supervisorTeamMembers: updatedsupervisorTeamMembers });
   };
+  
+  
 
   const handleArchive = (projectId, adminId) => {
-    const projectIdToDelete = searchResult.projectID;
+    const projectIdToDelete = searchResult.projectId;
 
     axios.delete(`http://localhost:8081/projects/${projectId}?adminId=${adminId}}`)
       .then((response) => {
@@ -136,6 +323,8 @@ const UpdateProjectDetails = () => {
         alert('Error archiving project. Please try again.');
       });
   };
+
+  
 
   return (
     <>
@@ -150,10 +339,10 @@ const UpdateProjectDetails = () => {
                 <input
                   type="text"
                   className="form-control me-2"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  value={projectId}
+                  onChange={(e) => setprojectId(e.target.value)}
                 />
-                <button type="submit" className="btn btn-primary">Search</button>
+                <button type="search" className="btn btn-primary" onClick={handleClick}>Search</button>
               </div>
             </form>
           </div>
@@ -167,12 +356,10 @@ const UpdateProjectDetails = () => {
                   <div className="project-details-header">
                     <h3>Project Details</h3>
                     <div className='button'>
-                      {!editing && <button onClick={handleEdit} className="btn btn-secondary">Edit</button>}
+                      {!editing && <button  className="btn btn-primary" onClick={handleEdit}>Edit</button>}
                     </div>
                   </div>
-                  <p className="project-id">
-                    <strong>Project ID:</strong> {searchResult.projectID}
-                  </p>
+                  
                   <p>
                     <strong>Project Title:</strong>{' '}
                     {editing ? (
@@ -215,22 +402,22 @@ const UpdateProjectDetails = () => {
           {/* Team Members */}
           <div>
             <strong>Team Members</strong>
-            {updatedProject.teamMembers.map((member, index) => (
+            {updatedProject.employeeTeamMembers.map((employee, index) => (
               <div key={index} className="mb-3">
                 <input
                   type="text"
                   placeholder="Employee ID"
                   className="form-control"
-                  value={member.employeeID}
-                  onChange={(e) => handleTeamMemberChange(index, 'employeeID', e.target.value)}
+                  value={employee.employeeId}
+                  onChange={(e) => handleEmployeeIdChange(index, 'employeeId', e.target.value)}
                 />
-                <input
+                {/* <input
                   type="text"
                   placeholder="Employee Name"
                   className="form-control"
-                  value={member.employeeName}
+                  value={member.firstName}
                   onChange={(e) => handleTeamMemberChange(index, 'employeeName', e.target.value)}
-                />
+                /> */}
                 <button type="button" className="btn btn-danger" onClick={() => handleRemoveTeamMember(index)}>
                   Remove
                 </button>
@@ -245,22 +432,22 @@ const UpdateProjectDetails = () => {
           {/* Supervisor Employees */}
           <div>
             <strong>Supervisor Employees</strong>
-            {updatedProject.supervisorEmployees.map((supervisor, index) => (
+            {updatedProject.supervisorTeamMembers.map((supervisor, index) => (
               <div key={index} className="mb-3">
                 <input
                   type="text"
                   placeholder="Supervisor ID"
                   className="form-control"
-                  value={supervisor.employeeID}
-                  onChange={(e) => handleSupervisorChange(index, 'employeeID', e.target.value)}
+                  value={supervisor.supervisorId}
+                  onChange={(e) => handleSupervisorIdChange(index, 'supervisorId', e.target.value)}
                 />
-                <input
+                {/* <input
                   type="text"
                   placeholder="Supervisor Name"
                   className="form-control"
-                  value={supervisor.employeeName}
+                  value={supervisor.firstName}
                   onChange={(e) => handleSupervisorChange(index, 'employeeName', e.target.value)}
-                />
+                /> */}
                 <button type="button" className="btn btn-danger" onClick={() => handleRemoveSupervisor(index)}>
                   Remove
                 </button>
@@ -276,14 +463,14 @@ const UpdateProjectDetails = () => {
         <>
           {/* Display search results when not editing */}
           {/* Team Members */}
-          {searchResult.teamMembers && (
+          {searchResult.employeeTeamMembers && (
             <div>
               <strong>Team Members</strong>
-              {searchResult.teamMembers.map((member, index) => (
+              {searchResult.employeeTeamMembers.map((employee, index) => (
                 <div key={index} className="mb-3">
-                  <strong>Employee ID:</strong> {member.employeeID}
-                  <br />
-                  <strong>Employee Name:</strong> {member.employeeName}
+                  <strong>Employee ID:</strong> {employee.employeeId}
+                  {/* <br />
+                  <strong>Employee Name:</strong> {member.firstName} */}
                 </div>
               ))}
             </div>
@@ -291,14 +478,14 @@ const UpdateProjectDetails = () => {
           <br />
 
           {/* Supervisor Employees */}
-          {searchResult.supervisorEmployees && (
+          {searchResult.supervisorTeamMembers && (
             <div>
               <strong>Supervisor Employees</strong>
-              {searchResult.supervisorEmployees.map((supervisor, index) => (
+              {searchResult.supervisorTeamMembers.map((supervisor, index) => (
                 <div key={index} className="mb-3">
-                  <strong>Supervisor ID:</strong> {supervisor.employeeID}
-                  <br />
-                  <strong>Supervisor Name:</strong> {supervisor.employeeName}
+                  <strong>Supervisor ID:</strong> {supervisor.supervisorId}
+                  {/* <br />
+                  <strong>Supervisor Name:</strong> {supervisor.firstName} */}
                 </div>
               ))}
             </div>
@@ -309,8 +496,9 @@ const UpdateProjectDetails = () => {
 
                   {editing && (
                     <div className="mb-3">
-                      <button type="button" className="btn btn-success" onClick={handleSave}>Save</button>
+                      <button type="button" className="btn btn-success mx-2" onClick={handleSave}>Save</button>
                       <button type="button" className="btn btn-warning" onClick={handleArchive}>Delete</button>
+                      <button type="button" className="btn btn-secondary mx-2" onClick={handleCancel}>Cancel</button>
                     </div>
                   )}
                 </div>
@@ -322,7 +510,7 @@ const UpdateProjectDetails = () => {
         <div className="row mt-4">
           <div className="col-md-12 text-center">
             {!editing && (
-              <button type="button" className="btn btn-primary" onClick={handleNavigateAdminHome}>Cancel</button>
+              <button type="button" className="btn btn-secondary mx-2" onClick={handleNavigateAdminHome}>Cancel</button>
             )}
           </div>
         </div>

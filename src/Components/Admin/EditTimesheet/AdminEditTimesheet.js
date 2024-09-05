@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
 import successCheck from '../../Image/checked.png';
 import { useSelector, useDispatch } from 'react-redux';
-import { submitON,submitOFF } from '../../features/submitBtn';
+import { submitAdminON,submitAdminOFF } from '../../features/submitAdminButton';
 
 
 
@@ -36,7 +36,7 @@ function AdminEditTimesheet(){
 
     const objectPositionRef = useRef(1);
     const navigate = useNavigate();
-    let {isSubmit} =useSelector((state)=>state.submitBtn.value);
+    let {isSubmit} =useSelector((state)=>state.submitAdminButton.value);
     const dispatch= useDispatch();
 
     const loadRecentTimesheetData = () => {
@@ -277,12 +277,12 @@ function AdminEditTimesheet(){
                 // Show success modal
                 const status=response.data[0].status;
                 setSuccessModalForTimesheet(true);
-                    dispatch(submitOFF(true));
+                    dispatch(submitAdminON(true));
                     setIsSubmitTimesheet(true)
                 // Remove the submitted data from local storage
                 const savedTimesheetDataList = JSON.parse(localStorage.getItem(adminId)) || [];
                 const updatedTimesheetData = savedTimesheetDataList.filter((_, index) => index !== savedTimesheetDataList.length - objectPositionRef.current);
-                localStorage.setItem(`isSubmitOn${adminId}`, 'true');
+                localStorage.setItem(`isSubmitAdminOn${adminId}`, 'true');
                 localStorage.setItem(`startSubmitDate${adminId}`, inputs.startDate);
                 localStorage.setItem(`endSubmitDate${adminId}`, inputs.endDate);
                 localStorage.setItem(`submitAdminId${adminId}`, inputs.adminId);
