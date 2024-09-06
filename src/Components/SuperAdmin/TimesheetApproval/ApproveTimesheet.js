@@ -11,7 +11,7 @@ import  SuperadminNav from'../Navbar/SuperAdminNav'
 function ApproveTimesheet() {
   const [timesheetDatas, setTimesheetDatas] = useState([])
   const [selectAllChecked, setSelectAllChecked] = useState(false);
-  const [rejectReason, setRejectReason] = useState('Your timesheet has been rejected. Please reach out supervisor regarding your timesheet.');
+  const [rejectReason, setRejectReason] = useState(' Your timesheet has been rejected. Please reach out supervisor regarding your timesheet. ');
   const [askConfitrmationForApprove, setAskConfirmationForApprove] = useState(false)
   const [askConfitrmationForReject, setAskConfirmationForReject] = useState(false)
   const [successModalForApprove, setSuccessModalForApprove] = useState(false)
@@ -26,7 +26,7 @@ function ApproveTimesheet() {
 
    async function getTimesheet() {
     try {
-        const timesheets = await axios.get("http://localhost:8080/admins/working-hours/new");
+        const timesheets = await axios.get("http://localhost:8080/admins/all/new");
         const datasOfTimesheet = timesheets.data;
 
         let timehseetData=[];
@@ -167,32 +167,28 @@ function ApproveTimesheet() {
     setAskConfirmationForReject(false);
     const rejectSheets = timesheetDatas.filter((sheet) => sheet.checked === true);
 
+    console.log(rejectSheets);
+
 
 
     try {
       // Update the status of approved sheets and track their IDs
       const updates = rejectSheets.map(async (sheet) => {
         // Update the status of the sheet locally
-        const updatedSheet = { ...sheet, status: "Your timesheet has been rejected", rejectReason: rejectReason  };
+        const updatedSheet = { ...sheet,  rejectionReason: rejectReason  };
 
         // Make a PUT request to update the status of the sheet in the API
-        const response = await axios.put(`${employeeSheetUrl}/${updatedSheet.id}`, updatedSheet);
-        // console.log("Updated reject sheet:", response.data);
+        const response = await axios.put(`http://localhost:8080/admins/working-hours/${sheet.adminId}/reject-range?startDate=${sheet.startDate}&endDate=${sheet.endDate}&reason=${rejectReason}`);
+        
+        if(response.data){
+          setSuccessModalForReject(true);
+        }
 
-        return updatedSheet;
+        
       });
 
-      // Wait for all updates to finish
-      const updatedSheets = await Promise.all(updates);
-
-      // Update the state with the updated data
-      setTimesheetDatas(updatedSheets);
-
-      // Reset checkbox selection
-      // cancelsheetFun();
-
-      // Show success modal
-      setSuccessModalForReject(true);
+      
+     
     } catch (error) {
       console.log('API error', error);
     }
@@ -231,6 +227,11 @@ function ApproveTimesheet() {
 
   function closeSuccessModal(){
     setSuccessModalForApprove(false);
+    
+  }
+
+  function closeRejectModal(){
+    setSuccessModalForReject(false);
     getTimesheet();
   }
 
@@ -352,7 +353,7 @@ function ApproveTimesheet() {
             <div className="d-flex flex-column modal-success p-4 align-items-center ">
               <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
               <p className="mb-4 text-center">Timesheets have been rejected.</p>
-              <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForReject(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+              <button className="btn  w-100 text-white" onClick={closeRejectModal} style={{ backgroundColor: '#5EAC24' }}>Close</button>
             </div>
           </Modal>
 

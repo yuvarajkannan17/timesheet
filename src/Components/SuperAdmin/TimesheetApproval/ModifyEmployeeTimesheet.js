@@ -28,7 +28,7 @@ function ModifyAdminTimesheet() {
 
     const [editApproveConfirmationModal, setEditApproveConfirmationModal] = useState(false);
     const [editRejectConfirmationModal, setEditRejectConfirmationModal] = useState(false);
-    const [rejectReason, setRejectReason] = useState('Please reach out supervisor regarding your timesheet.');
+    const [rejectReason, setRejectReason] = useState('Please reach out superadmin  regarding your timesheet.');
 
     const editTimesheetSuccessModalValue = useSelector(state => state.modal.value.editTimesheetSuccessModalValue);
     const editTimesheetRejectModalValue = useSelector(state => state.modal.value.editTimesheetRejectModalValue);
@@ -53,9 +53,10 @@ function ModifyAdminTimesheet() {
         } catch (error) {
             console.log(error)
         }
+        
     }
 
-    function navigateToApproveTimesheet(){
+    function closeSuccessModal(){
         dispatch(editTimesheetSuccessModal(false));
          navigate('/superadmin/timesheetapproval')
 
@@ -76,7 +77,7 @@ function ModifyAdminTimesheet() {
 
         try {
 
-            await axios.put(`http://localhost:8080/admins/working-hours/${id}/reject-range?startDate=${startDate}&endDate=${endDate}`);
+            await axios.put(`http://localhost:8080/admins/working-hours/${id}/reject-range?startDate=${startDate}&endDate=${endDate}&reason=${rejectReason}`);
             
             dispatch(editTimesheetRejectModal(true));
 
@@ -89,11 +90,13 @@ function ModifyAdminTimesheet() {
     useEffect(() => {
         const fetchProjects = async () => {
             try {
-                const response = await axios.get('https://6638af3a4253a866a24ec473.mockapi.io/cart');
-                setAvailableProjects(response.data);
-            } catch (error) {
+                const response = await axios.get('http://localhost:8081/admin/projects');
+                 let projectDatas=response.data;
+                let projectIds= projectDatas.map((project)=>project.projectId);
+                setAvailableProjects(projectIds);
+              } catch (error) {
                 console.error('Error fetching projects:', error);
-            }
+              }
         };
 
         fetchProjects();
@@ -131,6 +134,7 @@ function ModifyAdminTimesheet() {
     async function getEditTimesheet() {
         const response = await axios.get(`http://localhost:8080/admins/working-hours/${id}/range?startDate=${startDate}&endDate=${endDate}`);
         const datas = response.data;
+        console.log(datas);
         setTimesheetData(datas);
         setEditableData(datas)
 
@@ -271,6 +275,11 @@ function ModifyAdminTimesheet() {
     }
 
 
+    function closeRejectModal(){
+        dispatch(editTimesheetRejectModal(false));
+        navigate('/superadmin/timesheetapproval');
+
+    }
 
 
     return (
@@ -326,10 +335,10 @@ function ModifyAdminTimesheet() {
                                     <tr key={index}>
                                         <td style={{ width: "120px", backgroundColor: '#e8fcaf' }}>
                                             <Select
-                                                value={availableProjects.find(project => project.projectId === projectId) ? { value: projectId, label: projectId } : null}
-                                                options={availableProjects.map(project => ({
-                                                    value: project.projectId,
-                                                    label: project.projectId,
+                                                value={availableProjects.find(project => project === projectId) ? { value: projectId, label: projectId } : null}
+                                                options={availableProjects.map(projectId => ({
+                                                    value: projectId,
+                                                    label: projectId,
                                                 }))}
                                                 className="AddTimesheet my-2"
                                                 onChange={(selectedOption) => updateProject(selectedOption.value, index)}
@@ -427,8 +436,8 @@ function ModifyAdminTimesheet() {
                     <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={editTimesheetSuccessModalValue}  >
                         <div className="d-flex flex-column modal-success p-4 align-items-center ">
                             <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
-                            <p className="mb-4 text-center">Timesheet have been approved.</p>
-                            <button className="btn  w-100 text-white" onClick={navigateToApproveTimesheet} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+                            <p className="mb-4 text-center">Timesheet has been approved.</p>
+                            <button className="btn  w-100 text-white" onClick={closeSuccessModal} style={{ backgroundColor: '#5EAC24' }}>Close</button>
                         </div>
                     </Modal>
 
@@ -436,8 +445,8 @@ function ModifyAdminTimesheet() {
                     <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={editTimesheetRejectModalValue}  >
                         <div className="d-flex flex-column modal-success p-4 align-items-center ">
                             <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
-                            <p className="mb-4 text-center">Timesheet have been rejected.</p>
-                            <button className="btn  w-100 text-white" onClick={() => { dispatch(editTimesheetRejectModal(false)) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+                            <p className="mb-4 text-center">Timesheet has been rejected.</p>
+                            <button className="btn  w-100 text-white" onClick={closeRejectModal} style={{ backgroundColor: '#5EAC24' }}>Close</button>
                         </div>
                     </Modal>
 

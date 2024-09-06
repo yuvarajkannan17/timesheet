@@ -28,7 +28,7 @@ function TimesheetLogin() {
     async function onSubmit(values) {
         try {
             // API call based on role
-            let response = await axios.post(`http://localhost:8082/api/login/${values.role}?emailId=${values.email}&password=${values.password}`);
+            let response = await axios.post(`http://localhost:8088/api/login/${values.role}?emailId=${values.email}&password=${values.password}`);
             let credentials = response.data;
 
             console.log(response);
@@ -69,6 +69,7 @@ function TimesheetLogin() {
             } else {
                 // Handle other response errors
                 setUserError(`Error: ${error.response.status} - ${error.response.statusText}`);
+                console.log(error.message)
             }
         } else if (error.request) {
             // The request was made but no response was received

@@ -370,13 +370,10 @@ const AdminAddTimesheet = () => {
           if(response.data){
             let data=response.data;
            let statusValue= data[0].status;
-<<<<<<< HEAD
-            //  dispatch(submitON(true));
-              localStorage.setItem('isSubmitOn', 'true');
-=======
+
+
              dispatch(submitAdminON(true));
-              localStorage.setItem(`isSubmitOn${adminId}`, 'true');
->>>>>>> d85fc90afc8757212cbd0804ab4b24e3f5d829eb
+             
               let receviedData=response.data;
              let lengthOfData=receviedData.length;
             let last=receviedData[lengthOfData-1];
@@ -387,6 +384,7 @@ const AdminAddTimesheet = () => {
             setSubmitAdminId(adminId);
             setStartSubmitDate(firstDate);
             setEndSubmitDate(lastDate);
+            localStorage.setItem(`isSubmitOn${adminId}`, 'true');
             localStorage.setItem(`startSubmitDate${adminId}`, firstDate);
             localStorage.setItem(`endSubmitDate${adminId}`, lastDate);
             localStorage.setItem(`submitAdminId${adminId}`, adminId);
