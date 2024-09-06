@@ -24,13 +24,14 @@ function AdminApproveLeaveRequest() {
     try {
       const response = await axios.get("http://localhost:8081/admin");
       const leaveList = response.data;
-      
+      console.log(leaveList)
       const filteredLeaveList = leaveList.filter(leave => leave.status === "PENDING");
       
       setleaveDatas(filteredLeaveList.map((leave) => ({
         ...leave,
         checked: false,
       })));
+
     } catch (error) {
       console.error("Error fetching leave data:", error);
     }
@@ -121,9 +122,9 @@ function AdminApproveLeaveRequest() {
 
     try {
         // Create an array of promises
-        const updatePromises = approvedLeavesRequest.map(async (emp) => {
+        const updatePromises = approvedLeavesRequest.map(async (sup) => {
             // Perform the PUT request
-            const response = await axios.put(`http://localhost:8081/admin/${emp.id}/approve`);
+            const response = await axios.put(`http://localhost:8081/admin/${sup.id}/approve`);
             return response.data; // Return the response data if needed
         });
 

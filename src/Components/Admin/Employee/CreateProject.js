@@ -6,26 +6,28 @@ import './CreateProject.css';
 import NavPages from '../NavPages';
 import successImage from '../../Image/checked.png'; // Import your success image here
 import { Modal} from 'react-bootstrap';
+import { useSelector } from "react-redux";
+
 
 const CreateProject = () => {
   const navigate = useNavigate();
-
+  const adminValue = useSelector(state=>state.adminLogin.value);
+  const adminId = adminValue.adminId;
   // State for form input values
-  const [formData, setFormData] = useState({
-    projectID: '',
+  const [formData, setFormData] = useState({    
     projectTitle: '',
     projectDescription: '',
-    teamMembers: [{ employeeID: '' }],
-    supervisorEmployees: [{ employeeID: '' }],
+    employeeTeamMembers: [{ employeeID: '' }],
+    supervisorTeamMembers: [{ employeeID: '' }],   
   });
 
   // Error state for each field
-  const [projectIDError, setProjectIDError] = useState('');
   const [projectTitleError, setProjectTitleError] = useState('');
   const [projectDescriptionError, setProjectDescriptionError] = useState('');
   const initialErrorState = { idError: ''};
-  const [teamMembersError, setTeamMembersError] = useState([initialErrorState]);
-  const [supervisorEmployeesError, setSupervisorEmployeesError] = useState([initialErrorState]);
+  const [employeeTeamMembersError, setemployeeTeamMembersError] = useState([initialErrorState]);
+  const [supervisorTeamMembersError, setsupervisorTeamMembersError] = useState([initialErrorState]);
+  
 
   // State for confirmation page
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -33,60 +35,60 @@ const CreateProject = () => {
   // State for showing the success modal
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  const validateProjectID = (id) => /^PROJ\d{5}$/.test(id);
+  // const validateProjectID = (id) => /^PROJ\d{3}$/.test(id);
   const validateEmployeeID = (id) => /^EMP\d{3}$/.test(id);
-  // const validateSupervisorID = (id) => /^STPL\d{5}$/.test(id);
+  // const validateSupervisorID = (id) => /^STPL\d{3}$/.test(id);
 
 
   const handleTeamMemberChange = (index, field, value) => {
-    const updatedTeamMembers = [...formData.teamMembers];
-    updatedTeamMembers[index][field] = value;
+    const updatedemployeeTeamMembers = [...formData.employeeTeamMembers];
+    updatedemployeeTeamMembers[index][field] = value;
     setFormData({
       ...formData,
-      teamMembers: updatedTeamMembers,
+      employeeTeamMembers: updatedemployeeTeamMembers,
     });
   };
 
   const handleSupervisorChange = (index, field, value) => {
-    const updatedSupervisorEmployees = [...formData.supervisorEmployees];
-    updatedSupervisorEmployees[index][field] = value;
+    const updatedsupervisorTeamMembers = [...formData.supervisorTeamMembers];
+    updatedsupervisorTeamMembers[index][field] = value;
     setFormData({
       ...formData,
-      supervisorEmployees: updatedSupervisorEmployees,
+      supervisorTeamMembers: updatedsupervisorTeamMembers,
     });
   };
 
   const handleAddTeamMember = () => {
     setFormData({
       ...formData,
-      teamMembers: [...formData.teamMembers, { employeeID: '' }],
+      employeeTeamMembers: [...formData.employeeTeamMembers, { employeeID: '' }],
     });
-    setTeamMembersError([...teamMembersError, { idError: '' }]);
+    setemployeeTeamMembersError([...employeeTeamMembersError, { idError: '' }]);
   };
 
   const handleRemoveTeamMember = (index) => {
-    const updatedTeamMembers = [...formData.teamMembers];
-    updatedTeamMembers.splice(index, 1);
+    const updatedemployeeTeamMembers = [...formData.employeeTeamMembers];
+    updatedemployeeTeamMembers.splice(index, 1);
     setFormData({
       ...formData,
-      teamMembers: updatedTeamMembers,
+      employeeTeamMembers: updatedemployeeTeamMembers,
     });
   };
 
   const handleAddSupervisor = () => {
     setFormData({
       ...formData,
-      supervisorEmployees: [...formData.supervisorEmployees, { employeeID: '' }],
+      supervisorTeamMembers: [...formData.supervisorTeamMembers, { employeeID: '' }],
     });
-    setSupervisorEmployeesError([...supervisorEmployeesError, { idError: '' }]);
+    setsupervisorTeamMembersError([...supervisorTeamMembersError, { idError: '' }]);
   };
 
   const handleRemoveSupervisor = (index) => {
-    const updatedSupervisorEmployees = [...formData.supervisorEmployees];
-    updatedSupervisorEmployees.splice(index, 1);
+    const updatedsupervisorTeamMembers = [...formData.supervisorTeamMembers];
+    updatedsupervisorTeamMembers.splice(index, 1);
     setFormData({
       ...formData,
-      supervisorEmployees: updatedSupervisorEmployees,
+      supervisorTeamMembers: updatedsupervisorTeamMembers,
     });
   };
 
@@ -106,32 +108,37 @@ const CreateProject = () => {
   };
 
   const handleConfirmSubmit = async () => {
-    const { projectID, projectTitle, projectDescription, teamMembers, supervisorEmployees } = formData;
+    const { projectTitle, projectDescription, employeeTeamMembers, supervisorTeamMembers } = formData;
 
-    const postData = {
-      projectID: formData.projectID,              // Ensure this is a string
-      projectTitle: formData.projectTitle,        // Ensure this is a non-empty string
-      projectDescription: formData.projectDescription,  // Ensure this is a non-empty string
-      teamMembers: formData.teamMembers.map(member => ({ employeeID: member.employeeID })), // Ensure this is an array of objects
-      supervisorEmployees: formData.supervisorEmployees.map(supervisor => ({ employeeID: supervisor.employeeID })), // Ensure this is an array of objects
-    };
-    
-    
+    // Convert lists to arrays of strings
+    const employeeIDs = employeeTeamMembers.map(member => member.employeeID);
+    const supervisorIDs = supervisorTeamMembers.map(supervisor => supervisor.employeeID);
 
     try {
-      
-      console.log('Payload being sent:', postData);
-      const response = await axios.post('http://localhost:8081/projects/saveproject', postData);
+      const response = await axios.post(
+        `http://localhost:8081/admin/createprojects`,
+        {
+          projectTitle,
+          projectDescription,
+          employeeTeamMembers: employeeIDs,
+          supervisorTeamMembers: supervisorIDs,
+        },
+        {
+          params: {
+            adminId
+          }
+        }
+      );
 
       console.log('API Response:', response.data);
       setShowSuccessModal(true); // Show success modal when form is successfully submitted
-      // Navigate back to Home'/admin' after successful submission
       navigate('/admin');
     } catch (error) {
       console.error('Error creating project:', error.message);
       alert('Error creating project. Please try again.');
       setFormSubmitted(false);
     }
+
   };
 
   const handleCancel = () => {
@@ -153,17 +160,13 @@ const CreateProject = () => {
     let isValid = true;
 
     // Reset error messages
-    setProjectIDError('');
+    
     setProjectTitleError('');
     setProjectDescriptionError('');
-    setTeamMembersError([]);
-    setSupervisorEmployeesError([]);
+    setemployeeTeamMembersError([]);
+    setsupervisorTeamMembersError([]);
 
-    // if (!validateProjectID(formData.projectID)) {
-    //   setProjectIDError('Project ID format is incorrect. Please use the format CPXXXXX.');
-    //   isValid = false;
-    // }
-
+    
     if (!formData.projectTitle) {
       setProjectTitleError('Project Title is required.');
       isValid = false;
@@ -174,7 +177,7 @@ const CreateProject = () => {
       isValid = false;
     }
 
-    const teamMembersErrors = formData.teamMembers.map((member, index) => {
+    const employeeTeamMembersErrors = formData.employeeTeamMembers.map((member, index) => {
       let idError = '';
       
       if (!validateEmployeeID(member.employeeID)) {
@@ -187,9 +190,9 @@ const CreateProject = () => {
       return { idError};
     });
 
-    setTeamMembersError(teamMembersErrors);
+    setemployeeTeamMembersError(employeeTeamMembersErrors);
 
-    const supervisorEmployeesErrors = formData.supervisorEmployees.map((supervisor, index) => {
+    const supervisorTeamMembersErrors = formData.supervisorTeamMembers.map((supervisor, index) => {
       let idError = '';
       
       // if (!validateSupervisorID(supervisor.employeeID)) {
@@ -200,7 +203,7 @@ const CreateProject = () => {
       return { idError };
     });
 
-    setSupervisorEmployeesError(supervisorEmployeesErrors);
+    setsupervisorTeamMembersError(supervisorTeamMembersErrors);
 
     return isValid;
   };
@@ -218,9 +221,7 @@ const CreateProject = () => {
                 <div className="createAdmin-confirmation-text-container">
                   <p className="createAdmin-confirmation-text">Confirm the following details before submitting:</p>
                 </div>
-                <div className="confirmation-field">
-                  <p>Project ID: {formData.projectID}</p>
-                </div>
+                
                 <div className="confirmation-field">
                   <p>Project Title: {formData.projectTitle}</p>
                 </div>
@@ -230,7 +231,7 @@ const CreateProject = () => {
                 <div className="confirmation-field">
                   <p>Team Members:</p>
                   <ul>
-                    {formData.teamMembers.map((member, index) => (
+                    {formData.employeeTeamMembers.map((member, index) => (
                       <li key={index}>{`ID: ${member.employeeID}`}</li>
                     ))}
                   </ul>
@@ -238,7 +239,7 @@ const CreateProject = () => {
                 <div className="confirmation-field">
                   <p>Supervisor Employees:</p>
                   <ul>
-                    {formData.supervisorEmployees.map((supervisor, index) => (
+                    {formData.supervisorTeamMembers.map((supervisor, index) => (
                       <li key={index}>{`ID: ${supervisor.employeeID}`}</li>
                     ))}
                   </ul>
@@ -257,13 +258,13 @@ const CreateProject = () => {
             ) : (
               // Form Fields
               <div className="createAdmin-body-ProjectForm border border-1 border-dark rounded">
-                <label>Project ID:</label>
+                {/* <label>Project ID:</label>
                 <input
                   type="text"
                   className="form-control-1-ProjectForm"
                   value={formData.projectID}
                   onChange={(e) => handleInputChange('projectID', e.target.value)}
-                />
+                /> */}
                 {/* {projectIDError && <p className="error-message-ProjectForm">{projectIDError}</p>} */}
 
                 <label>Project Title:</label>
@@ -286,7 +287,7 @@ const CreateProject = () => {
                 {/* Team Members */}
                 <div className="mt-3">
                   <label>Team Members:</label>
-                  {formData.teamMembers.map((member, index) => (
+                  {formData.employeeTeamMembers.map((member, index) => (
                     <div key={index} className="row team-member-container-ProjectForm">
                       <div className="col">
                         <input
@@ -296,8 +297,8 @@ const CreateProject = () => {
                           value={member.employeeID || ''}
                           onChange={(e) => handleTeamMemberChange(index, 'employeeID', e.target.value)}
                         />
-                        {teamMembersError[index].idError && (
-                          <p className="error-message-ProjectForm">{teamMembersError[index].idError}</p>
+                        {employeeTeamMembersError[index].idError && (
+                          <p className="error-message-ProjectForm">{employeeTeamMembersError[index].idError}</p>
                         )}
                       </div>
 
@@ -309,8 +310,8 @@ const CreateProject = () => {
                           value={member.employeeName || ''}
                           onChange={(e) => handleTeamMemberChange(index, 'employeeName', e.target.value)}
                         />
-                        {teamMembersError[index].nameError && (
-                          <p className="error-message-ProjectForm">{teamMembersError[index].nameError}</p>
+                        {employeeTeamMembersError[index].nameError && (
+                          <p className="error-message-ProjectForm">{employeeTeamMembersError[index].nameError}</p>
                         )}
                       </div> */}
 
@@ -339,7 +340,7 @@ const CreateProject = () => {
                 {/* Supervisor Employees */}
                 <div className="mt-3">
                   <label>Supervisor Employees:</label>
-                  {formData.supervisorEmployees.map((supervisor, index) => (
+                  {formData.supervisorTeamMembers.map((supervisor, index) => (
                     <div key={index} className="row supervisor-container-ProjectForm">
                       <div className="col">
                         <input
@@ -349,8 +350,8 @@ const CreateProject = () => {
                           value={supervisor.employeeID || ''}
                           onChange={(e) => handleSupervisorChange(index, 'employeeID', e.target.value)}
                         />
-                        {supervisorEmployeesError[index].idError && (
-                          <p className="error-message-ProjectForm">{supervisorEmployeesError[index].idError}</p>
+                        {supervisorTeamMembersError[index].idError && (
+                          <p className="error-message-ProjectForm">{supervisorTeamMembersError[index].idError}</p>
                         )}
                       </div>
 
@@ -362,8 +363,8 @@ const CreateProject = () => {
                           value={supervisor.employeeName || ''}
                           onChange={(e) => handleSupervisorChange(index, 'employeeName', e.target.value)}
                         />
-                        {supervisorEmployeesError[index].nameError && (
-                          <p className="error-message-ProjectForm">{supervisorEmployeesError[index].nameError}</p>
+                        {supervisorTeamMembersError[index].nameError && (
+                          <p className="error-message-ProjectForm">{supervisorTeamMembersError[index].nameError}</p>
                         )}
                       </div> */}
 
@@ -415,7 +416,7 @@ const CreateProject = () => {
         <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={showSuccessModal}  >
          <div className="d-flex flex-column modal-success p-4 align-items-center ">
              <img src={successImage} className="img-fluid mb-4" alt="SuccessCheck" />
-             <p className="mb-4 text-center"> Your Timesheet has submitted for approval.</p>
+             <p className="mb-4 text-center"> Project created Successfully.</p>
              <button className="btn  w-100 text-white" onClick={() => { setShowSuccessModal(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
          </div>
         </Modal>

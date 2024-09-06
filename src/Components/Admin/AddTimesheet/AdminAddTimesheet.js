@@ -372,8 +372,12 @@ const AdminAddTimesheet = () => {
            let statusValue= data[0].status;
 
 
-             dispatch(submitAdminON(true));
+
+            
              
+             dispatch(submitAdminON(true));
+              
+
               let receviedData=response.data;
              let lengthOfData=receviedData.length;
             let last=receviedData[lengthOfData-1];
