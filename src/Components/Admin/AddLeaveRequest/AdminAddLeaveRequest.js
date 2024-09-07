@@ -54,18 +54,18 @@ console.log(formik.values)
     
 
     async function onSubmit() {
-
+        console.log(formik.values);
         try {
             const leaveData = await axios.post("http://localhost:8081/admin/leave-requests", formik.values);
             if (leaveData.data) {
                 const {empId,status,id,startDate,endDate} =leaveData.data
                 setLeaveSuccessModal(true);
-                localStorage.setItem(`leaveSubmitEmpId${adminId}`,empId);
-                localStorage.setItem(`leaveStatus${adminId}`,status);
-                localStorage.setItem(`isLeaveSubmit${adminId}`,"true");
+                // localStorage.setItem(`leaveSubmitEmpId${adminId}`,empId);
+                // localStorage.setItem(`leaveStatus${adminId}`,status);
+                // localStorage.setItem(`isLeaveSubmit${adminId}`,"true");
                 localStorage.setItem(`leaveObjectId${adminId}`,id);
-                localStorage.setItem(`leaveStartDate${adminId}`,startDate);
-                localStorage.setItem(`leaveEndDate${adminId}`,endDate);
+                // localStorage.setItem(`leaveStartDate${adminId}`,startDate);
+                // localStorage.setItem(`leaveEndDate${adminId}`,endDate);
                 dispatch(leaveSubmitON(true));
                 formik.resetForm();
                 navigate("/admin")

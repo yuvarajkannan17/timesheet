@@ -50,8 +50,10 @@ const AdminAddTimesheet = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.get('https://6638af3a4253a866a24ec473.mockapi.io/cart');
-        setAvailableProjects(response.data);
+        const response = await axios.get('http://localhost:8081/admin/projects');
+        let projectDatas=response.data;
+        let projectIds= projectDatas.map((project)=>project.projectId);
+        setAvailableProjects(projectIds);
       } catch (error) {
         console.error('Error fetching projects:', error);
       }
@@ -60,20 +62,7 @@ const AdminAddTimesheet = () => {
     fetchProjects();
   }, []);
 
-  // function updatingEmployeeId(e) {
-  //   const id = e.target.value.trim();
-  //   setEmployeeId(id);
   
-  //   const regex = /^AD\d+$/;
-
-  //   if (id.trim() === "") {
-  //     setEmployeeIdError("Employee ID is required");
-  //   } else if (!regex.test(id)) {
-  //     setEmployeeIdError('Employee ID must start with "AD" followed by digits');
-  //   } else {
-  //     setEmployeeIdError("");
-  //   }
-  // }
 
   const handleForward = () => {
     if (selectedMonth) {
@@ -199,10 +188,7 @@ const AdminAddTimesheet = () => {
   const validateTimesheetData = () => {
     let isValid = true;
 
-    // if (!employeeId || employeeIdError) {
-    //   setEmployeeIdError("Employee Id is required");
-    //   isValid = false;
-    // }
+    
 
     const invalidRows = projectRows.filter(row => !row.projectId || !Object.values(row.workHours || {}).some(hours => hours > 0));
     if (invalidRows.length > 0) {
@@ -366,30 +352,31 @@ const AdminAddTimesheet = () => {
     if (formattedData.length > 0) {
       try {
         // Send the data to the backend
-        const response = await axios.post("http://localhost:8081/api/working-hours", formattedData);
-          if(response.data){
-            let data=response.data;
-           let statusValue= data[0].status;
-             dispatch(submitAdminON(true));
-              localStorage.setItem(`isSubmitOn${adminId}`, 'true');
-              let receviedData=response.data;
-             let lengthOfData=receviedData.length;
-            let last=receviedData[lengthOfData-1];
-            let lastDate=last.date;
-           let first= receviedData[0];
-          let adminId=  first.adminId;
-           let firstDate=first.date;
-            setSubmitAdminId(adminId);
-            setStartSubmitDate(firstDate);
-            setEndSubmitDate(lastDate);
-            localStorage.setItem(`startSubmitDate${adminId}`, firstDate);
-            localStorage.setItem(`endSubmitDate${adminId}`, lastDate);
-            localStorage.setItem(`submitAdminId${adminId}`, adminId);
-            localStorage.setItem(`statusValue,${adminId}`, statusValue);
+        // const response = await axios.post("http://localhost:8081/api/working-hours", formattedData);
+        //   if(response.data){
+        //     let data=response.data;
+        //    let statusValue= data[0].status;
+        //      dispatch(submitAdminON(true));
+        //       localStorage.setItem(`isSubmitOn${adminId}`, 'true');
+        //       let receviedData=response.data;
+        //      let lengthOfData=receviedData.length;
+        //     let last=receviedData[lengthOfData-1];
+        //     let lastDate=last.date;
+        //    let first= receviedData[0];
+        //   let adminId=  first.adminId;
+        //    let firstDate=first.date;
+        //     setSubmitAdminId(adminId);
+        //     setStartSubmitDate(firstDate);
+        //     setEndSubmitDate(lastDate);
+        //     localStorage.setItem(`startSubmitDate${adminId}`, firstDate);
+        //     localStorage.setItem(`endSubmitDate${adminId}`, lastDate);
+        //     localStorage.setItem(`submitAdminId${adminId}`, adminId);
+        //     localStorage.setItem(`statusValue,${adminId}`, statusValue);
          
-           setSuccessModalForTimesheet(true);
+        //    setSuccessModalForTimesheet(true);
            
-          }
+        //   }
+        console.log(formattedData);
       } catch (error) {
         // Handle errors in the request
         console.error("Error saving timesheet data:", error);
@@ -491,9 +478,9 @@ const AdminAddTimesheet = () => {
                   <tr key={rowIndex}>
                     <td style={{ width: "120px", backgroundColor: '#e8fcaf' }} >
                       <Select
-                        options={availableProjects.map((project) => ({
-                          value: project.projectId,
-                          label: project.projectId,
+                        options={availableProjects.map((projectId) => ({
+                          value: projectId,
+                          label: projectId,
                         }))}
                         value={project.projectId ? { value: project.projectId, label: project.projectId } : null}
                         onChange={(selectedOption) => handleProjectChange(rowIndex, selectedOption)}
