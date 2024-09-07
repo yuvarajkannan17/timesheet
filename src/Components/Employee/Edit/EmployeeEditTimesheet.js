@@ -83,11 +83,13 @@ function EmployeeEditTimesheet() {
     useEffect(() => {
         const fetchProjects = async () => {
             try {
-                const response = await axios.get('https://6638af3a4253a866a24ec473.mockapi.io/cart');
-                setAvailableProjects(response.data);
-            } catch (error) {
+                const response = await axios.get('http://localhost:8081/admin/projects');
+                 let projectDatas=response.data;
+                let projectIds= projectDatas.map((project)=>project.projectId);
+                setAvailableProjects(projectIds);
+              } catch (error) {
                 console.error('Error fetching projects:', error);
-            }
+              }
         };
 
         fetchProjects();
@@ -273,7 +275,7 @@ function EmployeeEditTimesheet() {
         setEditDataSubmitConfirmation(false);
 
         try {
-            let response = await axios.post("http://localhost:8002/api/working-hours", editableData);
+            let response = await axios.post("http://localhost:8090/workinghours/bulk", editableData);
 
             console.log(response.data);
 
@@ -341,7 +343,7 @@ function EmployeeEditTimesheet() {
                             </div>
                             <div className="d-flex justify-content-between">
                                 <div className="m-1">
-                                    <label htmlFor="emp_id"> Id :  </label>
+                                    <label htmlFor="emp_id"> EmployeeId :  </label>
                                     <input type="text" id="emp_id" className="mx-1" value={inputs.employeeId} readOnly />
                                 </div>
                             </div>
@@ -369,10 +371,10 @@ function EmployeeEditTimesheet() {
                                             <tr key={index}>
                                                 <td style={{ width: "120px", backgroundColor: '#e8fcaf' }}>
                                                     <Select
-                                                        value={availableProjects.find(project => project.projectId === projectId) ? { value: projectId, label: projectId } : null}
-                                                        options={availableProjects.map(project => ({
-                                                            value: project.projectId,
-                                                            label: project.projectId,
+                                                        value={availableProjects.find(project => project === projectId) ? { value: projectId, label: projectId } : null}
+                                                        options={availableProjects.map(projectId => ({
+                                                            value:projectId,
+                                                            label:projectId,
                                                         }))}
                                                         className="AddTimesheet my-2"
                                                         onChange={(selectedOption) => updateProject(selectedOption.value, index)}

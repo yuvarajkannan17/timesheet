@@ -69,6 +69,7 @@ function TimesheetLogin() {
             } else {
                 // Handle other response errors
                 setUserError(`Error: ${error.response.status} - ${error.response.statusText}`);
+                console.log(error.message)
             }
         } else if (error.request) {
             // The request was made but no response was received

@@ -20,13 +20,13 @@ export function EmployeeLeaveRequest() {
     const [numberOfDays, setNumberOfDays] = useState(0);
     let dispatch = useDispatch();
     let { isSubmit } = useSelector((state) => state.empLeaveSubmit.value);
-    console.log("sssssssss", isSubmit)
+    
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
-            empId:employeeId, 
-            startDate: new Date(),
-            endDate: new Date(),
+            employeeId, 
+            startDate: new Date().toISOString().split('T')[0],
+            endDate: new Date().toISOString().split('T')[0],
             noOfDays: 0,
             reason: "",
             comments: "",
@@ -35,7 +35,7 @@ export function EmployeeLeaveRequest() {
         validationSchema: schemaLeave,
         onSubmit
     })
-    console.log("date", typeof formik.values.startDate)
+    
     // Calculate the last day of June
     // const lastDayOfJune = new Date(new Date().getFullYear(), 5, 30); // Note: Month index is zero-based, so June is 5
 
@@ -55,6 +55,8 @@ export function EmployeeLeaveRequest() {
 
 
     async function onSubmit() {
+
+        console.log(formik.values);
 
         try {
             const leaveData = await axios.post("http://localhost:8087/leaverequests", formik.values);
@@ -109,10 +111,10 @@ export function EmployeeLeaveRequest() {
                                             <DatePicker
                                                 selected={formik.values.startDate}
                                                 onChange={date => {
-                                                    const startDate = date.toLocaleDateString('en-US'); // Example: "4/4/2024"
-                                                    formik.setFieldValue("startDate", date);
-
+                                                    const startDate = date.toISOString().split('T')[0]; 
+                                                    formik.setFieldValue("startDate", startDate);
                                                 }}
+                                                
                                                 minDate={new Date()}
 
                                                 placeholderText="dd/mm/yyyy"
@@ -124,10 +126,13 @@ export function EmployeeLeaveRequest() {
                                             <label className="pe-1"><span style={{ color: 'red' }}>*</span> End Date :</label>
                                             <DatePicker
                                                 selected={formik.values.endDate}
+                                               
+
                                                 onChange={date => {
-                                                    const endDate = date.toLocaleDateString('en-US'); // Example: "4/4/2024"
-                                                    formik.setFieldValue("endDate", date);
+                                                    const endDate = date.toISOString().split('T')[0]; 
+                                                    formik.setFieldValue("endDate", endDate);
                                                 }}
+                                                
                                                 minDate={new Date()}
 
                                                 placeholderText="dd/mm/yyyy"

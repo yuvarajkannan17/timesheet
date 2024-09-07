@@ -46,8 +46,10 @@ const AddTimesheet = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.get('https://6638af3a4253a866a24ec473.mockapi.io/cart');
-        setAvailableProjects(response.data);
+        const response = await axios.get('http://localhost:8081/admin/projects');
+         let projectDatas=response.data;
+        let projectIds= projectDatas.map((project)=>project.projectId);
+        setAvailableProjects(projectIds);
       } catch (error) {
         console.error('Error fetching projects:', error);
       }
@@ -93,6 +95,8 @@ const AddTimesheet = () => {
 
     setTimesheetData(newTimesheetData);
   };
+
+  console.log(availableProjects);
    
   const handleProjectChange = (rowIndex, selectedOption) => {
     if (selectedOption && selectedOption.value) {
@@ -343,36 +347,40 @@ const AddTimesheet = () => {
     });
   
   
+    console.log(formattedData);
     
   
     // Check if there is any data to send
     if (formattedData.length > 0) {
       try {
-        // Send the data to the backend
-        const response = await axios.post("http://localhost:8002/api/working-hours", formattedData);
-          if(response.data){
-            let data=response.data;
-           let statusValue= data[0].status;
-             dispatch(submitON(true));
-              localStorage.setItem(`isSubmitOn${employeeId}`, 'true');
-              let receviedData=response.data;
-             let lengthOfData=receviedData.length;
-            let last=receviedData[lengthOfData-1];
-            let lastDate=last.date;
-           let first= receviedData[0];
-          let empId=  first.employeeId;
-           let firstDate=first.date;
-            setSubmitEmployeeId(empId);
-            setStartSubmitDate(firstDate);
-            setEndSubmitDate(lastDate);
-            localStorage.setItem(`startSubmitDate${employeeId}`, firstDate);
-            localStorage.setItem(`endSubmitDate${employeeId}`, lastDate);
-            localStorage.setItem(`submitEmployeeId${employeeId}`, empId);
-            localStorage.setItem(`statusValue${employeeId}`, statusValue);
+        // // Send the data to the backend
+        // const response = await axios.post("http://localhost:8090/workinghours/bulk", formattedData);
+        // console.log(response);
+        //   if(response.data){
+        //     let data=response.data;
+        //    let statusValue= data[0].status;
+        //      dispatch(submitON(true));
+        //       localStorage.setItem(`isSubmitOn${employeeId}`, 'true');
+        //       let receviedData=response.data;
+        //      let lengthOfData=receviedData.length;
+        //     let last=receviedData[lengthOfData-1];
+        //     let lastDate=last.date;
+        //    let first= receviedData[0];
+        //   let empId=  first.employeeId;
+        //    let firstDate=first.date;
+        //     setSubmitEmployeeId(empId);
+        //     setStartSubmitDate(firstDate);
+        //     setEndSubmitDate(lastDate);
+        //     localStorage.setItem(`startSubmitDate${employeeId}`, firstDate);
+        //     localStorage.setItem(`endSubmitDate${employeeId}`, lastDate);
+        //     localStorage.setItem(`submitEmployeeId${employeeId}`, empId);
+        //     localStorage.setItem(`statusValue${employeeId}`, statusValue);
          
-           setSuccessModalForTimesheet(true);
+        //    setSuccessModalForTimesheet(true);
            
-          }
+        //   }
+
+        console.log(formattedData);
       } catch (error) {
         // Handle errors in the request
         console.error("Error saving timesheet data:", error);
@@ -476,9 +484,9 @@ const AddTimesheet = () => {
                   <tr key={rowIndex}>
                     <td style={{ width: "120px", backgroundColor: '#e8fcaf' }} >
                       <Select
-                        options={availableProjects.map((project) => ({
-                          value: project.projectId,
-                          label: project.projectId,
+                        options={availableProjects.map((projectId) => ({
+                          value: projectId,
+                          label: projectId,
                         }))}
                         value={project.projectId ? { value: project.projectId, label: project.projectId } : null}
                         onChange={(selectedOption) => handleProjectChange(rowIndex, selectedOption)}

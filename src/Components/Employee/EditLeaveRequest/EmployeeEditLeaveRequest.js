@@ -39,19 +39,18 @@ function EmployeeEditLeaveRequest() {
 
   async function fetchLeaveData() {
     try {
-      const response = await axios.get("http://localhost:8002/leave-requests");
+      const response = await axios.get(`http://localhost:8087/leaverequests/employee/${employeeId}`);
       const leaveRequest = response.data;
-       const filteringEmployeeId = leaveRequest.filter(item => item.empId === employeeId);
-       const pendingItems= filteringEmployeeId.filter(item=>item.status==="PENDING")
-      console.log(pendingItems);
-    
+      //  const filteringEmployeeId = leaveRequest.filter(item => item.empId === employeeId);
+       const pendingItems= leaveRequest.filter(item=>item.status==="PENDING")
+   
       if (pendingItems.length > 0) {
         const lastRequest = pendingItems[pendingItems.length - 1];
-        console.log("last",lastRequest)
+        console.log("last",lastRequest.employeeId)
         setLastLeaveRequestData(lastRequest);
         setEditId(lastRequest.id);
         formik.setValues({
-          empId:lastRequest.empId,
+          employeeId:lastRequest.employeeId,
           startDate: new Date(lastRequest.startDate),
           endDate: new Date(lastRequest.endDate),
           noOfDays: lastRequest.noOfDays,
@@ -115,7 +114,7 @@ console.log("last State",lastLeaveRequestData)
                                     <form onSubmit={formik.handleSubmit}>
                                     <div className="my-3 leave-row">
                                             <label> <span style={{ color: 'red' }}>*</span>Emp Id :</label>
-                                            <input type='text'  className='w-25' name="empId" value={formik.values.empId} onChange={formik.handleChange} ></input>
+                                            <input type='text'  className='w-25' name="empId" value={formik.values.employeeId} onChange={formik.handleChange} ></input>
 
                                   </div>
                                        <div>
