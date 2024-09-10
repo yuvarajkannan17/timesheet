@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../../Supervisor/Home/supervisor.css";
 import { useSelector, useDispatch } from "react-redux";
-// import { submitON, submitOFF } from "../../features/submitBtn";
+
 import { submitAdminON, submitAdminOFF } from '../../features/submitAdminButton';
 import { leaveSubmitON,leaveSubmitOFF } from '../../features/empLeaveSubmit';
 import axios from "axios";

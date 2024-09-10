@@ -4,6 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import './CreateProject.css';
 import NavPages from '../NavPages';
+import successCheck from '../../Image/checked.png'
+
 import successImage from '../../Image/checked.png'; // Import your success image here
 import { Modal } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
@@ -29,6 +31,7 @@ const CreateProject = () => {
 
   // State for confirmation page
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false); // Modal for confirmation
 
   // State for showing the success modal
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -103,6 +106,7 @@ const CreateProject = () => {
   };
 
   const handleConfirmSubmit = async () => {
+    setShowConfirmationModal(false); // Hide confirmation modal
     const { projectTitle, projectDescription, employeeTeamMembers, supervisorTeamMembers } = formData;
 
     try {
@@ -123,25 +127,34 @@ const CreateProject = () => {
 
       console.log('API Response:', response.data);
       setShowSuccessModal(true); // Show success modal when form is successfully submitted
-      navigate('/admin');
+      // navigate('/admin');
     } catch (error) {
       console.error('Error creating project:', error.message);
       alert('Error creating project. Please try again.');
       setFormSubmitted(false);
     }
   };
+  
 
   const handleCancel = () => {
     navigate('/admin');
   };
 
-  const handleConfirmationCancel = () => {
-    setFormSubmitted(false);
-  };
+  // const handleConfirmationCancel = () => {
+  //   setFormSubmitted(false);
+  // };
 
   const handleCloseSuccessModal = () => {
     setShowSuccessModal(false);
     navigate('/admin/updateprojectdetails');
+  };
+
+  const handleShowConfirmationModal = () => {
+    setShowConfirmationModal(true);
+  };
+
+  const handleConfirmationCancel = () => {
+    setShowConfirmationModal(false);
   };
 
   const validateFields = () => {
@@ -230,7 +243,7 @@ const CreateProject = () => {
                 </div>
                 <div className="confirmation-button-group">
                   <div className="d-flex justify-content-center">
-                    <button type="button" className="btn btn-success" onClick={handleConfirmSubmit}>
+                    <button type="button" className="btn btn-success" onClick={handleShowConfirmationModal}>
                       Confirm
                     </button>
                     <button type="button" className="btn btn-secondary ms-2" onClick={handleConfirmationCancel}>
@@ -361,15 +374,33 @@ const CreateProject = () => {
           </form>
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      <Modal show={showConfirmationModal} onHide={handleConfirmationCancel} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Project Submission</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Are you sure you want to create this project?</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <button className="btn btn-secondary" onClick={handleConfirmationCancel}>
+            Cancel
+          </button>
+          <button className="btn btn-success" onClick={handleConfirmSubmit}>
+            Confirm
+          </button>
+        </Modal.Footer>
+      </Modal>
       {showSuccessModal && (
-        <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={showSuccessModal}  >
+        <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={showSuccessModal} onHide={handleCloseSuccessModal} >
           <div className="d-flex flex-column modal-success p-4 align-items-center ">
-            <img src={successImage} className="img-fluid mb-4" alt="SuccessCheck" />
+            <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
             <p className="mb-4 text-center">Project created Successfully.</p>
             <button className="btn  w-100 text-white" onClick={handleCloseSuccessModal} style={{ backgroundColor: '#5EAC24' }}>Close</button>
           </div>
         </Modal>
-      )}
+     )} 
     </div>
   );
 };

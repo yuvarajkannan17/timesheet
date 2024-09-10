@@ -39,7 +39,7 @@ function AdminEditLeaveRequest() {
 
   async function fetchLeaveData() {
     try {
-      const response = await axios.get("http://localhost:8081/admin/leave-requests");
+      const response = await axios.get(`http://localhost:8081/admin/leave-requests/${adminId}`);
       const leaveRequest = response.data;
       const pendingItems = leaveRequest.filter(item => item.status === "PENDING");
       console.log(pendingItems);
