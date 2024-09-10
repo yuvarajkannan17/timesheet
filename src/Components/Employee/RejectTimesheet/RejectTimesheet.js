@@ -6,7 +6,10 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
 import successCheck from '../../Image/checked.png'
-import { useSelector } from "react-redux";
+
+import { submitON,submitOFF } from '../../features/submitBtn';
+import { useSelector,useDispatch } from 'react-redux';
+
 function RejectTimesheet() {
     const employeeValue = useSelector(state => state.employeeLogin.value);
     const employeeId = employeeValue.employeeId;
@@ -27,9 +30,10 @@ function RejectTimesheet() {
     const [editDataSaveConfirmation, setEditDataSaveConfirmation] = useState(false);
     const [saveModalForEmployeeRejectEdit, setSaveModalForEmployeeRejectEdit] = useState(false);
     const [rejectDataSubmitConfirmation, setRejectDataSubmitConfirmation] = useState(false);
-    const [successModalForEmployeeReject, setSuccessModalForEmployeeReject] = useState(false);
+    const [successModalForTimesheetApprove, setSuccessModalForTimesheetApprove] = useState(false);
+    const [viewRejectReason, setViewRejectReason] = useState("");
 
-
+    const dispatch= useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -48,10 +52,25 @@ function RejectTimesheet() {
             setsubmitTimesheetStatus(status);
 
             if (status === "REJECTED" && startSubmitDate && endSubmitDate) {
-                const response = await axios.get(`http://localhost:8002/api/working-hours/${employeeId}/range?startDate=${startSubmitDate}&endDate=${endSubmitDate}`)
+                const response = await axios.get(`http://localhost:8090/workinghours/employee/${employeeId}/range?startDate=${startSubmitDate}&endDate=${endSubmitDate}`)
                 const datas = response.data;
-                setTimesheetData(datas);
-                setEditableData(datas);
+                // Iterate over each timesheet entry and update rejectionReason and status
+                const updatedData = datas.map((data) => {
+                    // Modify rejectionReason and status
+                    return {
+                        ...data,
+                        rejectionReason: null, // Set rejectionReason to null
+                        status: "NEW",         // Set status to "NEW"
+                    };
+                });
+
+                // Set the updated data to the state
+                setTimesheetData(updatedData);
+                setEditableData(updatedData);
+
+                const rejectReason = datas[0].rejectionReason;
+                setViewRejectReason(rejectReason);
+
 
             }
 
@@ -66,8 +85,10 @@ function RejectTimesheet() {
     useEffect(() => {
         const fetchProjects = async () => {
             try {
-                const response = await axios.get('https://6638af3a4253a866a24ec473.mockapi.io/cart');
-                setAvailableProjects(response.data);
+                const response = await axios.get('http://localhost:8081/admin/projects');
+                let projectDatas = response.data;
+                let projectIds = projectDatas.map((project) => project.projectId);
+                setAvailableProjects(projectIds);
             } catch (error) {
                 console.error('Error fetching projects:', error);
             }
@@ -95,8 +116,8 @@ function RejectTimesheet() {
         setUniqueProjectIds(uniqueProjectIds);
     };
 
-    console.log(uniqueDates)
-    console.log(uniqueProjectIds)
+    // console.log(uniqueDates)
+    // console.log(uniqueProjectIds)
 
     useEffect(() => {
 
@@ -222,25 +243,13 @@ function RejectTimesheet() {
     }, [editableData])
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     async function editDataSaveConfirmationFun() {
         setEditDataSaveConfirmation(true);
     }
     async function rejectDataSubmitConfirmationFun() {
-       if(!error){
-        setRejectDataSubmitConfirmation(true);
-       }
+        if (!error) {
+            setRejectDataSubmitConfirmation(true);
+        }
     }
 
     function goToEmployeeHome() {
@@ -257,45 +266,54 @@ function RejectTimesheet() {
     }
     function rejectDataSumbitFun() {
         setRejectDataSubmitConfirmation(false);
-        setSuccessModalForEmployeeReject(true)
+        setSuccessModalForTimesheetApprove(true)
     }
 
 
     async function editDataSaveFun() {
         setEditDataSaveConfirmation(false);
-        // try {
-        //     await axios.put(`${employeeSheetUrl}/${editId}`, timesheetData);
-        //     setSaveModalForEmployeeRejectEdit(true);
-        //     console.log('Timesheet data saved successfully:', timesheetData);
 
-        // } catch (error) {
-        //     console.log(error)
-        // }
     }
     async function rejectDataSumbitFun() {
         setRejectDataSubmitConfirmation(false);
         try {
-            // await axios.put(`http://localhost:8002/api/working-hours/update`, editableData);
-            // setSuccessModalForEmployeeReject(true);
-
-            console.log(editableData)
-            
+            // Use Promise.all to handle multiple async requests
+            const promises = editableData.map(async (data) => {
+                // Await inside map by turning the callback into an async function
+                const response = await axios.put(`http://localhost:8090/workinghours/${data.id}`, data);
+                return response;  // Optionally return the response if needed
+            });
+    
+            // Await all promises
+            await Promise.all(promises);
+            dispatch(submitON(true));
+            localStorage.setItem(`statusValue${employeeId}`, "NEW");
+            localStorage.setItem(`isSubmitOn${employeeId}`, 'true');
+            setSuccessModalForTimesheetApprove(true);
+    
+            // Optionally handle success here
+            console.log("All requests successfully submitted");
         } catch (error) {
-            console.log(error)
+            console.error("Error submitting data:", error);
         }
+    }
+    
+    function closeSuccessModal(){
+        setSuccessModalForTimesheetApprove(false);
+        navigate('/employee')
     }
 
 
     return (
         <>
-            {timesheetData && (<div className="ti-background-clr">
-                <div className="ti-data-field-container pt-4">
+            <div className="ti-background-clr">
+               {timesheetData.length > 0 ? ( <div className="ti-data-field-container pt-4">
                     <div>
                         <p className='fs-4 text-danger '>Reject Timesheet</p>
                     </div>
 
                     <div className="p-1 my-2 border border-danger border-2 bg-light" >
-                        <p>Please reach out supervisor regarding your timesheet.</p>
+                        <p>{viewRejectReason}</p>
                     </div>
 
 
@@ -323,9 +341,9 @@ function RejectTimesheet() {
 
 
                     <div className=" border table-responsive border-1 rounded p-4 border-black my-4" style={{ position: 'relative', zIndex: 1 }}>
-                    {error && <div style={{ color: "red", marginLeft: "20px", fontWeight: 900 }}>{error}</div>}
+                        {error && <div style={{ color: "red", marginLeft: "20px", fontWeight: 900 }}>{error}</div>}
                         <table className="table table-bordered border-dark text-center">
-                            
+
                             <thead>
                                 <tr>
                                     <th style={{ backgroundColor: '#c8e184' }}>Date</th>
@@ -347,10 +365,10 @@ function RejectTimesheet() {
                                     <tr key={index}>
                                         <td style={{ width: "120px", backgroundColor: '#e8fcaf' }}>
                                             <Select
-                                                value={availableProjects.find(project => project.projectId === projectId) ? { value: projectId, label: projectId } : null}
+                                                value={availableProjects.find(project => project === projectId) ? { value: projectId, label: projectId } : null}
                                                 options={availableProjects.map(project => ({
-                                                    value: project.projectId,
-                                                    label: project.projectId,
+                                                    value: project,
+                                                    label: project,
                                                 }))}
                                                 className="AddTimesheet my-2"
                                                 onChange={(selectedOption) => updateProject(selectedOption.value, index)}
@@ -394,33 +412,16 @@ function RejectTimesheet() {
                         <span className='fw-bold'>Total Hours Worked : </span> <span className='fw-bold'>{totalWorkHours}</span>
                     </div>
                     <div className="d-flex justify-content-center" >
-                        <button className="btn btn-primary m-3 w-5" onClick={editDataSaveConfirmationFun} style={{ width: '100px' }}>Save</button>
+
                         <button className="btn btn-success m-3 w-5" onClick={rejectDataSubmitConfirmationFun} style={{ width: '100px' }}>Submit</button>
                         <button className="btn btn-secondary m-3 w-5" onClick={goToEmployeeHome} style={{ width: '100px' }}>Cancel</button>
                     </div>
 
-                </div>
-                {/* confirmation modal */}
-                <Modal show={editDataSaveConfirmation}>
-
-                    <Modal.Body >Do you want to Save this sheet?</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={editDataCancelFun}>
-                            Cancel
-                        </Button>
-                        <Button variant="primary" onClick={editDataSaveFun}>
-                            Save
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-                {/* modal for success edit */}
-                <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={saveModalForEmployeeRejectEdit}  >
-                    <div className="d-flex flex-column modal-success p-4 align-items-center ">
-                        <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
-                        <p className="mb-4 text-center"> Your Timesheet has been Saved. </p>
-                        <button className="btn  w-100 text-white" onClick={() => { setSaveModalForEmployeeRejectEdit(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
-                    </div>
-                </Modal>
+                </div> ): (<div className="no-timesheet">
+                    <h3>No Rejected Timesheet Available</h3>
+                    
+                </div>)}
+                
 
                 <Modal show={rejectDataSubmitConfirmation}>
                     <Modal.Body >Do you want to Submit?</Modal.Body>
@@ -434,14 +435,14 @@ function RejectTimesheet() {
                     </Modal.Footer>
                 </Modal>
 
-                <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForEmployeeReject}  >
+                <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForTimesheetApprove}  >
                     <div className="d-flex flex-column modal-success p-4 align-items-center ">
                         <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
                         <p className="mb-4 text-center"> Your Timesheet has submitted for approval.</p>
-                        <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForEmployeeReject(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+                        <button className="btn  w-100 text-white" onClick={closeSuccessModal} style={{ backgroundColor: '#5EAC24' }}>Close</button>
                     </div>
                 </Modal>
-            </div>)}
+            </div>
         </>
     );
 }

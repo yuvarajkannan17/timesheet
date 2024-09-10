@@ -16,10 +16,11 @@ function ViewRejectedLeaveRequests() {
     useEffect(() => {
         async function getRejectedLeaveRequests() {
             try {
-                const response = await axios.get("http://localhost:8002/leave-requests");
-               let filteringEmployeeId=response.data.filter(item=>item.empId===employeeId)
+                const response = await axios.get(`http://localhost:8087/leaverequests/employee/${employeeId}`);
+
                
-                   let rejectedOne= filteringEmployeeId.filter(leave => leave.status == "REJECTED");
+               
+                   let rejectedOne= response.data.filter(leave => leave.status == "REJECTED");
                     setRejectedLeaveRequests(rejectedOne.slice(-3));
 
             } catch (error) {

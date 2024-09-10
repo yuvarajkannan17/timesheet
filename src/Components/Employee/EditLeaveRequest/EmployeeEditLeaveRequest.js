@@ -68,6 +68,8 @@ console.log("last State",lastLeaveRequestData)
     fetchLeaveData();
   }, []);
 
+  
+
   useEffect(() => {
     if (formik.values.endDate && formik.values.startDate) {
       const start = new Date(formik.values.startDate);
@@ -85,7 +87,7 @@ console.log("last State",lastLeaveRequestData)
   async function editLeaveRequest() {
     setConfirmationModal(false)
     try {
-      await axios.put(`http://localhost:8002/leave-requests/${editId}`, formik.values);
+      await axios.put(`http://localhost:8087/leaverequests/${editId}`, formik.values);
       setSuccessModal(true)
       console.log("submitted successfully")
     } catch (error) {
@@ -93,8 +95,11 @@ console.log("last State",lastLeaveRequestData)
     }
   }
 
-  function goToEmployeeHome() {
-    navigate("/employee");
+ 
+
+  function closeSuccessModal(){
+     setSuccessModal(true);
+     navigate("/employee");
   }
   
 
@@ -248,7 +253,7 @@ console.log("last State",lastLeaveRequestData)
               </p>
               <button
                 className="btn w-100 text-white"
-                onClick={() => setSuccessModal(false)}                
+                onClick={closeSuccessModal}                
                 style={{ backgroundColor: "#5EAC24" }}
               >
                 Close

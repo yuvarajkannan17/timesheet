@@ -8,6 +8,7 @@ import { authenticate } from "../features/adminDetails";
 import { setEmployeeId } from "../features/employeeLogin";
 import { setAdminId } from "../features/adminLogin";
 import { setSuperadminId } from "../features/superadminLogin";
+import { setSupervisorId } from "../features/supervisorLogin";
 
 function TimesheetLogin() {
     const navigate = useNavigate();
@@ -53,6 +54,14 @@ function TimesheetLogin() {
                     
                         
                     }
+                    else if(key==="supervisorId"){
+                        let id=credentials[key]
+                        dispatch(setSupervisorId(id))
+                        navigate("/supervisor")
+                    
+                        
+                    }
+                   
                    
                 }
 
@@ -109,6 +118,7 @@ function TimesheetLogin() {
                                     <option value="">Select Role</option>
                                     <option value="employee">Employee</option>
                                     <option value="admin">Admin</option>
+                                    <option value="supervisor">Supervisor</option>
                                     <option value="superadmin">Superadmin</option>
                                 </select>
                             </div>
