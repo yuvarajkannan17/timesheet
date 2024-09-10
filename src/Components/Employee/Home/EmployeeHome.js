@@ -67,12 +67,12 @@ function EmployeeHome() {
   
 
          async  function leaveStatus(){
-                let response=  await axios.get("http://localhost:8002/leave-requests");
+                let response=  await axios.get(`http://localhost:8087/leaverequests/employee/${employeeId}`);
                 let data= response.data;
                
                  let submitLeaveRequest=data.filter(obj=>obj.id==leaveObjectId);
 
-                 console.log("uuuuuuuuuuu",submitLeaveRequest);
+                 
                                 
                  submitLeaveRequest.map((obj)=>{
                     setLeaveSubmitStartDate(obj.startDate);
@@ -100,7 +100,7 @@ function EmployeeHome() {
 
         if (startSubmitDate && endSubmitDate && submitEmployeeId) {
             try {
-                let response = await axios.get(`http://localhost:8002/api/working-hours/${submitEmployeeId}/range?startDate=${startSubmitDate}&endDate=${endSubmitDate}`);
+                let response = await axios.get(`http://localhost:8090/workinghours/employee/${submitEmployeeId}/range?startDate=${startSubmitDate}&endDate=${endSubmitDate}`);
                 let data = response.data;
                 let status = data[0].status;
                 // console.log(statusValue);

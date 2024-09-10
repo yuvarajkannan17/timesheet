@@ -14,6 +14,7 @@ import employeeLogin from './Components/features/employeeLogin';
 import adminLogin from './Components/features/adminLogin';
 import superadminLogin from './Components/features/superadminLogin';
 import submitAdminButton from './Components/features/submitAdminButton';
+import supervisorLogin from './Components/features/supervisorLogin';
   const store=configureStore({
 
     reducer:{
@@ -24,7 +25,8 @@ import submitAdminButton from './Components/features/submitAdminButton';
       employeeLogin,
       adminLogin,
       superadminLogin,
-      submitAdminButton
+      submitAdminButton,
+      supervisorLogin
     }
 
   })

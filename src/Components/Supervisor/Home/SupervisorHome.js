@@ -1,14 +1,140 @@
-import { useState } from 'react';
-import {  Link } from 'react-router-dom';
-import './supervisor.css'
+import { useState, useEffect } from 'react';
+import { Link,useLocation } from 'react-router-dom';
+import '../../Supervisor/Home/supervisor.css'
+import { useSelector, useDispatch } from 'react-redux';
+import { submitON, submitOFF } from '../../features/submitBtn';
+
+import { leaveSubmitON,leaveSubmitOFF } from '../../features/empLeaveSubmit';
+import axios from 'axios';
+
 function SupervisorHome() {
+    
+    const supervisorValue = useSelector(state=>state.supervisorLogin.value);
+    const supervisorId=supervisorValue.supervisord;
     const [isOpenTimesheet, setIsOpenTimesheet] = useState(true);
     const [isOpenLeaveManagement, setIsOpenLeaveManagement] = useState(true);
+    const [startSubmitDate, setStartSubmitDate] = useState("");
+    const [endSubmitDate, setEndSubmitDate] = useState("");
+    const [submitSupervisorId, setSubmitSupervisorId] = useState("")
+    const [statusValue, setStatusValue] = useState("")
+    const [countTimesheet,setCountTimesheet]=useState(0);
+    const [rejectTimesheetCount,setRejectTimesheetCount]=useState(0);
+    const [leaveObjectId,setLeaveObjectId]=useState("");
+    const [isLeaveSubmit,setIsLeaveSubmit]=useState("");
+    const [leaveSubmitEmpId,setLeaveSubmitEmpId]=useState("");
+    const [leaveSubmitStartDate,setLeaveSubmitStartDate]=useState("");
+    const [leaveSubmitEndDate,setLeaveSubmitEndDate]=useState("");
+    const [leaveSubmitStatus,setLeaveSubmitStatus]=useState("");
+    const [leavePending,setLeavePending]=useState(0)
+    const [rejectLeave,setRejectLeave]=useState(0);
+    const dispatch = useDispatch();
    
+       
+   
+           
+    useEffect(()=>{
+     setLeaveObjectId(localStorage.getItem(`leaveObjectId${supervisorId}`));
+     
+    },[])
+
+
+       
+    useEffect(() => {
+        // Retrieve the submit state from local storage when the component mounts
+        const savedSubmitState = localStorage.getItem(`isSubmitOn${supervisorId}`);
+        const startSubmitDate = localStorage.getItem(`startSubmitDate${supervisorId}`);
+        const endSubmitDate = localStorage.getItem(`endSubmitDate${supervisorId}`);
+        const submitEmployeeId = localStorage.getItem(`submitEmployeeId${supervisorId}`)
+        const status = localStorage.getItem(`statusValue${supervisorId}`)
+        if (savedSubmitState === 'true') {
+            setStartSubmitDate(startSubmitDate);
+            setEndSubmitDate(endSubmitDate);
+            setSubmitSupervisorId(submitSupervisorId)
+            setStatusValue(status)
+            dispatch(submitON(true)); // Set the Redux state if needed
+            setCountTimesheet(1);
+        } else {
+            setStartSubmitDate(startSubmitDate);
+            setEndSubmitDate(endSubmitDate);
+            setStatusValue(status)
+            setSubmitSupervisorId(submitSupervisorId)
+            
+        }
+    }, []);
+
+
+
+  
+
+         async  function leaveStatus(){
+                let response=  await axios.get("http://localhost:8002/leave-requests");
+                let data= response.data;
+               
+                 let submitLeaveRequest=data.filter(obj=>obj.id==leaveObjectId);
+
+                 console.log("uuuuuuuuuuu",submitLeaveRequest);
+                                
+                 submitLeaveRequest.map((obj)=>{
+                    setLeaveSubmitStartDate(obj.startDate);
+                    setLeaveSubmitEndDate(obj.endDate);
+                    setLeaveSubmitStatus(obj.status);
+            })
+                 let leaveStatus = submitLeaveRequest.some(obj => obj.status === "PENDING");
+                console.log(leaveStatus)
+                  if(leaveStatus){
+                     dispatch(leaveSubmitON(true));
+               
+                  }else{
+                    dispatch(leaveSubmitOFF(false));
+                   
+                     
+                  }
+                
+           }
+
+           useEffect(()=>{
+             leaveStatus();
+           },[leaveObjectId])
+
+    async function timesheetState() {
+
+        if (startSubmitDate && endSubmitDate && submitSupervisorId) {
+            try {
+                let response = await axios.get(`http://localhost:8002/api/working-hours/${submitSupervisorId}/range?startDate=${startSubmitDate}&endDate=${endSubmitDate}`);
+                let data = response.data;
+                let status = data[0].status;
+                // console.log(statusValue);
+
+                 if(status==="APPROVED"){
+                      setStatusValue(status);
+                      dispatch(submitOFF(false));
+                      localStorage.setItem(`isSubmitOn${supervisorId}`, 'false');
+                      localStorage.setItem(`statusValue${supervisorId}`, status);
+                 }else if(status==="REJECTED"){
+                     setStatusValue(status)
+                     dispatch(submitOFF(false));
+                      localStorage.setItem(`isSubmitOn${supervisorId}`, 'false');
+                      localStorage.setItem(`statusValue${supervisorId}`, status);
+                 }
+
+                
+            } catch (error) {
+                console.error("Error fetching timesheet data:", error);
+            }
+        }
+    }
+
+ 
+
+    useEffect(()=>{
+        timesheetState();
+    },[startSubmitDate,endSubmitDate,supervisorId])
+
 
     return (
         <>
             <div className="ti-background-clr">
+
                 <div className='ti-home-container'>
 
                     <div className='left-navigation'>
@@ -20,8 +146,8 @@ function SupervisorHome() {
                                 <div className="collapse-content ">
                                     <ul><Link to={'/supervisor/addtimesheet'}>Add Timesheet</Link></ul>
                                     <ul><Link to={'/supervisor/edittimesheet'}>Edit Timesheet</Link></ul>
-                                    <ul><Link to={'/supervisor/rejecttimesheet'}>Reject Timesheet</Link></ul>
-                                    <ul><Link to={'/supervisor/approvetimesheet'}>Approve Timesheet</Link></ul>
+                                    <ul><Link to={'/supervisor/rejecttimesheet'}>View Rejected Timesheet</Link></ul>
+                                    <ul><Link to={'/supervisor/employeetimesheetapproval'}>Employee Timesheet Approval</Link></ul>
 
                                 </div>
                             )}
@@ -34,8 +160,8 @@ function SupervisorHome() {
                                 <div className="collapse-content ">
                                     <ul><Link to={'/supervisor/leaverequest'}>Add Leave Request</Link></ul>
                                     <ul><Link to={'/supervisor/editleaverequest'}>Edit Leave Request</Link></ul>
-                                    <ul><Link to={'/supervisor/leaveapproval'}>Approve Leave Request</Link></ul>
-                                    <ul><Link to={'/supervisor/viewrejectedleaverequests'}>View Rejected Leave Requests</Link></ul>
+                                    <ul><Link to={'/supervisor/rejectedleaverequests'}>View Rejected Leave Requests</Link></ul>
+                                    <ul><Link to={'/supervisor/employeeleaverequestapprove'}>Employee Leave Requests Approve</Link></ul>
                                 </div>
                             )}
                         </div>
@@ -44,16 +170,16 @@ function SupervisorHome() {
                     <div className='right-details'>
 
                         {/* notification about timesheet */}
-                        <div className="row text-center ti-home-notification">
+                        {/* <div className="row text-center ti-home-notification">
 
-                            <div className="col   mx-5 my-2 p-2 ">Timesheet to be approved :</div>
-                            <div className="col  mx-5  my-2 p-2  ">Rejected Timesheets :</div>
+                            <div className="col   mx-5 my-2 p-2 ">Timesheet to be approved : {countTimesheet}</div>
+                            <div className="col  mx-5  my-2 p-2  ">Rejected Timesheets : {rejectTimesheetCount}</div>
 
                         </div>
                         <div className="row text-center ti-home-notification">
-                            <div className="col   mx-5 my-2 p-2 ">Leaves to be approved :</div>
-                            <div className="col  mx-5  my-2 p-2  ">Rejected Leave Request :</div>
-                        </div>
+                            <div className="col   mx-5 my-2 p-2 ">Leaves to be approved : {leavePending}</div>
+                            <div className="col  mx-5  my-2 p-2  ">Rejected Leave Request : {rejectLeave}</div>
+                        </div> */}
 
                         <div className="row text-center ti-home-content mt-2">
                             {/* timesheet status */}
@@ -61,12 +187,29 @@ function SupervisorHome() {
                                 <p className='p-2 title'>Your Submitted Timesheet</p>
                                 <div className='body   p-2 text-start'>
                                     <div className='m-4 ti-home-ti-status p-4'>
-                                        <p className=''>Timesheet Period :</p>
-                                        <p className=''>Created On :</p>
-                                        <div className='d-flex justify-content-around flex-wrap '>
-                                            <button className='status-btn p-2 m-2'>Status</button>
-                                            <button className='view-btn p-2 m-2'>View</button>
+                                        <h5 className=''> Timesheet Period </h5>
+
+                                        <div className='d-flex flex-column ms-4'>
+                                            <div className='d-flex align-items-center mb-2'>
+                                                <p className='mb-0 me-2'>Start date :</p>
+                                                <p className='mb-0'>{startSubmitDate}</p>
+                                            </div>
+                                            <div className='d-flex align-items-center mb-2'>
+                                                <p className='mb-0 me-2'>End date :</p>
+                                                <p className='mb-0'>{endSubmitDate}</p>
+                                            </div>
+                                            <div className='d-flex align-items-center'>
+                                                <p className='mb-0 me-2'>STATUS :</p>
+                                                {statusValue && <button className='view-btn p-2' style={{
+                                                    backgroundColor:
+                                                        statusValue === "APPROVED" ? "green" :
+                                                            statusValue === "REJECTED" ? "red" :
+                                                                "blue",
+                                                    color: "white"  // Set the text color to white for better visibility
+                                                }} >{statusValue}</button>}
+                                            </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -75,18 +218,45 @@ function SupervisorHome() {
                                 <p className='p-2 title'>Your Requested Leave</p>
                                 <div className='body   p-2 text-start'>
                                     <div className='m-4 ti-home-ti-status p-4'>
-                                        <p className=''> Requested Leave Period :</p>
-                                        <p className=''>Created On :</p>
-                                        <div className='d-flex justify-content-around flex-wrap '>
-                                            <button className='status-btn p-2 m-2'>Status</button>
-                                            <button className='view-btn p-2 m-2'>View</button>
+                                        <h5 className=''> Leave Request Period </h5>
+
+                                        <div className='d-flex flex-column ms-4'>
+                                            <div className='d-flex align-items-center mb-2'>
+                                                <p className='mb-0 me-2'>Start date :</p>
+                                                <p className='mb-0'>{leaveSubmitStartDate}</p>
+                                            </div>
+                                            <div className='d-flex align-items-center mb-2'>
+                                                <p className='mb-0 me-2'>End date :</p>
+                                                <p className='mb-0'>{leaveSubmitEndDate}</p>
+                                            </div>
+                                            <div className='d-flex align-items-center'>
+                                                <p className='mb-0 me-2'>STATUS :</p>
+                                                {leaveSubmitStatus && <button className='view-btn p-2' style={{
+                                                    backgroundColor:
+                                                        leaveSubmitStatus === "APPROVED" ? "green" :
+                                                            leaveSubmitStatus === "REJECTED" ? "red" :
+                                                                "blue",
+                                                    color: "white"  // Set the text color to white for better visibility
+                                                }} >{leaveSubmitStatus}</button>}
+                                            </div>
                                         </div>
+
                                     </div>
                                 </div>
+                               
                             </div>
+
+
                         </div>
+
+
                     </div>
+
+
+
                 </div>
+
+
             </div>
 
         </>

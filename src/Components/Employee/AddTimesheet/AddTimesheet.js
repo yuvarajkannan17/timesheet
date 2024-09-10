@@ -353,32 +353,32 @@ const AddTimesheet = () => {
     // Check if there is any data to send
     if (formattedData.length > 0) {
       try {
-        // // Send the data to the backend
-        // const response = await axios.post("http://localhost:8090/workinghours/bulk", formattedData);
-        // console.log(response);
-        //   if(response.data){
-        //     let data=response.data;
-        //    let statusValue= data[0].status;
-        //      dispatch(submitON(true));
-        //       localStorage.setItem(`isSubmitOn${employeeId}`, 'true');
-        //       let receviedData=response.data;
-        //      let lengthOfData=receviedData.length;
-        //     let last=receviedData[lengthOfData-1];
-        //     let lastDate=last.date;
-        //    let first= receviedData[0];
-        //   let empId=  first.employeeId;
-        //    let firstDate=first.date;
-        //     setSubmitEmployeeId(empId);
-        //     setStartSubmitDate(firstDate);
-        //     setEndSubmitDate(lastDate);
-        //     localStorage.setItem(`startSubmitDate${employeeId}`, firstDate);
-        //     localStorage.setItem(`endSubmitDate${employeeId}`, lastDate);
-        //     localStorage.setItem(`submitEmployeeId${employeeId}`, empId);
-        //     localStorage.setItem(`statusValue${employeeId}`, statusValue);
+        // Send the data to the backend
+        const response = await axios.post("http://localhost:8090/workinghours/bulk", formattedData);
+        console.log(response);
+          if(response.data){
+            let data=response.data;
+           let statusValue= data[0].status;
+             dispatch(submitON(true));
+              localStorage.setItem(`isSubmitOn${employeeId}`, 'true');
+              let receviedData=response.data;
+             let lengthOfData=receviedData.length;
+            let last=receviedData[lengthOfData-1];
+            let lastDate=last.date;
+           let first= receviedData[0];
+          let empId=  first.employeeId;
+           let firstDate=first.date;
+            setSubmitEmployeeId(empId);
+            setStartSubmitDate(firstDate);
+            setEndSubmitDate(lastDate);
+            localStorage.setItem(`startSubmitDate${employeeId}`, firstDate);
+            localStorage.setItem(`endSubmitDate${employeeId}`, lastDate);
+            localStorage.setItem(`submitEmployeeId${employeeId}`, empId);
+            localStorage.setItem(`statusValue${employeeId}`, statusValue);
          
-        //    setSuccessModalForTimesheet(true);
+           setSuccessModalForTimesheet(true);
            
-        //   }
+          }
 
         console.log(formattedData);
       } catch (error) {

@@ -18,6 +18,10 @@ function Header() {
 
   const adminValue = useSelector(state=>state.adminLogin.value);
   const adminId=adminValue.adminId;
+
+  const supervisorValue = useSelector(state=>state.supervisorLogin.value);
+  const supervisorId=supervisorValue.supervisorId;
+
   const superadminValue = useSelector(state=>state.superadminLogin.value);
   const superadminId=superadminValue.superadminId;
   
@@ -69,6 +73,7 @@ function Header() {
                         <div className=' ti-sign-in'>
                             { employeeId && <a href='#' className='nav-link'>{employeeId}</a>}
                             { adminId && <a href='#' className='nav-link'>{adminId}</a>}
+                            { supervisorId && <a href='#' className='nav-link'>{supervisorId}</a>}
                             { superadminId && <a href='#' className='nav-link'>{superadminId}</a>}
                         </div>
                     </div>
