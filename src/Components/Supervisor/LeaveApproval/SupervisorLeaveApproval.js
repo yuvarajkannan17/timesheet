@@ -4,8 +4,10 @@ import { Container } from "react-bootstrap";
 import { Modal, Button } from 'react-bootstrap';
 import successCheck from '../../Image/checked.png'
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-import leaveUrl from "../../Api/leaveRequest"
+
+
 function SupervisorLeaveApproval() {
   const [leaveDatas, setleaveDatas] = useState([])
   const [selectAllChecked, setSelectAllChecked] = useState(false);
@@ -17,29 +19,45 @@ function SupervisorLeaveApproval() {
   const [successModalForReject, setSuccessModalForReject] = useState(false)
   const [atLeastOneChecked, setAtLeastOneChecked] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
   
+
+
+  const supervisorValue = useSelector(state => state.supervisorLogin.value);
+  const supervisorId = supervisorValue.supervisorId;
+
   const navigate = useNavigate();
-  
+
+ 
+
+  async function getLeaveData() {
+    try {
+      const response = await axios.get(`http://localhost:8087/leaverequests/supervisor/${supervisorId}`);
+      const datas = response.data;
 
 
-  useEffect(() => {
 
-    async function getLeaveData() {
-      const leaves = await axios.get(leaveUrl);
-      const leaveList = leaves.data;
+
+      const filteredLeaveList = datas.filter(leave => leave.status === "PENDING");
+      const leaveList = filteredLeaveList.slice(-5);
+
       setleaveDatas(leaveList.map((leave) => ({
         ...leave,
         checked: false,
-
       })));
+    } catch (error) {
+      console.error("Error fetching leave data:", error);
     }
+  }
+
+  useEffect(() => {
 
 
     getLeaveData();
   }, [])
 
 
-
+  console.log(supervisorId);
   useEffect(() => {
     // Check if at least one checkbox is checked
     const isChecked = leaveDatas.some((sheet) => sheet.checked);
@@ -48,15 +66,16 @@ function SupervisorLeaveApproval() {
     if (isChecked) {
       setErrorMessage('');
     }
+
   }, [leaveDatas]);
 
   function validateRejection() {
 
     if (rejectReason !== "") {
 
-       setErrorForRejection("");
+      setErrorForRejection("");
 
-    } 
+    }
 
   }
 
@@ -106,57 +125,47 @@ function SupervisorLeaveApproval() {
   }
 
 
-  // timesheet approvel
   async function approveSaveConfirmation() {
     setAskConfirmationForApprove(false);
+
+    // Filter the leaves that are approved
     const approvedLeavesRequest = leaveDatas.filter((leave) => leave.checked === true);
 
+      let approvalIds=approvedLeavesRequest.map(leave=>leave.id);
 
+      console.log(approvalIds);
 
     try {
-      // Update the status of approved sheets and track their IDs
-      const updates = approvedLeavesRequest.map(async (leave) => {
-        // Update the status of the sheet locally
-        const updatedLeavesRequest = { ...leave, status: "Your leave request has been approved" };
+      // Create an array of promises
+      
+        // Perform the PUT request
+        const response = await axios.post(`http://localhost:8087/leaverequests/approve-multiple`,{
+           leaveRequestIds: approvalIds,
+           supervisorId
+        });
 
+        if (response.data) {
+          getLeaveData();
+          // Show success modal
+          setSuccessModalForApprove(true);
+        }
 
-        // Make a PUT request to update the status of the sheet in the API
-        const response = await axios.put(`${leaveUrl}/${updatedLeavesRequest.id}`, updatedLeavesRequest);
-        const responseData = response.data;
+      
 
-        // console.log("Updated approve leaves request:", responseData);
-
-        return updatedLeavesRequest;
-      });
-
-
-
-      // Wait for all updates to finish
-      const updatedLeavesRequest = await Promise.all(updates);
-
-      // Update the state with the updated data
-      setleaveDatas(updatedLeavesRequest);
-
-      // Reset checkbox selection
-      // cancelLeaveFun();
-
-      // Show success modal
-      setSuccessModalForApprove(true);
     } catch (error) {
-      console.log('API error', error);
+      console.error('Error updating leave status:', error);
     }
   }
+
 
   // cancel the approvel
   function approveCancelConfirmation() {
     setAskConfirmationForApprove(false);
 
   }
-
+  console.log(rejectReason);
   // reject the timesheet
   async function rejectSaveConfirmation() {
-
-
     // First validate the rejection reason
     if (!rejectReason) {
       // Set the error message if no reason is selected
@@ -168,36 +177,44 @@ function SupervisorLeaveApproval() {
     setAskConfirmationForReject(false);
     const rejectLeaves = leaveDatas.filter((leave) => leave.checked === true);
 
+      let rejectIds=rejectLeaves.map(leave=>leave.id);
 
-
+      
+  
     try {
-      // Update the status of approved sheets and track their IDs
-      const updates = rejectLeaves.map(async (leave) => {
-        // Update the status of the sheet locally
-        const updatedLeave = { ...leave, status: "Your timesheet has been rejected", rejectReason:rejectReason };
 
-        // Make a PUT request to update the status of the sheet in the API
-        const response = await axios.put(`${leaveUrl}/${updatedLeave.id}`, updatedLeave);
-        // console.log("Updated reject sheet:", response.data);
+         let response=await axios.post("http://localhost:8087/leaverequests/reject-multiple",{
+          
+            leaveRequestIds: rejectIds,
+            reason: rejectReason,
+            supervisorId
+        
+         })
 
-        return updatedLeave;
-      });
+      if (response.data) {
 
-      // Wait for all updates to finish
-      const updatedLeave = await Promise.all(updates);
+        getLeaveData();
+        setRejectReason("");
+        // Show success modal
+        setSuccessModalForReject(true);
 
-      // Update the state with the updated data
-      setleaveDatas(updatedLeave);
+      }
 
-      // Reset checkbox selection
-      // cancelLeaveFun();
 
-      // Show success modal
-      setSuccessModalForReject(true);
+
+
+
+
+
     } catch (error) {
-      console.log('API error', error);
+      if (error.response) {
+        console.log('API error', error.response.data);
+        console.log('Status', error.response.status);
+        console.log('Headers', error.response.headers);
+      } else {
+        console.log('Error', error.message);
+      }
     }
-
   }
 
   // reject cancel
@@ -206,17 +223,7 @@ function SupervisorLeaveApproval() {
 
   }
 
-  function goToLeaveDetails(id, check) {
 
-    if (check) {
-      console.log(id)
-      navigate('/supervisor/leavedetails/' + id)
-    } else {
-      setErrorMessage("Please select the person you wish to view !!!")
-    }
-
-
-  }
 
   function selectAllCheckbox(event) {
     const check = event.target.checked;
@@ -235,7 +242,7 @@ function SupervisorLeaveApproval() {
     <>
 
       <div className="ti-background-clr">
-        <Container>
+        {leaveDatas.length > 0 ? (<Container>
           <div className="py-3 ">
             <p className=" text-center spr-approval-title ">Leave List</p>
           </div>
@@ -250,9 +257,11 @@ function SupervisorLeaveApproval() {
                 <tr className="text-center spr-approval-header" >
                   <th> <input className="me-1" type="checkbox" checked={selectAllChecked} onChange={selectAllCheckbox} />Select </th>
                   <th>Emp Id</th>
-                  <th>Emp Name</th>
+                  <th>Leave Type</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
                   <th>No Of Days Leave</th>
-                  <th>Action</th>
+                  <th>Comments</th>
                 </tr>
               </thead>
               <tbody >
@@ -267,11 +276,14 @@ function SupervisorLeaveApproval() {
                         onChange={() => handleCheckboxChange(sheet.id)}
                       ></input>
                     </td>
-                    <td>{sheet.id}</td>
-                    <td>{sheet.name}</td>
-                    <td>{sheet.numberOfDays}</td>
+                    <td>{sheet.employeeId}</td>
+                    <td>{sheet.reason}</td>
+                    <td>{sheet.startDate}</td>
+                    <td>{sheet.endDate}</td>
+                    <td>{sheet.noOfDays}</td>
+                    <td>{sheet.comments}</td>
 
-                    <td><button className="btn btn-primary" onClick={() => { goToLeaveDetails(sheet.id, sheet.checked) }}>Edit</button></td>
+
 
                   </tr>
                 )) : ""}
@@ -286,7 +298,10 @@ function SupervisorLeaveApproval() {
             <button className="btn btn-danger m-2" onClick={rejectLeaveFun}>Reject</button>
             <button className="btn btn-secondary m-2" onClick={cancelLeaveFun} >Cancel</button>
           </div>
-        </Container>
+        </Container>) : (<div className="no-timesheet">
+          <h3>No Submitted Leave Request</h3>
+
+        </div>)}
 
 
         {/* confirmation modal for approvel */}
@@ -329,12 +344,12 @@ function SupervisorLeaveApproval() {
                   <option value="excessive requests">Excessive Requests</option>
                   <option value="busy periods">Busy Periods</option>
                   <option value="incomplete work">Incomplete Works</option>
-                  <option value="maternity-leave">Policy Violations</option>
-                  
+                  <option value="Policy Violations">Policy Violations</option>
+
                 </select>
 
               </div>
-              <div className="text-danger  m-2">{ errorForRejection ? errorForRejection :""}</div>
+              <div className="text-danger  m-2">{errorForRejection ? errorForRejection : ""}</div>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={rejectCancelConfirmation}>
@@ -356,7 +371,7 @@ function SupervisorLeaveApproval() {
             </div>
           </Modal>
 
-       
+
 
         </div>
       </div>

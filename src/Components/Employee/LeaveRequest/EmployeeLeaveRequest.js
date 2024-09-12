@@ -18,6 +18,9 @@ export function EmployeeLeaveRequest() {
  const employeeId=employeeValue.employeeId;
     const [leaveSuccessModal, setLeaveSuccessModal] = useState(false);
     const [numberOfDays, setNumberOfDays] = useState(0);
+    const [approvedLeaveCount,setApprovedLeaveCount]=useState(0);
+    const [totalLeaves,setTotalLeaves]=useState(18)
+    const [pendingLeaves,setPendingLeaves]=useState(0);
     let dispatch = useDispatch();
     let { isSubmit } = useSelector((state) => state.empLeaveSubmit.value);
     
@@ -36,6 +39,20 @@ export function EmployeeLeaveRequest() {
         onSubmit
     })
     
+
+    function calculatePendingLeaves(){
+
+        let count=0;
+
+        count=totalLeaves-approvedLeaveCount;
+
+        setPendingLeaves(count);
+
+    }
+
+    useEffect(()=>{
+        calculatePendingLeaves();
+    },[approvedLeaveCount,totalLeaves])
     // Calculate the last day of June
     // const lastDayOfJune = new Date(new Date().getFullYear(), 5, 30); // Note: Month index is zero-based, so June is 5
 
@@ -52,6 +69,33 @@ export function EmployeeLeaveRequest() {
 
         }
     }, [formik.values.startDate, formik.values.endDate]);
+
+    async function calculateApprovedLeave() {
+        try {
+          // Make the API request
+          let response = await axios.get(`http://localhost:8087/leaverequests/employee/${employeeId}`);
+    
+          // Extract the actual data (leaves)
+          let totalLeaves = response.data;
+    
+          // Filter for approved leaves
+          let approvedLeaves = totalLeaves.filter(leaves => leaves.status === "APPROVED");
+    
+          // Set the approved leave count in state
+          let approvedCount=  approvedLeaves.length;
+
+           if(approvedCount>0){
+            
+           setApprovedLeaveCount(approvedCount);
+           }
+        } catch (error) {
+          console.error("Error fetching leaves data:", error);
+        }
+      }
+
+      useEffect(()=>{
+        calculateApprovedLeave();
+      },[])
 
 
     async function onSubmit() {
@@ -89,8 +133,10 @@ export function EmployeeLeaveRequest() {
     return (
         <>
             <div className="ti-background-clr">
+                
                 <h5 className="text-center pt-4">LEAVE REQUEST</h5>
                 <div className="ti-leave-management-container  ">
+                    <h5 className=''> YOUR AVAILABLE LEAVES : {pendingLeaves}</h5>
                     <div className='bg-white  '>
 
                         <div className="row ">

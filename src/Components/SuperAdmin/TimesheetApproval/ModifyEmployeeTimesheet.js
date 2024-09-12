@@ -41,9 +41,31 @@ function ModifyAdminTimesheet() {
         setEditApproveConfirmationModal(false);
     }
 
+    async function updateTimesheet(){
+
+        try{
+
+            editableData.map(async(data)=>{
+
+               let response= await axios.put("http://localhost:8080/admins/working-hours/update",data)
+
+               
+
+            })
+
+        }catch(error){
+
+            console.log("error");
+
+        }
+     }
+
+   
+
     async function editTimesheetApproveSave() {
         setEditApproveConfirmationModal(false);
         
+        updateTimesheet();
 
         try {
             await axios.put(`http://localhost:8080/admins/working-hours/${id}/approve-range?startDate=${startDate}&endDate=${endDate}`);
@@ -74,6 +96,8 @@ function ModifyAdminTimesheet() {
 
     async function editTimesheetRejectSave() {
         setEditRejectConfirmationModal(false);
+
+        updateTimesheet();
 
         try {
 
@@ -130,6 +154,7 @@ function ModifyAdminTimesheet() {
 
 
 
+    
 
     async function getEditTimesheet() {
         const response = await axios.get(`http://localhost:8080/admins/working-hours/${id}/range?startDate=${startDate}&endDate=${endDate}`);

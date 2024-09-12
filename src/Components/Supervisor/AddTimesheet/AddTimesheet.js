@@ -116,7 +116,7 @@ const AddTimesheet = () => {
       setProjectIdError("Please select a valid project");
     }
   };
-  console.log("project",projectRows);
+  
   const isSunday = (date) => date.getDay() === 0;
 
   const handleWorkHoursChange = (rowIndex, columnIndex, value) => {
@@ -221,7 +221,7 @@ const AddTimesheet = () => {
           if (row.projectId) {
             // Ensure that each date for each project has an entry
             formattedData.push({
-              supervisorId,
+              employeeId:supervisorId,
               projectId: row.projectId,
               date: dateStr,
               hours: 0, // Default to zero hours
@@ -251,7 +251,7 @@ const AddTimesheet = () => {
                 existingEntry.hours = parseFloat(hours);
               } else {
                 formattedData.push({
-                  supervisorId,
+                  employeeId:supervisorId,
                   projectId: row.projectId,
                   date: dateStr,
                   hours: parseFloat(hours),
@@ -305,7 +305,7 @@ const AddTimesheet = () => {
         if (row.projectId) {
           // Ensure that each date for each project has an entry
           formattedData.push({
-            supervisorId,
+            employeeId:supervisorId,
             projectId: row.projectId,
             date: dateStr,
             hours: 0, // Default to zero hours
@@ -326,7 +326,7 @@ const AddTimesheet = () => {
             // Find and update existing entry or add new one if not present
             const existingEntry = formattedData.find(
               (entry) =>
-                entry.supervisorId === supervisorId &&
+                entry.employeeId === supervisorId &&
                 entry.projectId === row.projectId &&
                 entry.date === dateStr
             );
@@ -335,7 +335,7 @@ const AddTimesheet = () => {
               existingEntry.hours = parseFloat(hours);
             } else {
               formattedData.push({
-                supervisorId,
+                employeeId:supervisorId,
                 projectId: row.projectId,
                 date: dateStr,
                 hours: parseFloat(hours),
@@ -355,9 +355,13 @@ const AddTimesheet = () => {
       try {
         // Send the data to the backend
         const response = await axios.post("http://localhost:8086/sup/api/working-hours", formattedData);
-        console.log(response);
+        console.log(response)
+        
           if(response.data){
             let data=response.data;
+
+            console.log(data);
+
            let statusValue= data[0].status;
              dispatch(submitON(true));
               localStorage.setItem(`isSubmitOn${supervisorId}`, 'true');
@@ -398,7 +402,7 @@ const AddTimesheet = () => {
     setSaveModalForTimesheet(false)
     navigate("/supervisor")
 }
-  
+  console.log(projectRows)
   
   
 
