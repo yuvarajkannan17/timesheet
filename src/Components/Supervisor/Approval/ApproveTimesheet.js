@@ -6,38 +6,63 @@ import successCheck from '../../Image/checked.png'
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import employeeSheetUrl from "../../Api/employeeEdit";
 
 function ApproveTimesheet() {
-
   const [timesheetDatas, setTimesheetDatas] = useState([])
   const [selectAllChecked, setSelectAllChecked] = useState(false);
-  const [rejectReason, setRejectReason] = useState('Your timesheet has been rejected. Please reach out supervisor regarding your timesheet.');
+  const [rejectReason, setRejectReason] = useState(' Your timesheet has been rejected. Please reach out supervisor regarding your timesheet. ');
   const [askConfitrmationForApprove, setAskConfirmationForApprove] = useState(false)
   const [askConfitrmationForReject, setAskConfirmationForReject] = useState(false)
   const [successModalForApprove, setSuccessModalForApprove] = useState(false)
   const [successModalForReject, setSuccessModalForReject] = useState(false)
   const [atLeastOneChecked, setAtLeastOneChecked] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  
+
+  const supervisorValue = useSelector(state=>state.supervisorLogin.value);
+  const supervisorId=supervisorValue.supervisorId;
+ 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // console.log(timesheetDatas)
-  useEffect(() => {
+  
 
-    async function getTimesheet() {
-      const timesheets = await axios.get(employeeSheetUrl);
-      const datasOfTimesheet = timesheets.data;
-      setTimesheetDatas(datasOfTimesheet.map((sheetData) => ({
-        ...sheetData,
-        checked: false,
+   async function getTimesheet() {
+    try {
+        const timesheets = await axios.get(`http://localhost:8090/workinghours/supervisor/${supervisorId}/new`);
+        const datasOfTimesheet = timesheets.data;
 
-      })));
+        console.log(datasOfTimesheet);
+
+        let timehseetData=[];
+
+        for (let empId in datasOfTimesheet) {
+          const adminData = datasOfTimesheet[empId];
+          const workingHours = adminData.workingHours;
+  
+          // Fetch startDate and endDate
+          const startDate = workingHours[0].date;
+          const endDate = workingHours[workingHours.length - 1].date;
+          const totalHours = adminData.totalHours;
+          const adminId=adminData.employeeId;
+          timehseetData=[...timehseetData,{adminId,startDate,endDate,totalHours,checked:false}];
+        }
+        
+            setTimesheetDatas(timehseetData.slice(-5));
+         
+           
+        
+
+    } catch (error) {
+        console.error("Error fetching timesheet data:", error);
     }
+}
 
 
+  useEffect(()=>{
     getTimesheet();
-  }, [])
+  },[])
+
+  console.log(timesheetDatas);
 
   useEffect(() => {
     // Check if at least one checkbox is checked
@@ -76,16 +101,16 @@ function ApproveTimesheet() {
 
   // reset the timesheet
   function cancelsheetFun() {
-    navigate('/supervisor')
+    navigate('/superadmin/createadmin')
   }
 
 
   // update the timesheetCheckBox
-  function handleCheckboxChange(id) {
+  function handleCheckboxChange(adminId) {
 
     setTimesheetDatas((prevData) =>
       prevData.map((sheet) =>
-        sheet.id === id ? { ...sheet, checked: !sheet.checked } : sheet
+        sheet.adminId === adminId ? { ...sheet, checked: !sheet.checked } : sheet
       )
     );
   }
@@ -95,38 +120,41 @@ function ApproveTimesheet() {
   async function approveSaveConfirmation() {
     setAskConfirmationForApprove(false);
     const approvedSheets = timesheetDatas.filter((sheet) => sheet.checked === true);
+       console.log(approvedSheets);
 
 
 
     try {
       // Update the status of approved sheets and track their IDs
       const updates = approvedSheets.map(async (sheet) => {
-        // Update the status of the sheet locally
-        const updatedSheet = { ...sheet, status: "Your timesheet has been approved" };
+       
+       
 
 
         // Make a PUT request to update the status of the sheet in the API
-        const response = await axios.put(`${employeeSheetUrl}/${updatedSheet.id}`, updatedSheet);
+        const response = await axios.put(`http://localhost:8080/admins/working-hours/${sheet.adminId}/approve-range?startDate=${sheet.startDate}&endDate=${sheet.endDate}`);
         const responseData = response.data;
 
-        console.log("Updated approve sheet:", responseData);
+        if (responseData) {
+          setSuccessModalForApprove(true);
+        }
 
-        return updatedSheet;
+        
       });
 
 
 
       // Wait for all updates to finish
-      const updatedSheets = await Promise.all(updates);
+      // const updatedSheets = await Promise.all(updates);
     
-      // Update the state with the updated data
-      setTimesheetDatas(updatedSheets);
+      // // Update the state with the updated data
+      // setTimesheetDatas(updatedSheets);
 
-      // Reset checkbox selection
-      // cancelsheetFun();
+      // // Reset checkbox selection
+      // // cancelsheetFun();
 
-      // Show success modal
-      setSuccessModalForApprove(true);
+      // // Show success modal
+      // setSuccessModalForApprove(true);
     } catch (error) {
       console.log('API error', error);
     }
@@ -143,32 +171,28 @@ function ApproveTimesheet() {
     setAskConfirmationForReject(false);
     const rejectSheets = timesheetDatas.filter((sheet) => sheet.checked === true);
 
+    console.log(rejectSheets);
+
 
 
     try {
       // Update the status of approved sheets and track their IDs
       const updates = rejectSheets.map(async (sheet) => {
         // Update the status of the sheet locally
-        const updatedSheet = { ...sheet, status: "Your timesheet has been rejected", rejectReason: rejectReason  };
+        const updatedSheet = { ...sheet,  rejectionReason: rejectReason  };
 
         // Make a PUT request to update the status of the sheet in the API
-        const response = await axios.put(`${employeeSheetUrl}/${updatedSheet.id}`, updatedSheet);
-        // console.log("Updated reject sheet:", response.data);
+        const response = await axios.put(`http://localhost:8080/admins/working-hours/${sheet.adminId}/reject-range?startDate=${sheet.startDate}&endDate=${sheet.endDate}&reason=${rejectReason}`);
+        
+        if(response.data){
+          setSuccessModalForReject(true);
+        }
 
-        return updatedSheet;
+        
       });
 
-      // Wait for all updates to finish
-      const updatedSheets = await Promise.all(updates);
-
-      // Update the state with the updated data
-      setTimesheetDatas(updatedSheets);
-
-      // Reset checkbox selection
-      // cancelsheetFun();
-
-      // Show success modal
-      setSuccessModalForReject(true);
+      
+     
     } catch (error) {
       console.log('API error', error);
     }
@@ -181,11 +205,11 @@ function ApproveTimesheet() {
 
   }
 
-  function goEditPage(id, check) {
+  function goEditPage(id,check,startDate,endDate) {
 
     if (check) {
       console.log(id)
-      navigate('/supervisor/modifyEmployeeTimesheet/' + id)
+      navigate('/supervisor/modifyEmployeeTimesheet/' + id,{state:{startDate,endDate}})
     } else {
       setErrorMessage("Please select the timesheet you wish to edit!!!")
     }
@@ -205,12 +229,22 @@ function ApproveTimesheet() {
 
   }
 
+  function closeSuccessModal(){
+    setSuccessModalForApprove(false);
+    
+  }
+
+  function closeRejectModal(){
+    setSuccessModalForReject(false);
+    getTimesheet();
+  }
+
 
   return (
     <>
-
+       
       <div className="ti-background-clr">
-        <Container>
+       {timesheetDatas.length>0 ?  (<Container>
           <div className="py-3 ">
             <p className=" text-center spr-approval-title ">Timesheet List</p>
           </div>
@@ -224,9 +258,9 @@ function ApproveTimesheet() {
               <thead className="" >
                 <tr className="text-center spr-approval-header" >
                   <th> <input className="me-1" type="checkbox" checked={selectAllChecked} onChange={selectAllCheckbox} />Select </th>
-                  <th>Emp Id</th>
-                  <th>Emp Name</th>
-                  <th>Timesheet Period</th>
+                  <th>Employee Id</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
                   <th>No hrs Submitted</th>
                   <th>Action</th>
                 </tr>
@@ -234,20 +268,20 @@ function ApproveTimesheet() {
               <tbody >
                 {/* table body */}
                 {timesheetDatas ? timesheetDatas.map((sheet) => (
-                  <tr key={sheet.id} className="text-center">
+                  <tr key={sheet.adminId} className="text-center">
                     <td>
                       <input
                         type="checkbox"
                         name="approvalchkTimesheet"
                         checked={sheet.checked}
-                        onChange={() => handleCheckboxChange(sheet.id)}
+                        onChange={() => handleCheckboxChange(sheet.adminId)}
                       ></input>
                     </td>
-                    <td>{sheet.empId}</td>
-                    <td>{sheet.empName}</td>
-                    <td>{sheet.StartDate}</td>
-                    <td>{sheet.noOfHoursWorked}</td>
-                    <td><button className="btn btn-primary" onClick={() => { goEditPage(sheet.id, sheet.checked) }}>Edit</button></td>
+                    <td>{sheet.adminId}</td>
+                    <td>{sheet.startDate}</td>
+                    <td>{sheet.endDate}</td>
+                    <td>{sheet.totalHours}</td>
+                    <td><button className="btn btn-primary" onClick={() => { goEditPage(sheet.adminId, sheet.checked,sheet.startDate,sheet.endDate) }}>Edit</button></td>
 
                   </tr>
                 )) : ""}
@@ -262,7 +296,10 @@ function ApproveTimesheet() {
             <button className="btn btn-danger m-2" onClick={rejectsheetFun}>Reject</button>
             <button className="btn btn-secondary m-2" onClick={cancelsheetFun} >Cancel</button>
           </div>
-        </Container>
+        </Container>) :(<div className="no-timesheet">
+                    <h3>No Submitted Timesheet </h3>
+                    
+                </div>)}
 
 
         {/* confirmation modal for approvel */}
@@ -285,7 +322,7 @@ function ApproveTimesheet() {
             <div className="d-flex flex-column modal-success p-4 align-items-center ">
               <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
               <p className="mb-4 text-center">Timesheets have been approved.</p>
-              <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForApprove(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+              <button className="btn  w-100 text-white" onClick={closeSuccessModal} style={{ backgroundColor: '#5EAC24' }}>Close</button>
             </div>
           </Modal>
 
@@ -314,17 +351,17 @@ function ApproveTimesheet() {
               </Button>
             </Modal.Footer>
           </Modal>
-           
-           {/* modal for success approvel */}
-          <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForReject}  >
+
+           {/* modal for Reject approvel */}
+           <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForReject}  >
             <div className="d-flex flex-column modal-success p-4 align-items-center ">
               <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
               <p className="mb-4 text-center">Timesheets have been rejected.</p>
-              <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForReject(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+              <button className="btn  w-100 text-white" onClick={closeRejectModal} style={{ backgroundColor: '#5EAC24' }}>Close</button>
             </div>
           </Modal>
 
-         
+
 
         </div>
       </div>

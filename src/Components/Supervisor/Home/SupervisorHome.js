@@ -10,7 +10,7 @@ import axios from 'axios';
 function SupervisorHome() {
     
     const supervisorValue = useSelector(state=>state.supervisorLogin.value);
-    const supervisorId=supervisorValue.supervisord;
+    const supervisorId=supervisorValue.supervisorId;
     const [isOpenTimesheet, setIsOpenTimesheet] = useState(true);
     const [isOpenLeaveManagement, setIsOpenLeaveManagement] = useState(true);
     const [startSubmitDate, setStartSubmitDate] = useState("");
@@ -38,13 +38,14 @@ function SupervisorHome() {
     },[])
 
 
+
        
     useEffect(() => {
         // Retrieve the submit state from local storage when the component mounts
         const savedSubmitState = localStorage.getItem(`isSubmitOn${supervisorId}`);
         const startSubmitDate = localStorage.getItem(`startSubmitDate${supervisorId}`);
         const endSubmitDate = localStorage.getItem(`endSubmitDate${supervisorId}`);
-        const submitEmployeeId = localStorage.getItem(`submitEmployeeId${supervisorId}`)
+        const submitSupervisorId = localStorage.getItem(`submitSupervisorId${supervisorId}`)
         const status = localStorage.getItem(`statusValue${supervisorId}`)
         if (savedSubmitState === 'true') {
             setStartSubmitDate(startSubmitDate);
@@ -52,7 +53,7 @@ function SupervisorHome() {
             setSubmitSupervisorId(submitSupervisorId)
             setStatusValue(status)
             dispatch(submitON(true)); // Set the Redux state if needed
-            setCountTimesheet(1);
+            
         } else {
             setStartSubmitDate(startSubmitDate);
             setEndSubmitDate(endSubmitDate);
@@ -62,17 +63,20 @@ function SupervisorHome() {
         }
     }, []);
 
+    console.log(startSubmitDate)
+    console.log(endSubmitDate)
+    console.log(submitSupervisorId)
 
 
   
 
          async  function leaveStatus(){
-                let response=  await axios.get("http://localhost:8002/leave-requests");
+                let response=  await axios.get("http://localhost:8086/supervisor/leave-requests");
                 let data= response.data;
                
                  let submitLeaveRequest=data.filter(obj=>obj.id==leaveObjectId);
 
-                 console.log("uuuuuuuuuuu",submitLeaveRequest);
+                 
                                 
                  submitLeaveRequest.map((obj)=>{
                     setLeaveSubmitStartDate(obj.startDate);
@@ -80,7 +84,7 @@ function SupervisorHome() {
                     setLeaveSubmitStatus(obj.status);
             })
                  let leaveStatus = submitLeaveRequest.some(obj => obj.status === "PENDING");
-                console.log(leaveStatus)
+                
                   if(leaveStatus){
                      dispatch(leaveSubmitON(true));
                
@@ -96,14 +100,16 @@ function SupervisorHome() {
              leaveStatus();
            },[leaveObjectId])
 
+        
+
     async function timesheetState() {
 
         if (startSubmitDate && endSubmitDate && submitSupervisorId) {
             try {
-                let response = await axios.get(`http://localhost:8002/api/working-hours/${submitSupervisorId}/range?startDate=${startSubmitDate}&endDate=${endSubmitDate}`);
+                let response = await axios.get(`http://localhost:8086/sup/api/working-hours/${supervisorId}/range?startDate=${startSubmitDate}&endDate=${endSubmitDate}`);
                 let data = response.data;
                 let status = data[0].status;
-                // console.log(statusValue);
+                console.log(statusValue);
 
                  if(status==="APPROVED"){
                       setStatusValue(status);
@@ -147,7 +153,7 @@ function SupervisorHome() {
                                     <ul><Link to={'/supervisor/addtimesheet'}>Add Timesheet</Link></ul>
                                     <ul><Link to={'/supervisor/edittimesheet'}>Edit Timesheet</Link></ul>
                                     <ul><Link to={'/supervisor/rejecttimesheet'}>View Rejected Timesheet</Link></ul>
-                                    <ul><Link to={'/supervisor/employeetimesheetapproval'}>Employee Timesheet Approval</Link></ul>
+                                    <ul><Link to={'/supervisor/approvetimesheet'}>Employee Timesheet Approval</Link></ul>
 
                                 </div>
                             )}
@@ -160,8 +166,8 @@ function SupervisorHome() {
                                 <div className="collapse-content ">
                                     <ul><Link to={'/supervisor/leaverequest'}>Add Leave Request</Link></ul>
                                     <ul><Link to={'/supervisor/editleaverequest'}>Edit Leave Request</Link></ul>
-                                    <ul><Link to={'/supervisor/rejectedleaverequests'}>View Rejected Leave Requests</Link></ul>
-                                    <ul><Link to={'/supervisor/employeeleaverequestapprove'}>Employee Leave Requests Approve</Link></ul>
+                                    <ul><Link to={'/supervisor/viewrejectedleaverequests'}>View Rejected Leave Requests</Link></ul>
+                                    <ul><Link to={'/supervisor/leaveapproval'}>Employee Leave Requests Approve</Link></ul>
                                 </div>
                             )}
                         </div>

@@ -2,20 +2,27 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-import leaveUrl from "../../Api/leaveRequest";
+
 
 function SupervisorViewRejectedLeaveRequests() {
     const [rejectedLeaveRequests, setRejectedLeaveRequests] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
-
+    const supervisorValue = useSelector(state=>state.supervisorLogin.value);
+    const supervisorId=supervisorValue.supervisorId;
 
     useEffect(() => {
         async function getRejectedLeaveRequests() {
             try {
-                const response = await axios.get(leaveUrl);
-                setRejectedLeaveRequests(response.data.filter(leave => leave.status === "Your timesheet has been rejected"));
+                const response = await axios.get(`http://localhost:8086/supervisor/leave-requests`);
+
+               
+                                   let filteringSupervisorId=  response.data.filter(leave=>leave.empId==supervisorId)
+                   let rejectedOne= filteringSupervisorId.filter(leave => leave.status == "REJECTED");
+                    setRejectedLeaveRequests(rejectedOne.slice(-3));
+
             } catch (error) {
                 console.error('Error fetching rejected leave requests:', error);
                 setErrorMessage('Error fetching rejected leave requests. Please try again.');
@@ -23,14 +30,14 @@ function SupervisorViewRejectedLeaveRequests() {
         }
         getRejectedLeaveRequests();
     }, []);
-
+    
     const handleCancel = () => {
         navigate("/supervisor");
     }
 
     return (
         <div className="ti-background-clr">
-            <Container>
+            {rejectedLeaveRequests.length > 0  ? (<Container>
                 <div className="py-3 ">
                     <p className="text-center spr-approval-title">Rejected Leave Requests</p>
                 </div>
@@ -51,11 +58,11 @@ function SupervisorViewRejectedLeaveRequests() {
                         <tbody>
                             {rejectedLeaveRequests.map((leave) => (
                                 <tr key={leave.id} className="text-center">
-                                    <td>{leave.leaveReason}</td>
+                                    <td>{leave.reason}</td>
                                     <td>{leave.startDate}</td>
                                     <td>{leave.endDate}</td>
-                                    <td>{leave.numberOfDays}</td>
-                                    <td>{leave.rejectReason}</td>
+                                    <td>{leave.noOfDays}</td>
+                                    <td>{leave.reasonForRejection}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -64,9 +71,13 @@ function SupervisorViewRejectedLeaveRequests() {
                 <div className="d-flex justify-content-center mt-3">
                     <button className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
                 </div>
-            </Container>
+            </Container>):(<div className="no-timesheet">
+                    <h3>No Rejected Timesheet Available</h3>
+                    
+                </div>)}
         </div>
     );
 }
 
 export default SupervisorViewRejectedLeaveRequests;
+
