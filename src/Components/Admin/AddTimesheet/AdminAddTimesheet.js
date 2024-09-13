@@ -250,8 +250,10 @@ const AdminAddTimesheet = () => {
           }
         });
       });
+
+      
     
-      // Update formattedData with entered work hours
+      // // Update formattedData with entered work hours
       projectRows.forEach((row) => {
         if (row.projectId && row.workHours) {
           Object.entries(row.workHours).forEach(([columnIndex, hours]) => {
@@ -263,7 +265,7 @@ const AdminAddTimesheet = () => {
               // Find and update existing entry or add new one if not present
               const existingEntry = formattedData.find(
                 (entry) =>
-                  entry.adminId === adminId &&
+                  entry.employeeId=== adminId &&
                   entry.projectId === row.projectId &&
                   entry.date === dateStr
               );
@@ -282,7 +284,7 @@ const AdminAddTimesheet = () => {
           });
         }
       });
-    
+      console.log(formattedData);
       // Retrieve existing data from local storage
       const existingData = JSON.parse(localStorage.getItem(adminId)) || [];
     
@@ -345,7 +347,7 @@ const AdminAddTimesheet = () => {
             // Find and update existing entry or add new one if not present
             const existingEntry = formattedData.find(
               (entry) =>
-                entry.adminId === adminId &&
+                entry.employeeId === adminId &&
                 entry.projectId === row.projectId &&
                 entry.date === dateStr
             );
@@ -365,6 +367,7 @@ const AdminAddTimesheet = () => {
       }
     });
     
+    console.log(formattedData);
     
     // Check if there is any data to send
     if (formattedData.length > 0) {
@@ -372,13 +375,13 @@ const AdminAddTimesheet = () => {
       try {
         // Send the data to the backend
         const response = await axios.post("http://localhost:8081/api/working-hours", formattedData);
-        console.log(response);
+        
           if(response.data){
             let data=response.data;
            let statusValue= data[0].status;
-          //  console.log(adminId)
+          
              dispatch(submitAdminON(true));
-            // localStorage.setItem("name", "vidya")
+            
             localStorage.setItem(`isSubmitOn${adminId}`, 'true');
 
 
@@ -403,8 +406,7 @@ const AdminAddTimesheet = () => {
            setSuccessModalForTimesheet(true);
            
           }
-          console.log(response.data)
-        console.log(formattedData);
+        
       } catch (error) {
         // Handle errors in the request
         console.error("Error saving timesheet data:", error);
