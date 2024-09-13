@@ -538,7 +538,7 @@ const AddTimesheet = () => {
           <div className="d-flex justify-content-center">
             <button className="AddTimesheet btn btn-primary m-3 w-5" onClick={saveTimesheetData} style={{ width: '100px' }}>Save</button>
             <button className="AddTimesheet btn btn-success m-3 w-5" onClick={()=> setAddDataSubmitConfirmation(true)} disabled={isSubmit} style={{ width: '100px' }}>Submit</button>
-            <button className="AddTimesheet btn btn-secondary m-3 w-5" style={{ width: '100px' }} onClick={() => { navigate('/employee') }}>Cancel</button>
+            <button className="AddTimesheet btn btn-secondary m-3 w-5" style={{ width: '100px' }} onClick={() => { navigate('/supervisor') }}>Cancel</button>
           </div>
         </div>}
       </div>
