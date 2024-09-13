@@ -2,18 +2,20 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-
+import { useSelector } from "react-redux";
 import leaveUrl from "../../Api/leaveRequest";
 
 function AdminViewRejectedLeaveRequests() {
     const [rejectedLeaveRequests, setRejectedLeaveRequests] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
+    const adminValue = useSelector(state=>state.adminLogin.value);
+    const adminId=adminValue.adminId;
 
     useEffect(() => {
         async function getRejectedLeaveRequests() {
             try {
-                const response = await axios.get('http://localhost:8081/admin/leave-requests');
+                const response = await axios.get(`http://localhost:8081/admin/leave-requests`);
                 let rejectedOne= response.data.filter(leave => leave.status == "REJECTED");
                     setRejectedLeaveRequests(rejectedOne.slice(-3));
             } catch (error) {

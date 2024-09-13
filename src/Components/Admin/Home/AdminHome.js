@@ -68,7 +68,6 @@ function AdminHome() {
            
             let submitLeaveRequest=data.filter(obj=>obj.id==leaveObjectId);
 
-            console.log("uuuuuuuuuuu",submitLeaveRequest);
                            
             submitLeaveRequest.map((obj)=>{
                setLeaveSubmitStartDate(obj.startDate);
@@ -99,7 +98,8 @@ function AdminHome() {
         );
         let data = response.data;        
         let status = data[0].status;
-        // console.log(statusValue);
+        console.log(data);
+        console.log(statusValue);
 
         if(status ==="APPROVED"){
           setStatusValue(status);
@@ -216,7 +216,7 @@ timesheetState();
                     </Link>
                   </ul>
                   <ul>
-                    <Link to={"adminapproveleaverequest"}>
+                    <Link to={"/admin/adminapproveleaverequest"}>
                       Approve Leave Request
                     </Link>
                   </ul>
@@ -286,7 +286,7 @@ timesheetState();
                       </div>
                       <div className="d-flex align-items-center">
                         <p className="mb-0 me-2">STATUS :</p>
-                        {statusValue && (
+                        {statusValue && 
                           <button
                             className="view-btn p-2"
                             style={{
@@ -301,7 +301,7 @@ timesheetState();
                           >
                             {statusValue}
                           </button>
-                        )}
+                        }
                       </div>
                     </div>
                   </div>

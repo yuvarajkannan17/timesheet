@@ -14,6 +14,7 @@ import checkedImage from '../../Image/checked.png';
 const AdminAddTimesheet = () => {
   const adminValue = useSelector(state=>state.adminLogin.value);
   const adminId=adminValue.adminId;
+  // console.log(adminId)
   const [total, setTotal] = useState(0);
   const [startSubmitDate,setStartSubmitDate]=useState("");
   const [endSubmitDate,setEndSubmitDate]=useState("");
@@ -26,7 +27,7 @@ const AdminAddTimesheet = () => {
   const [availableProjects, setAvailableProjects] = useState([]);
   const [projectRows, setProjectRows] = useState([{}]);
   const [showFirstHalf, setShowFirstHalf] = useState(true);
-  const [employeeId, setEmployeeId] = useState("");
+  // const [employeeId, setEmployeeId] = useState("");
   const [addDataSubmitConfirmation,setAddDataSubmitConfirmation]=useState(false);
   const [successModalForTimesheet,setSuccessModalForTimesheet]=useState(false);
   const [saveModalForTimesheet,setSaveModalForTimesheet]=useState(false)
@@ -82,6 +83,23 @@ const AdminAddTimesheet = () => {
     }
   };
 
+  // const generateTimesheetData = (selectedMonth) => {
+  //   if (!selectedMonth) return;
+
+  //   const currentYear = parseInt(selectedMonth.slice(0, 4));
+  //   const currentMonth = parseInt(selectedMonth.slice(5, 7)) - 1; // Zero-indexed month
+  //   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  //   const startDay = showFirstHalf ? 1 : 16;
+  //   const endDay = showFirstHalf ? 15 : daysInMonth;
+
+  //   const newTimesheetData = Array.from({ length: endDay - startDay + 1 }, (_, i) => {
+  //     const dayOfMonth = startDay + i;
+  //     const date = new Date(currentYear, currentMonth, dayOfMonth);
+  //     return { date };
+  //   });
+
+  //   setTimesheetData(newTimesheetData);
+  // };
   const generateTimesheetData = (selectedMonth) => {
     if (!selectedMonth) return;
 
@@ -99,7 +117,7 @@ const AdminAddTimesheet = () => {
 
     setTimesheetData(newTimesheetData);
   };
-   
+   console.log(timesheetData)
   const handleProjectChange = (rowIndex, selectedOption) => {
     if (selectedOption && selectedOption.value) {
       setProjectIdError(""); // Clear the error when a valid projectId is selected
@@ -224,7 +242,7 @@ const AdminAddTimesheet = () => {
           if (row.projectId) {
             // Ensure that each date for each project has an entry
             formattedData.push({
-              adminId,
+              employeeId:adminId,
               projectId: row.projectId,
               date: dateStr,
               hours: 0, // Default to zero hours
@@ -254,7 +272,7 @@ const AdminAddTimesheet = () => {
                 existingEntry.hours = parseFloat(hours);
               } else {
                 formattedData.push({
-                  adminId,
+                  employeeId:adminId,
                   projectId: row.projectId,
                   date: dateStr,
                   hours: parseFloat(hours),
@@ -306,7 +324,7 @@ const AdminAddTimesheet = () => {
         if (row.projectId) {
           // Ensure that each date for each project has an entry
           formattedData.push({
-            adminId,
+            employeeId:adminId,
             projectId: row.projectId,
             date: dateStr,
             hours: 0, // Default to zero hours
@@ -336,7 +354,7 @@ const AdminAddTimesheet = () => {
               existingEntry.hours = parseFloat(hours);
             } else {
               formattedData.push({
-                adminId,
+                employeeId:adminId,
                 projectId: row.projectId,
                 date: dateStr,
                 hours: parseFloat(hours),
@@ -347,35 +365,45 @@ const AdminAddTimesheet = () => {
       }
     });
     
-  
+    
     // Check if there is any data to send
     if (formattedData.length > 0) {
+      console.log(formattedData)
       try {
         // Send the data to the backend
         const response = await axios.post("http://localhost:8081/api/working-hours", formattedData);
+        console.log(response);
           if(response.data){
             let data=response.data;
            let statusValue= data[0].status;
+          //  console.log(adminId)
              dispatch(submitAdminON(true));
-              localStorage.setItem(`isSubmitOn${adminId}`, 'true');
+            // localStorage.setItem("name", "vidya")
+            localStorage.setItem(`isSubmitOn${adminId}`, 'true');
+
+
               let receviedData=response.data;
              let lengthOfData=receviedData.length;
+             console.log(lengthOfData)
             let last=receviedData[lengthOfData-1];
+            console.log(last)
             let lastDate=last.date;
            let first= receviedData[0];
-          let adminId=  first.adminId;
+          let adminID=  first.employeeId;
+          console.log(adminID)
+          console.log(first)
            let firstDate=first.date;
-            setSubmitAdminId(adminId);
+            setSubmitAdminId(adminID);
             setStartSubmitDate(firstDate);
             setEndSubmitDate(lastDate);
             localStorage.setItem(`startSubmitDate${adminId}`, firstDate);
             localStorage.setItem(`endSubmitDate${adminId}`, lastDate);
-            localStorage.setItem(`submitAdminId${adminId}`, adminId);
-            localStorage.setItem(`statusValue,${adminId}`, statusValue);
-         
+            localStorage.setItem(`submitAdminId${adminId}`, adminID);
+            localStorage.setItem(`statusValue${adminId}`, statusValue);
            setSuccessModalForTimesheet(true);
            
           }
+          console.log(response.data)
         console.log(formattedData);
       } catch (error) {
         // Handle errors in the request
@@ -546,10 +574,11 @@ const AdminAddTimesheet = () => {
             <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForTimesheet}  >
                 <div className="d-flex flex-column modal-success p-4 align-items-center ">
                     <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
-                    <p className="mb-4 text-center"> Your Have Submitted Timesheet From <b> {startSubmitDate} To {endSubmitDate} </b>.</p>
+                    <p className="mb-4 text-center"> You Have Submitted Timesheet For Approval .</p>
+                    <p className="mb-4 text-center"><b>  {startSubmitDate} To {endSubmitDate} </b></p>
                     <button className="btn  w-100 text-white" onClick={closeSuccessModal} style={{ backgroundColor: '#5EAC24' }}>Close</button>
                 </div>
-            </Modal>  
+            </Modal>   
             <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={saveModalForTimesheet}  >
                 <div className="d-flex flex-column modal-success p-4 align-items-center ">
                     <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />

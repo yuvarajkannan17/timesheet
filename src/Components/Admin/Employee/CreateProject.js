@@ -356,14 +356,14 @@ const CreateProject = () => {
                 <div className="createAdmin-button-ProjectForm d-flex-ProjectForm justify-content-ProjectForm-center my-3 mx-5">
                   <button
                     type="button"
-                    className="btn-ProjectForm btn-success-ProjectForm btn-lg-ProjectForm submit-button-ProjectForm"
+                    className="btn btn-success m-3 w-5"
                     onClick={handleSubmit}
                   >
                     Submit
                   </button>
                   <button
                     type="button"
-                    className="btn-ProjectForm btn-info-ProjectForm btn-lg-ProjectForm cancel-button-ProjectForm"
+                    className="btn btn-secondary m-3 w-5"
                     onClick={handleCancel}
                   >
                     Cancel

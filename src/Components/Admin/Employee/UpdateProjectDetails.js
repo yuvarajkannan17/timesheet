@@ -23,8 +23,9 @@ const UpdateProjectDetails = () => {
 
   const [showSaveModal, setShowSaveModal] = useState(false); // Modal state for save confirmation
   const [showArchiveModal, setShowArchiveModal] = useState(false); // Modal state for archive confirmation
-
+const [updateProjectSuccessModal, setUpdateProjectSuccessModal] = useState(false);
   const navigate = useNavigate();
+
 
   const fetchProjectDetails = async (projectId) => {
     if (projectId) {
@@ -88,7 +89,9 @@ const UpdateProjectDetails = () => {
     setShowSaveModal(false); // Hide save confirmation modal
   };
 
+
   const handleSave = async () => {
+    handleCloseSaveModal();
     const transformedProject = {
       projectTitle: updatedProject.projectTitle,
       projectDescription: updatedProject.projectDescription,
@@ -102,23 +105,22 @@ const UpdateProjectDetails = () => {
         transformedProject,
         { headers: { 'Content-Type': 'application/json' } }
       );
-
+setUpdateProjectSuccessModal(true);
       if (response.status !== 200) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
       setEditing(false);
-      alert('Project details updated successfully!');
-      handleCloseSaveModal(); // Close modal after saving
+      
     } catch (error) {
       if (error.response) {
-        alert(`Error: ${error.response.data.message}`);
+        console.log(`Error: ${error.response.data.message}`);
       } else if (error.request) {
-        alert('No response from server. Please try again later.');
+        console.log('No response from server. Please try again later.');
       } else {
-        alert('Error updating project details. Please try again.');
+        console.log('Error updating project details. Please try again.');
       }
-      handleCloseSaveModal(); // Close modal in case of error
+      
     }
   };
 
@@ -299,7 +301,7 @@ const UpdateProjectDetails = () => {
                 {editing && (
                   <div className="mb-3">
                     <button type="button" className="btn btn-success mx-2" onClick={handleShowSaveModal}>Save</button>
-                    <button type="button" className="btn btn-warning" onClick={handleArchive}>Delete</button>
+                    <button type="button" className="btn btn-danger" onClick={handleArchive}>Delete</button>
                     <button type="button" className="btn btn-secondary mx-2" onClick={handleCancel}>Cancel</button>
                   </div>
                 )}
@@ -329,7 +331,13 @@ const UpdateProjectDetails = () => {
           <button className="btn btn-success" onClick={handleSave}>Save</button>
         </Modal.Footer>
       </Modal>
-      
+      <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={updateProjectSuccessModal}  >
+                        <div className="d-flex flex-column modal-success p-4 align-items-center ">
+                            <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+                            <p className="mb-4 text-center"> Your Project Updated Successfully</p>
+                            <button className="btn  w-100 text-white" onClick={() => setUpdateProjectSuccessModal(false)} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+                        </div>
+                    </Modal>
     </>
   );
 };
