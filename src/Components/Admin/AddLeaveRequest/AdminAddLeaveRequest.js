@@ -17,9 +17,13 @@ function AdminAddLeaveRequest() {
   const adminId=adminValue.adminId;
   const [leaveSuccessModal,setLeaveSuccessModal]=useState(false);
   const [numberOfDays, setNumberOfDays] = useState(0);
+  const [approvedLeaveCount,setApprovedLeaveCount]=useState(0);
+    const [totalLeaves,setTotalLeaves]=useState(18)
+    const [pendingLeaves,setPendingLeaves]=useState(0);
   let dispatch = useDispatch();
     let { isSubmit } = useSelector((state) => state.empLeaveSubmit.value);
     console.log("sss", isSubmit) 
+     
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
@@ -34,6 +38,20 @@ function AdminAddLeaveRequest() {
         validationSchema: schemaLeave,
         onSubmit
     })
+
+    function calculatePendingLeaves(){
+
+        let count=0;
+
+        count=totalLeaves-approvedLeaveCount;
+
+        setPendingLeaves(count);
+
+    }
+
+    useEffect(()=>{
+        calculatePendingLeaves();
+    },[approvedLeaveCount,totalLeaves])
  
     // Calculate the last day of June
     // const lastDayOfJune = new Date(new Date().getFullYear(), 5, 30); // Note: Month index is zero-based, so June is 5
@@ -52,20 +70,46 @@ console.log(formik.values)
         }
     }, [formik.values.startDate, formik.values.endDate]);
     
+    async function calculateApprovedLeave() {
+        try {
+          // Make the API request
+          let response = await axios.get(`http://localhost:8081/admin/leave-requests`);
+    
+          // Extract the actual data (leaves)
+          let totalLeaves = response.data;
+    
+          // Filter for approved leaves
+          let approvedLeaves = totalLeaves.filter(leaves => leaves.status === "APPROVED");
+    
+          // Set the approved leave count in state
+          let approvedCount=  approvedLeaves.length;
+
+           if(approvedCount>0){
+            
+           setApprovedLeaveCount(approvedCount);
+           }
+        } catch (error) {
+          console.error("Error fetching leaves data:", error);
+        }
+      }
+
+      useEffect(()=>{
+        calculateApprovedLeave();
+      },[])
 
     async function onSubmit() {
-
+        console.log(formik.values);
         try {
             const leaveData = await axios.post("http://localhost:8081/admin/leave-requests", formik.values);
             if (leaveData.data) {
                 const {empId,status,id,startDate,endDate} =leaveData.data
                 setLeaveSuccessModal(true);
-                localStorage.setItem(`leaveSubmitEmpId${adminId}`,empId);
-                localStorage.setItem(`leaveStatus${adminId}`,status);
-                localStorage.setItem(`isLeaveSubmit${adminId}`,"true");
+                // localStorage.setItem(`leaveSubmitEmpId${adminId}`,empId);
+                // localStorage.setItem(`leaveStatus${adminId}`,status);
+                // localStorage.setItem(`isLeaveSubmit${adminId}`,"true");
                 localStorage.setItem(`leaveObjectId${adminId}`,id);
-                localStorage.setItem(`leaveStartDate${adminId}`,startDate);
-                localStorage.setItem(`leaveEndDate${adminId}`,endDate);
+                // localStorage.setItem(`leaveStartDate${adminId}`,startDate);
+                // localStorage.setItem(`leaveEndDate${adminId}`,endDate);
                 dispatch(leaveSubmitON(true));
                 formik.resetForm();
                 navigate("/admin")
@@ -84,6 +128,8 @@ console.log(formik.values)
             <div className="ti-background-clr">
             <h5 className="text-center pt-4">LEAVE REQUEST</h5>
                 <div className="ti-leave-management-container  ">
+                <h5 className=''> YOUR AVAILABLE LEAVES : {pendingLeaves}</h5>
+
                     <div className='bg-white  '>
                         
                         <div className="row ">
@@ -93,7 +139,7 @@ console.log(formik.values)
                                     <form onSubmit={formik.handleSubmit}>
                                     <div className="my-3 leave-row">
                                             <label> <span style={{ color: 'red' }}>*</span>Admin Id :</label>
-                                            <input type='text'  className='w-25' name="empId" value={formik.values.empId} onChange={formik.handleChange} ></input>
+                                            <input type='text'  className='w-25' name="empId" value={adminId} onChange={formik.handleChange} ></input>
 
                                   </div>
                                        <div>

@@ -53,6 +53,7 @@ export function EmployeeLeaveRequest() {
     useEffect(()=>{
         calculatePendingLeaves();
     },[approvedLeaveCount,totalLeaves])
+    
     // Calculate the last day of June
     // const lastDayOfJune = new Date(new Date().getFullYear(), 5, 30); // Note: Month index is zero-based, so June is 5
 

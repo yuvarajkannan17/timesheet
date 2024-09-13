@@ -4,6 +4,7 @@ import { Container } from "react-bootstrap";
 import { Modal, Button } from 'react-bootstrap';
 import successCheck from '../../Image/checked.png'
 import { useNavigate } from "react-router-dom";
+import { useSelector,useDispatch } from 'react-redux';
 
 import leaveUrl from "../../Api/leaveRequest"
 function AdminApproveLeaveRequest() {
@@ -17,8 +18,9 @@ function AdminApproveLeaveRequest() {
   const [successModalForReject, setSuccessModalForReject] = useState(false)
   const [atLeastOneChecked, setAtLeastOneChecked] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
- 
-
+ const adminValue = useSelector(state=>state.adminLogin.value);
+  const adminId=adminValue.adminId;
+  
   const navigate = useNavigate();
   async function getLeaveData() {
     try {
@@ -36,7 +38,7 @@ function AdminApproveLeaveRequest() {
       console.error("Error fetching leave data:", error);
     }
   }
-
+  
   useEffect(() => {
 
     
@@ -122,9 +124,9 @@ function AdminApproveLeaveRequest() {
 
     try {
         // Create an array of promises
-        const updatePromises = approvedLeavesRequest.map(async (sup) => {
+        const updatePromises = approvedLeavesRequest.map(async (data) => {
             // Perform the PUT request
-            const response = await axios.put(`http://localhost:8081/admin/${sup.id}/approve`);
+            const response = await axios.put(`http://localhost:8086/supervisor/leave-requests/${data.id}/approve?adminId=${adminId}`);
             return response.data; // Return the response data if needed
         });
 
@@ -161,15 +163,12 @@ function AdminApproveLeaveRequest() {
 
     try {
       // Update the status of rejected leaves and track their IDs
-      const updates = rejectLeaves.map(async (leave) => {
+      const updates = rejectLeaves.map(async (data) => {
         // Update the leave object with rejection reason
         
 
         // Make a PUT request to update the status of the leave in the API
-        const response = await axios.put(`http://localhost:8081/admin/${leave.id}/reject`,{
-          reasonForRejection:rejectReason
-        });
-        
+        const response = await axios.put(`http://localhost:8086/supervisor/leave-requests/${data.id}/reject?adminId=${adminId}&reasonForRejection=${rejectReason}`);       
 
         return response.data;
       });

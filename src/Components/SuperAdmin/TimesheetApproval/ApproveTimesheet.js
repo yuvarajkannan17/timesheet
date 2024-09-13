@@ -227,7 +227,7 @@ function ApproveTimesheet() {
 
   function closeSuccessModal(){
     setSuccessModalForApprove(false);
-    
+    getTimesheet();
   }
 
   function closeRejectModal(){

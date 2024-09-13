@@ -83,7 +83,7 @@ function AdminEditTimesheet(){
     useEffect(() => {
         const fetchProjects = async () => {
             try {
-                const response = await axios.get('https://6638af3a4253a866a24ec473.mockapi.io/cart');
+                const response = await axios.get('http://localhost:8081/admin/projects');
                 setAvailableProjects(response.data);
             } catch (error) {
                 console.error('Error fetching projects:', error);

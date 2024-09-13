@@ -233,7 +233,7 @@ useEffect(()=>{
 
                                         <div className='my-5 text-end'>
                                             <button type='submit' disabled={ isSubmit} className='btn btn-success mx-2'>Submit</button>
-                                            <button type='button' className='btn btn-secondary mx-2' onClick={() => { navigate('/employee') }}>Cancel</button>
+                                            <button type='button' className='btn btn-secondary mx-2' onClick={() => { navigate('/supervisor') }}>Cancel</button>
                                         </div>
 
                                     </form>

@@ -9,423 +9,302 @@ import {  editTimesheetSuccessModal,  editTimesheetRejectModal} from "../../feat
 import employeeSheetUrl from "../../Api/employeeEdit";
 
 function AdminApprovalPage() {
-  const [timesheetDatas, setTimesheetDatas] = useState([]);
+  const [timesheetDatas, setTimesheetDatas] = useState([])
   const [selectAllChecked, setSelectAllChecked] = useState(false);
-  const [rejectReason, setRejectReason] = useState("Your timesheet has been rejected. Please reach out supervisor regarding your timesheet.");
-  const [askConfitrmationForApprove, setAskConfirmationForApprove] = useState(false);
-  const [askConfitrmationForReject, setAskConfirmationForReject] = useState(false);
-  const [successModalForApprove, setSuccessModalForApprove] = useState(false);
-  const [successModalForReject, setSuccessModalForReject] = useState(false);
+  const [rejectReason, setRejectReason] = useState(' Your timesheet has been rejected. Please reach out supervisor regarding your timesheet. ');
+  const [askConfitrmationForApprove, setAskConfirmationForApprove] = useState(false)
+  const [askConfitrmationForReject, setAskConfirmationForReject] = useState(false)
+  const [successModalForApprove, setSuccessModalForApprove] = useState(false)
+  const [successModalForReject, setSuccessModalForReject] = useState(false)
   const [atLeastOneChecked, setAtLeastOneChecked] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const editTimesheetSuccessModalValue = useSelector((state) => state.modal.value.editTimesheetSuccessModalValue);
-  const editTimesheetRejectModalValue = useSelector((state) => state.modal.value.editTimesheetRejectModalValue);
+  const [errorMessage, setErrorMessage] = useState('');
+  const adminValue = useSelector(state=>state.adminLogin.value);
+  const adminId=adminValue.adminId;
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [datasOfTimesheet, setDatasOfTimesheet] = useState([]);
-  const employeeValue = useSelector(state=>state.employeeLogin.value);
-  const employeeId=employeeValue.employeeId;
+  // console.log(timesheetDatas)
+  
 
+   async function getTimesheet() {
+    try {
+        const timesheets = await axios.get("http://localhost:8081/admin/new");
+        const datasOfTimesheet = timesheets.data;
 
-  useEffect(() => {
-    async function getTimesheet() {
-        try {
-            const response = await axios.get("http://localhost:8081/admin/working-hours/new");
-            const timesheets = response.data.map((sheet, index) => ({
-                ...sheet,
-                id: sheet.id, // Use employeeId as id if there's no other unique id
-                checked: false, // Initialize checked as false
-            }));
-            setTimesheetDatas(timesheets);
-            console.log("timesheetData", timesheets);
-        } catch (error) {
-            console.error("Error fetching timesheet data:", error);
+        let timehseetData=[];
+
+        for (let empId in datasOfTimesheet) {
+          const adminData = datasOfTimesheet[empId];
+          const workingHours = adminData.workingHours;
+  
+          // Fetch startDate and endDate
+          const startDate = workingHours[0].date;
+          const endDate = workingHours[workingHours.length - 1].date;
+          const totalHours = adminData.totalHours;
+          const adminId=adminData.employeeId;
+          timehseetData=[...timehseetData,{adminId,startDate,endDate,totalHours,checked:false}];
         }
-    }
-
-    getTimesheet();
-}, []);
-
-//   useEffect(() => {
-//     async function getTimesheet() {
-//         try {
-//             const response = await axios.get("http://localhost:8081/admin/working-hours/new");
-//             const timesheets = response.data.map((sheet) => ({
-//                 ...sheet,
-//                 checked: false, // Initialize with checked as false
-//             }));
-//             setTimesheetDatas(timesheets);
-//         } catch (error) {
-//             console.error("Error fetching timesheet data:", error);
-//         }
-//     }
-
-//     getTimesheet();
-// }, []);
-
-  
-  // useEffect(() => {
-  //   async function getTimesheet() {      
-  //     try {
-  //       const response = await axios.get("http://localhost:8081/admin/working-hours/new");
-  //       // Ensure response data is an array
         
-  //       if (response.data && typeof response.data === 'object' && !Array.isArray(response.data)) {
-  //         const timesheetArray = Object.values(response.data);
-  //         setTimesheetDatas(timesheetArray);
-  //         console.log("timesheetData", timesheetArray);
-  //       } else if (Array.isArray(response.data)) {
-  //         setTimesheetDatas(response.data);
-  //         console.log("timesheetData", response.data);
-  //       } else {
-  //         console.error("Unexpected data format:", response.data);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching timesheet data:", error);
-  //     }
-  //   }
-  //   async function getTimesheet() {
-  //     const timesheets = await axios.get(
-  //       "http://localhost:8081/admin/working-hours/new"
-  //     );
-  //     const datasOfTimesheet = timesheets.data;
-  //     setTimesheetDatas(
-  //       datasOfTimesheet.map((sheetData) => ({
-  //         ...sheetData,
-  //         checked: false,
-  //       }))
-  //     );
-  //   }
+            setTimesheetDatas(timehseetData.slice(-5));
+         
+           
+        
 
-  //   getTimesheet();
-  // }, []);
+    } catch (error) {
+        console.error("Error fetching timesheet data:", error);
+    }
+}
 
-  
-  
+
+  useEffect(()=>{
+    getTimesheet();
+  },[])
+
+  console.log(timesheetDatas);
 
   useEffect(() => {
     // Check if at least one checkbox is checked
     const isChecked = timesheetDatas.some((sheet) => sheet.checked);
-    setSelectAllChecked(isChecked);
+    setSelectAllChecked(isChecked)
     setAtLeastOneChecked(isChecked);
     if (isChecked) {
-      setErrorMessage("");
+      setErrorMessage('');
     }
   }, [timesheetDatas]);
-  
+
 
   // ask confirmation or trigger alert
   function approvesheetFun() {
+
     if (atLeastOneChecked) {
       setAskConfirmationForApprove(true);
     } else {
-      setErrorMessage("Please select at least one Timesheet!!");
+      setErrorMessage("Please select at least one Timesheet!!")
     }
+
+
+
   }
   // ask confirmation or trigger alert
   function rejectsheetFun() {
     if (atLeastOneChecked) {
       setAskConfirmationForReject(true);
     } else {
-      setErrorMessage("Please select at least one Timesheet!!");
+      setErrorMessage("Please select at least one Timesheet!!")
     }
+
+
+
   }
 
   // reset the timesheet
   function cancelsheetFun() {
-    navigate("/admin");
+    navigate('/admin')
   }
 
+
   // update the timesheetCheckBox
-  function handleCheckboxChange(employeeId) {
+  function handleCheckboxChange(adminId) {
+
     setTimesheetDatas((prevData) =>
       prevData.map((sheet) =>
-        sheet.id === employeeId
-          ? {
-              ...sheet,
-              checked: !sheet.checked,
-            }
-          : sheet
+        sheet.adminId === adminId ? { ...sheet, checked: !sheet.checked } : sheet
       )
     );
   }
 
-  // timesheet approvel
-  async function approveSaveConfirmation(startDate, endDate) {
-    
-    setAskConfirmationForApprove(false);
-    const approvedSheets = timesheetDatas.filter(
-      (sheet) => sheet.checked === true
-    );
 
+  // timesheet approvel
+  async function approveSaveConfirmation() {
+    setAskConfirmationForApprove(false);
+    const approvedSheets = timesheetDatas.filter((sheet) => sheet.checked === true);
+       console.log(approvedSheets);
     try {
       // Update the status of approved sheets and track their IDs
-      const updates = approvedSheets.map(async (sheet) => {
-        // Update the status of the sheet locally
-        const updatedSheet = {
-          ...sheet,
-          status: "Your timesheet has been approved",
-        };
-
+      const updates = approvedSheets.map(async (sheet) => {  
         // Make a PUT request to update the status of the sheet in the API
-        const response = await axios.put(
-          // `http://localhost:8081/admin/working-hours/approve/${updatedSheet.id}`,
-          `http://localhost:8081/admin/working-hours/${sheet.id}/approve-range?startDate=${startDate}&endDate=${endDate}`,
-          updatedSheet
-        );
+        const response = await axios.put(`http://localhost:8086/sup/api/working-hours/${sheet.adminId}/approve-range?startDate=${sheet.startDate}&endDate=${sheet.endDate}&adminId=${adminId}`);
         const responseData = response.data;
 
-        console.log("Updated approve sheet:", responseData);
-
-        return updatedSheet;
-      });
-
-      // Wait for all updates to finish
-      const updatedSheets = await Promise.all(updates);
-
-      // Update the state with the updated data
-      setTimesheetDatas((prevData) =>
-        prevData.map(
-          (sheet) =>
-            updatedSheets.find((updated) => updated.id === sheet.id) || sheet
-        )
-      );
-      // setTimesheetDatas(updatedSheets);
-
-      // Reset checkbox selection
-      // cancelsheetFun();
-
-      // Show success modal
-      setSuccessModalForApprove(true);
+        if (responseData) {
+          setSuccessModalForApprove(true);
+        }        
+      });      
     } catch (error) {
-      console.log("API error", error);
+      console.log('API error', error);
     }
   }
-
-  
 
   // cancel the approvel
   function approveCancelConfirmation() {
     setAskConfirmationForApprove(false);
+
   }
 
   // reject the timesheet
-  async function rejectSaveConfirmation(startDate,endDate) {
+  async function rejectSaveConfirmation() {
     setAskConfirmationForReject(false);
-    const rejectSheets = timesheetDatas.filter(
-      (sheet) => sheet.checked === true
-    );
+    const rejectSheets = timesheetDatas.filter((sheet) => sheet.checked === true);
+
+    console.log(rejectSheets);
+
+
 
     try {
       // Update the status of approved sheets and track their IDs
       const updates = rejectSheets.map(async (sheet) => {
         // Update the status of the sheet locally
-        const updatedSheet = {
-          ...sheet,
-          status: "Your timesheet has been rejected",
-        };
+        const updatedSheet = { ...sheet,  rejectionReason: rejectReason  };
 
         // Make a PUT request to update the status of the sheet in the API
-        const response = await axios.put(
-          `http://localhost:8081/admin/working-hours/${sheet.id}/reject-range?startDate=${startDate}&endDate=${endDate}`,
-          updatedSheet
-        );
-        // console.log("Updated reject sheet:", response.data);
+        const response = await axios.put(`http://localhost:8086/sup/api/working-hours/SUP002/reject-range?startDate=${sheet.startDate}&endDate=${sheet.endDate}&reason=${rejectReason}&adminId=${adminId}`);
+        
+        if(response.data){
+          setSuccessModalForReject(true);
+        }
 
-        return updatedSheet;
+        
       });
 
-      // Wait for all updates to finish
-      const updatedSheets = await Promise.all(updates);
-
-      // Update the state with the updated data
-      setTimesheetDatas((prevData) =>
-        prevData.map(
-          (sheet) =>
-            updatedSheets.find((updated) => updated.id === sheet.id) || sheet
-        )
-      );
-      // setTimesheetDatas(updatedSheets);
-
-      // Reset checkbox selection
-      // cancelsheetFun();
-
-      // Show success modal
-      setSuccessModalForReject(true);
+      
+     
     } catch (error) {
-      console.log("API error", error);
+      console.log('API error', error);
     }
+
   }
 
   // reject cancel
   function rejectCancelConfirmation() {
     setAskConfirmationForReject(false);
+
   }
 
-  function goEditPage(id, check) {
-    console.log("Button clicked. ID:", id, "Checked:", check);
+  function goEditPage(id,check,startDate,endDate) {
+
     if (check) {
-      console.log(id);
-      console.log("Navigating to edit page with ID:", id);
-      navigate("/admin/modifyEmployeeTimesheet/" + id);
+      console.log(id)
+      navigate('/admin/approvetimesheet/modifytimesheet/' + id,{state:{startDate,endDate}})
     } else {
-      setErrorMessage("Please select the timesheet you wish to edit!!!");
+      setErrorMessage("Please select the timesheet you wish to edit!!!")
     }
+
+
   }
 
   function selectAllCheckbox(event) {
     const check = event.target.checked;
     setSelectAllChecked(check);
-    setTimesheetDatas((prevData) =>
-      prevData.map((data) => ({
+    setTimesheetDatas(prevData =>
+      prevData.map(data => ({
         ...data,
-        checked: check,
+        checked: check
       }))
     );
+
   }
+
+  function closeSuccessModal(){
+    setSuccessModalForApprove(false);
+    getTimesheet();
+  }
+
+  function closeRejectModal(){
+    setSuccessModalForReject(false);
+    getTimesheet();
+  }
+
 
   return (
     <>
+      
       <div className="ti-background-clr">
-        <Container>
+       {timesheetDatas.length>0 ?  (<Container>
           <div className="py-3 ">
-            <p className=" text-center spr-approval-title "> Timesheet List </p>{" "}
-          </div>{" "}
-          {/* without select timesheet error  */}{" "}
-          {errorMessage && (
-            <div className="alert alert-danger" role="alert">
-              {" "}
-              {errorMessage}{" "}
-            </div>
-          )}{" "}
-          {/* table head */}{" "}
+            <p className=" text-center spr-approval-title ">Timesheet List</p>
+          </div>
+          {/* without select timesheet error  */}
+          {errorMessage && <div className="alert alert-danger" role="alert">
+            {errorMessage}
+          </div>}
+          {/* table head */}
           <div className="table-responsive">
             <table className="table table-bordered   table-hover border border-1 border-black">
-              <thead className="">
-                <tr className="text-center spr-approval-header">
-                  <th>
-                    {" "}
-                    <input
-                      className="me-1"
-                      type="checkbox"
-                      checked={selectAllChecked}
-                      onChange={selectAllCheckbox}
-                    />
-                    Select{" "}
-                  </th>
-                  <th> Emp Id </th> 
-                  <th> Emp Name </th>{" "}
-                  <th> Timesheet Period </th> 
-                  <th> No hrs Submitted </th>{" "}
-                  <th> Action </th>{" "}
-                </tr>{" "}
-              </thead>{" "}
-              <tbody>
-                {" "}
-                {/* table body */}{" "}
-                {/* {timesheetDatas */}
-                   {timesheetDatas.map((sheet) => {
-                    console.log("Mapping sheet:", sheet);
-                    // return (
-                      <tr key={sheet.id} className="text-center">
-                        <td>
-                          <input
-                            type="checkbox"
-                            name="approvalchkTimesheet"
-                            checked={sheet.checked}
-                            onChange={() => handleCheckboxChange(sheet.id)}
-                          ></input>{" "}
-                        </td>{" "}
-                        <td> {sheet.employeeId} </td> 
-                        <td> {sheet.empName} </td>{" "}
-                        <td> {sheet.StartDate} </td>{" "}
-                        <td> {sheet.totalHours} </td>{" "}
-                        <td>
-                          {" "}
-                          <button
-                            className="btn btn-primary"
-                            onClick={() => {
-                              goEditPage(sheet.id, sheet.checked);
-                            }}
-                          >
-                            {" "}
-                            Edit{" "}
-                          </button>
-                        </td>
-                      </tr>
-                    // )
-})}
-                  {/* // : ""} */}
-              </tbody>{" "}
-            </table>{" "}
-          </div>{" "}
-          {/* buttons for approvel page */}{" "}
+              <thead className="" >
+                <tr className="text-center spr-approval-header" >
+                  <th> <input className="me-1" type="checkbox" checked={selectAllChecked} onChange={selectAllCheckbox} />Select </th>
+                  <th>supervisor Id</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
+                  <th>No hrs Submitted</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody >
+                {/* table body */}
+                {timesheetDatas ? timesheetDatas.map((sheet) => (
+                  <tr key={sheet.adminId} className="text-center">
+                    <td>
+                      <input
+                        type="checkbox"
+                        name="approvalchkTimesheet"
+                        checked={sheet.checked}
+                        onChange={() => handleCheckboxChange(sheet.adminId)}
+                      ></input>
+                    </td>
+                    <td>{sheet.adminId}</td>
+                    <td>{sheet.startDate}</td>
+                    <td>{sheet.endDate}</td>
+                    <td>{sheet.totalHours}</td>
+                    <td><button className="btn btn-primary" onClick={() => { goEditPage(sheet.adminId, sheet.checked,sheet.startDate,sheet.endDate) }}>Edit</button></td>
+
+                  </tr>
+                )) : ""}
+
+
+              </tbody>
+            </table>
+          </div>
+          {/* buttons for approvel page */}
           <div className="d-flex justify-content-around flex-wrap">
-            <button className="btn btn-success m-2" onClick={approvesheetFun}>
-              {" "}
-              Approve{" "}
-            </button>{" "}
-            <button className="btn btn-danger m-2" onClick={rejectsheetFun}>
-              {" "}
-              Reject{" "}
-            </button>{" "}
-            <button className="btn btn-secondary m-2" onClick={cancelsheetFun}>
-              {" "}
-              Cancel{" "}
-            </button>{" "}
-          </div>{" "}
-        </Container>
-        {/* confirmation modal for approvel */}{" "}
+            <button className="btn btn-success m-2" onClick={approvesheetFun}>Approve</button>
+            <button className="btn btn-danger m-2" onClick={rejectsheetFun}>Reject</button>
+            <button className="btn btn-secondary m-2" onClick={cancelsheetFun} >Cancel</button>
+          </div>
+        </Container>) :(<div className="no-timesheet">
+                    <h3>No Submitted Timesheet </h3>
+                    
+                </div>)}
+
+
+        {/* confirmation modal for approvel */}
         <div className="approveModal">
           <Modal show={askConfitrmationForApprove}>
-            <Modal.Body> Do you want to approve this sheets ? </Modal.Body>
+
+            <Modal.Body >Do you want to approve this sheets?</Modal.Body>
+
             <Modal.Footer>
               <Button variant="secondary" onClick={approveCancelConfirmation}>
-                Cancel{" "}
-              </Button>{" "}
+                Cancel
+              </Button>
               <Button variant="primary" onClick={approveSaveConfirmation}>
-                Approve{" "}
-              </Button>{" "}
-            </Modal.Footer>{" "}
-          </Modal>{" "}
-          {/* modal for success approvel */}{" "}
-          <Modal
-            className="custom-modal"
-            style={{
-              left: "50%",
-              transform: "translateX(-50%)",
-            }}
-            dialogClassName="modal-dialog-centered"
-            show={successModalForApprove}
-          >
-            <div className="d-flex flex-column modal-success p-4 align-items-center ">
-              <img
-                src={successCheck}
-                className="img-fluid mb-4"
-                alt="successCheck"
-              />
-              <p className="mb-4 text-center">
-                {" "}
-                Timesheets have been approved.{" "}
-              </p>{" "}
-              <button
-                className="btn  w-100 text-white"
-                onClick={() => {
-                  setSuccessModalForApprove(false);
-                }}
-                style={{
-                  backgroundColor: "#5EAC24",
-                }}
-              >
-                {" "}
-                Close{" "}
-              </button>{" "}
-            </div>{" "}
+                Approve
+              </Button>
+            </Modal.Footer>
           </Modal>
+          {/* modal for success approvel */}
+          <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForApprove}  >
+            <div className="d-flex flex-column modal-success p-4 align-items-center ">
+              <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+              <p className="mb-4 text-center">Timesheets have been approved.</p>
+              <button className="btn  w-100 text-white" onClick={closeSuccessModal} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+            </div>
+          </Modal>
+
           {/* confirmation modal for rejects */}
+
           <Modal show={askConfitrmationForReject}>
             <Modal.Body>
-              Are you sure you want to reject this sheets ?
+              Are you sure you want to reject this sheets?
               <div className="textarea-container">
                 <textarea
                   rows="4"
@@ -435,89 +314,34 @@ function AdminApprovalPage() {
                   onChange={(e) => setRejectReason(e.target.value)}
                   className="mt-2 fixed-size-textarea"
                 />
-              </div>{" "}
-            </Modal.Body>{" "}
+              </div>
+            </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={rejectCancelConfirmation}>
-                Cancel{" "}
-              </Button>{" "}
+                Cancel
+              </Button>
               <Button variant="danger" onClick={rejectSaveConfirmation}>
-                Reject{" "}
-              </Button>{" "}
-            </Modal.Footer>{" "}
+                Reject
+              </Button>
+            </Modal.Footer>
           </Modal>
-          {/* modal for editTimesheetsuccess approvel */}{" "}
-          <Modal
-            className="custom-modal"
-            style={{
-              left: "50%",
-              transform: "translateX(-50%)",
-            }}
-            dialogClassName="modal-dialog-centered"
-            show={editTimesheetSuccessModalValue}
-          >
+
+           {/* modal for Reject approvel */}
+           <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForReject}  >
             <div className="d-flex flex-column modal-success p-4 align-items-center ">
-              <img
-                src={successCheck}
-                className="img-fluid mb-4"
-                alt="successCheck"
-              />
-              <p className="mb-4 text-center">
-                {" "}
-                Timesheet have been approved.{" "}
-              </p>{" "}
-              <button
-                className="btn  w-100 text-white"
-                onClick={() => {
-                  dispatch(editTimesheetSuccessModal(false));
-                }}
-                style={{
-                  backgroundColor: "#5EAC24",
-                }}
-              >
-                {" "}
-                Close{" "}
-              </button>{" "}
-            </div>{" "}
+              <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+              <p className="mb-4 text-center">Timesheets have been rejected.</p>
+              <button className="btn  w-100 text-white" onClick={closeRejectModal} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+            </div>
           </Modal>
-          {/* modal for editTimesheet reject */}{" "}
-          <Modal
-            className="custom-modal"
-            style={{
-              left: "50%",
-              transform: "translateX(-50%)",
-            }}
-            dialogClassName="modal-dialog-centered"
-            show={editTimesheetRejectModalValue}
-          >
-            <div className="d-flex flex-column modal-success p-4 align-items-center ">
-              <img
-                src={successCheck}
-                className="img-fluid mb-4"
-                alt="successCheck"
-              />
-              <p className="mb-4 text-center">
-                {" "}
-                Timesheet have been rejected.{" "}
-              </p>{" "}
-              <button
-                className="btn  w-100 text-white"
-                onClick={() => {
-                  dispatch(editTimesheetRejectModal(false));
-                }}
-                style={{
-                  backgroundColor: "#5EAC24",
-                }}
-              >
-                {" "}
-                Close{" "}
-              </button>{" "}
-            </div>{" "}
-          </Modal>
-        </div>{" "}
+
+
+
+        </div>
       </div>
+
     </>
-  );
+  )
 }
 
 export default AdminApprovalPage;

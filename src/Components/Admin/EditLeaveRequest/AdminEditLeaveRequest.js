@@ -8,6 +8,7 @@ import { Modal, Button } from "react-bootstrap";
 import successCheck from "../../Image/checked.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function AdminEditLeaveRequest() {
   const [lastLeaveRequestData, setLastLeaveRequestData] = useState(null);
@@ -16,7 +17,8 @@ function AdminEditLeaveRequest() {
   const [successModal, setSuccessModal] = useState(false);
   const navigate = useNavigate();
 
-
+  const adminValue = useSelector(state=>state.adminLogin.value);
+  const adminId=adminValue.adminId;
   
 
   const formik = useFormik({
@@ -26,6 +28,7 @@ function AdminEditLeaveRequest() {
       endDate: new Date(),
       noOfDays: "",
       reason: "",
+      status:"",
       comments: "",
     },
     validationSchema: schemaLeave,
@@ -36,7 +39,7 @@ function AdminEditLeaveRequest() {
 
   async function fetchLeaveData() {
     try {
-      const response = await axios.get("http://localhost:8081/admin/leave-requests");
+      const response = await axios.get(`http://localhost:8081/admin/leave-requests/${adminId}`);
       const leaveRequest = response.data;
       const pendingItems = leaveRequest.filter(item => item.status === "PENDING");
       console.log(pendingItems);

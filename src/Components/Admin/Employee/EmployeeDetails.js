@@ -119,13 +119,13 @@ export default function EmployeeDetails() {
           </div>
 
           <div className="buttons">
-            <button type="button" className="btn-edit btn-sm" onClick={handleSuccess}>
+            <button type="button" className="btn btn-primary m-3" onClick={handleSuccess}>
               Edit
             </button>
-            <button type="button" className="btn-delete btn-sm" onClick={handleDeleteConfirm}>
+            <button type="button" className="btn btn-danger m-3" onClick={handleDeleteConfirm}>
               Delete
             </button>
-            <button type="button" className="btn-cancel btn-sm" onClick={handleSuccessClick}>
+            <button type="button" className="btn btn-secondary m-3" onClick={handleSuccessClick}>
               Cancel
             </button>
           </div>
