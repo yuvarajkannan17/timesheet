@@ -39,7 +39,7 @@ function AdminEditLeaveRequest() {
 
   async function fetchLeaveData() {
     try {
-      const response = await axios.get(`http://localhost:8081/admin/leave-requests/${adminId}`);
+      const response = await axios.get(`http://localhost:8081/admin/leave-requests`);
       const leaveRequest = response.data;
       const pendingItems = leaveRequest.filter(item => item.status === "PENDING");
       console.log(pendingItems);
@@ -109,8 +109,8 @@ function AdminEditLeaveRequest() {
                                 <div className="p-5 center-align">
                                     <form onSubmit={formik.handleSubmit}>
                                     <div className="my-3 leave-row">
-                                            <label> <span style={{ color: 'red' }}>*</span>Emp Id :</label>
-                                            <input type='text'  className='w-25' name="empId" value={formik.values.empId} onChange={formik.handleChange} ></input>
+                                            <label> <span style={{ color: 'red' }}>*</span>Admin Id :</label>
+                                            <input type='text'  className='w-25' name="empId" value={adminId} onChange={formik.handleChange} ></input>
 
                                   </div>
                                        <div>
@@ -184,7 +184,7 @@ function AdminEditLeaveRequest() {
 
                                         <div className='my-5 text-end'>
                                             <button type='submit' disabled={formik.isSubmitting} className='btn btn-success mx-2' onClick={() => setConfirmationModal(true)}>Submit</button>
-                                            <button type='button' className='btn btn-secondary mx-2' onClick={() => { navigate('/employee') }}>Cancel</button>
+                                            <button type='button' className='btn btn-secondary mx-2' onClick={() => { navigate('/admin') }}>Cancel</button>
                                         </div>
 
                                     </form>

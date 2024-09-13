@@ -32,7 +32,7 @@ function AdminViewRejectedLeaveRequests() {
 
     return (
         <div className="ti-background-clr">
-            <Container>
+           {rejectedLeaveRequests.length > 0  ? ( <Container>
                 <div className="py-3 ">
                     <p className="text-center spr-approval-title">Rejected Leave Requests</p>
                 </div>
@@ -66,7 +66,10 @@ function AdminViewRejectedLeaveRequests() {
                 <div className="d-flex justify-content-center mt-3">
                     <button className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
                 </div>
-            </Container>
+            </Container>):(<div className="no-timesheet">
+                    <h3>No Rejected Timesheet Available</h3>
+                    
+                </div>)}
         </div>
     );
 }

@@ -231,7 +231,8 @@ function ApproveTimesheet() {
 
   function closeSuccessModal(){
     setSuccessModalForApprove(false);
-    
+    getTimesheet();
+    console.log("abc")
   }
 
   function closeRejectModal(){
