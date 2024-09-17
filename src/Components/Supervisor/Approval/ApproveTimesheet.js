@@ -36,15 +36,15 @@ function ApproveTimesheet() {
         let timehseetData=[];
 
         for (let empId in datasOfTimesheet) {
-          const adminData = datasOfTimesheet[empId];
-          const workingHours = adminData.workingHours;
+          const employeeData = datasOfTimesheet[empId];
+          const workingHours = employeeData.workingHours;
   
           // Fetch startDate and endDate
           const startDate = workingHours[0].date;
           const endDate = workingHours[workingHours.length - 1].date;
-          const totalHours = adminData.totalHours;
-          const adminId=adminData.employeeId;
-          timehseetData=[...timehseetData,{adminId,startDate,endDate,totalHours,checked:false}];
+          const totalHours = employeeData.totalHours;
+          const employeeId=employeeData.employeeId;
+          timehseetData=[...timehseetData,{employeeId,startDate,endDate,totalHours,checked:false}];
         }
         
             setTimesheetDatas(timehseetData.slice(-5));
@@ -106,11 +106,11 @@ function ApproveTimesheet() {
 
 
   // update the timesheetCheckBox
-  function handleCheckboxChange(adminId) {
+  function handleCheckboxChange(employeeId) {
 
     setTimesheetDatas((prevData) =>
       prevData.map((sheet) =>
-        sheet.adminId === adminId ? { ...sheet, checked: !sheet.checked } : sheet
+        sheet.employeeId === employeeId ? { ...sheet, checked: !sheet.checked } : sheet
       )
     );
   }
@@ -120,7 +120,7 @@ function ApproveTimesheet() {
   async function approveSaveConfirmation() {
     setAskConfirmationForApprove(false);
     const approvedSheets = timesheetDatas.filter((sheet) => sheet.checked === true);
-       console.log(approvedSheets);
+       
 
 
 
@@ -132,7 +132,7 @@ function ApproveTimesheet() {
 
 
         // Make a PUT request to update the status of the sheet in the API
-        const response = await axios.put(`http://localhost:8080/admins/working-hours/${sheet.adminId}/approve-range?startDate=${sheet.startDate}&endDate=${sheet.endDate}`);
+        const response = await axios.put(`http://localhost:8090/workinghours/employee/${sheet.employeeId}/range/approval?startDate=${sheet.startDate}&endDate=${sheet.endDate}&status=APPROVED&rejectionReason=heavr &projectId=PRO002`);
         const responseData = response.data;
 
         if (responseData) {
@@ -144,17 +144,7 @@ function ApproveTimesheet() {
 
 
 
-      // Wait for all updates to finish
-      // const updatedSheets = await Promise.all(updates);
-    
-      // // Update the state with the updated data
-      // setTimesheetDatas(updatedSheets);
-
-      // // Reset checkbox selection
-      // // cancelsheetFun();
-
-      // // Show success modal
-      // setSuccessModalForApprove(true);
+      
     } catch (error) {
       console.log('API error', error);
     }
@@ -173,6 +163,7 @@ function ApproveTimesheet() {
 
     console.log(rejectSheets);
 
+    console.log(rejectReason);
 
 
     try {
@@ -182,7 +173,7 @@ function ApproveTimesheet() {
         const updatedSheet = { ...sheet,  rejectionReason: rejectReason  };
 
         // Make a PUT request to update the status of the sheet in the API
-        const response = await axios.put(`http://localhost:8080/admins/working-hours/${sheet.adminId}/reject-range?startDate=${sheet.startDate}&endDate=${sheet.endDate}&reason=${rejectReason}`);
+        const response = await axios.put(`http://localhost:8090/workinghours/employee/${sheet.employeeId}/range/approval?startDate=${sheet.startDate}&endDate=${sheet.endDate}&status=REJECTED&rejectionReason=${rejectReason}&projectId=PRO002`);
         
         if(response.data){
           setSuccessModalForReject(true);
@@ -269,20 +260,20 @@ function ApproveTimesheet() {
               <tbody >
                 {/* table body */}
                 {timesheetDatas ? timesheetDatas.map((sheet) => (
-                  <tr key={sheet.adminId} className="text-center">
+                  <tr key={sheet.employeeId} className="text-center">
                     <td>
                       <input
                         type="checkbox"
                         name="approvalchkTimesheet"
                         checked={sheet.checked}
-                        onChange={() => handleCheckboxChange(sheet.adminId)}
+                        onChange={() => handleCheckboxChange(sheet.employeeId)}
                       ></input>
                     </td>
-                    <td>{sheet.adminId}</td>
+                    <td>{sheet.employeeId}</td>
                     <td>{sheet.startDate}</td>
                     <td>{sheet.endDate}</td>
                     <td>{sheet.totalHours}</td>
-                    <td><button className="btn btn-primary" onClick={() => { goEditPage(sheet.adminId, sheet.checked,sheet.startDate,sheet.endDate) }}>Edit</button></td>
+                    <td><button className="btn btn-primary" onClick={() => { goEditPage(sheet.employeeId, sheet.checked,sheet.startDate,sheet.endDate) }}>Edit</button></td>
 
                   </tr>
                 )) : ""}
