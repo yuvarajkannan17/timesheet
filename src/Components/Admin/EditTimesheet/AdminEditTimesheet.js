@@ -214,7 +214,7 @@ function AdminEditTimesheet(){
 
         // Add entries for the new project in editableData with 0 hours for each date
         const newEntries = uniqueDates.map(date => ({
-            employeeId:adminId,
+            adminId: inputs.adminId,
             projectId: newProjectId,
             date: date,
             hours: 0,
@@ -338,7 +338,7 @@ function AdminEditTimesheet(){
                             <div className="d-flex justify-content-between">
                                 <div className="m-1">
                                     <label htmlFor="ad_id">Admin Id :  </label>
-                                    <input type="text" id="ad_id" className="mx-1" value={inputs.adminId} readOnly />
+                                    <input type="text" id="ad_id" className="mx-1" value={adminId} readOnly />
                                 </div>
                             </div>
                             <div className="border table-responsive border-1 rounded p-4 border-black my-4" style={{ position: 'relative', zIndex: 1 }}>

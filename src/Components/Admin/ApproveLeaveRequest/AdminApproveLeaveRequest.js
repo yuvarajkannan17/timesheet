@@ -326,7 +326,7 @@ function AdminApproveLeaveRequest() {
                   <option value="excessive requests">Excessive Requests</option>
                   <option value="busy periods">Busy Periods</option>
                   <option value="incomplete work">Incomplete Works</option>
-                  <option value="maternity-leave">Policy Violations</option>
+                  <option value="policy violations">Policy Violations</option>
                   
                 </select>
 

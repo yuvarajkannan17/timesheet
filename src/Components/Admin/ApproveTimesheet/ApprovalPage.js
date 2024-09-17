@@ -145,7 +145,7 @@ function AdminApprovalPage() {
         const updatedSheet = { ...sheet,  rejectionReason: rejectReason  };
 
         // Make a PUT request to update the status of the sheet in the API
-        const response = await axios.put(`http://localhost:8086/sup/api/working-hours/SUP002/reject-range?startDate=${sheet.startDate}&endDate=${sheet.endDate}&reason=${rejectReason}&adminId=${adminId}`);
+        const response = await axios.put(`http://localhost:8086/sup/api/working-hours/${sheet.adminId}/reject-range?startDate=${sheet.startDate}&endDate=${sheet.endDate}&reason=${rejectReason}&adminId=${adminId}`);
         
         if(response.data){
           setSuccessModalForReject(true);

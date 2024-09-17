@@ -27,7 +27,7 @@ function AdminAddLeaveRequest() {
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
-            empId:"", 
+            empId:adminId, 
             startDate: new Date(),
             endDate: new Date(),
             noOfDays:0,
