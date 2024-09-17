@@ -214,7 +214,7 @@ function AdminEditTimesheet(){
 
         // Add entries for the new project in editableData with 0 hours for each date
         const newEntries = uniqueDates.map(date => ({
-            adminId: inputs.adminId,
+            employeeId:adminId,
             projectId: newProjectId,
             date: date,
             hours: 0,
@@ -278,11 +278,12 @@ function AdminEditTimesheet(){
                 const status=response.data[0].status;
                 setSuccessModalForTimesheet(true);
                     dispatch(submitAdminON(true));
+                                    localStorage.setItem(`isSubmitAdminOn${adminId}`, 'true');
+
                     setIsSubmitTimesheet(true)
                 // Remove the submitted data from local storage
                 const savedTimesheetDataList = JSON.parse(localStorage.getItem(adminId)) || [];
                 const updatedTimesheetData = savedTimesheetDataList.filter((_, index) => index !== savedTimesheetDataList.length - objectPositionRef.current);
-                localStorage.setItem(`isSubmitAdminOn${adminId}`, 'true');
                 localStorage.setItem(`startSubmitDate${adminId}`, inputs.startDate);
                 localStorage.setItem(`endSubmitDate${adminId}`, inputs.endDate);
                 localStorage.setItem(`submitAdminId${adminId}`, inputs.adminId);

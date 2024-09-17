@@ -77,15 +77,11 @@ function ApproveTimesheet() {
 
   // ask confirmation or trigger alert
   function approvesheetFun() {
-
     if (atLeastOneChecked) {
       setAskConfirmationForApprove(true);
     } else {
       setErrorMessage("Please select at least one Timesheet!!")
     }
-
-
-
   }
   // ask confirmation or trigger alert
   function rejectsheetFun() {
@@ -94,14 +90,11 @@ function ApproveTimesheet() {
     } else {
       setErrorMessage("Please select at least one Timesheet!!")
     }
-
-
-
   }
 
   // reset the timesheet
   function cancelsheetFun() {
-    navigate('/superadmin/createadmin')
+    navigate('/supervisor')
   }
 
 

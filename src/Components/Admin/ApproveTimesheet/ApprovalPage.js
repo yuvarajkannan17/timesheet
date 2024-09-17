@@ -74,15 +74,11 @@ function AdminApprovalPage() {
 
   // ask confirmation or trigger alert
   function approvesheetFun() {
-
     if (atLeastOneChecked) {
       setAskConfirmationForApprove(true);
     } else {
       setErrorMessage("Please select at least one Timesheet!!")
     }
-
-
-
   }
   // ask confirmation or trigger alert
   function rejectsheetFun() {
@@ -91,9 +87,6 @@ function AdminApprovalPage() {
     } else {
       setErrorMessage("Please select at least one Timesheet!!")
     }
-
-
-
   }
 
   // reset the timesheet
@@ -144,11 +137,7 @@ function AdminApprovalPage() {
   async function rejectSaveConfirmation() {
     setAskConfirmationForReject(false);
     const rejectSheets = timesheetDatas.filter((sheet) => sheet.checked === true);
-
     console.log(rejectSheets);
-
-
-
     try {
       // Update the status of approved sheets and track their IDs
       const updates = rejectSheets.map(async (sheet) => {
@@ -160,17 +149,12 @@ function AdminApprovalPage() {
         
         if(response.data){
           setSuccessModalForReject(true);
-        }
-
-        
-      });
-
-      
+        }        
+      });     
      
     } catch (error) {
       console.log('API error', error);
     }
-
   }
 
   // reject cancel
@@ -187,8 +171,6 @@ function AdminApprovalPage() {
     } else {
       setErrorMessage("Please select the timesheet you wish to edit!!!")
     }
-
-
   }
 
   function selectAllCheckbox(event) {
@@ -271,8 +253,7 @@ function AdminApprovalPage() {
             <button className="btn btn-secondary m-2" onClick={cancelsheetFun} >Cancel</button>
           </div>
         </Container>) :(<div className="no-timesheet">
-                    <h3>No Submitted Timesheet </h3>
-                    
+                    <h3>No Submitted Timesheet </h3>                    
                 </div>)}
 
 
