@@ -12,7 +12,7 @@ import { useLocation } from 'react-router-dom';
 import successCheck from '../../Image/checked.png'
 
 function EmployeeModifyTimesheet() {
-    const [timesheetData, setTimesheetData] = useState('');
+    const [timesheetData, setTimesheetData] = useState([]);
     const { id } = useParams();
     const location = useLocation();
     const { startDate, endDate } = location.state || {};
@@ -38,21 +38,19 @@ function EmployeeModifyTimesheet() {
 
     function editTimesheetApproveConfirmation() {
         setEditApproveConfirmationModal(true);
+        
     }
 
     function editTimesheetApproveCancel() {
         setEditApproveConfirmationModal(false);
+        
     }
 
     async function updateTimesheet(){
-
         try{
-
             editableData.map(async(data)=>{
 
-               let response= await axios.put("http://localhost:8081/admin/working-hours/update",data)
-
-               
+               let response= await axios.put("http://localhost:8081/admin/working-hours/update",data)              
 
             })
 
@@ -61,6 +59,7 @@ function EmployeeModifyTimesheet() {
             console.log("error");
 
         }
+        console.log(editableData)
      }
 
    
@@ -81,14 +80,11 @@ function EmployeeModifyTimesheet() {
         
     }
 
-    function closeSuccessModal(){
-        dispatch(editTimesheetSuccessModal(false));
-         navigate('/admin/approvetimesheet')
-
-    }
+    
 
     function editTimesheetRejectConfirmation() {
         setEditRejectConfirmationModal(true);
+        
     }
 
     function editTimesheetRejectCancel() {
@@ -162,12 +158,9 @@ function EmployeeModifyTimesheet() {
     async function getEditTimesheet() {
         const response = await axios.get(`http://localhost:8081/admin/working-hours/${id}/range?startDate=${startDate}&endDate=${endDate}`);
         const datas = response.data;
-        console.log(datas);
+        console.log("data",datas);
         setTimesheetData(datas);
         setEditableData(datas)
-
-
-
     }
 
     useEffect(() => {
@@ -291,21 +284,20 @@ function EmployeeModifyTimesheet() {
       },[editableData])
 
 
-
-
-
-
-
-
+      function closeSuccessModal(){
+        dispatch(editTimesheetSuccessModal(false));
+        getEditTimesheet();
+        console.log("abc")
+    }
 
     function goToHomePage() {
-        navigate('/admin/approvetimesheet')
+        navigate('/admin/approvalpage')
     }
 
 
     function closeRejectModal(){
         dispatch(editTimesheetRejectModal(false));
-        navigate('/admin/approvetimesheet');
+        getEditTimesheet();
 
     }
 
@@ -480,6 +472,7 @@ function EmployeeModifyTimesheet() {
 
                 </div>
             </div>)}
+          
         </>
 
     );

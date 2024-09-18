@@ -46,7 +46,7 @@ function AdminApprovalPage() {
         
             setTimesheetDatas(timehseetData.slice(-5));
          
-           
+          
         
 
     } catch (error) {
@@ -167,7 +167,9 @@ function AdminApprovalPage() {
 
     if (check) {
       console.log(id)
-      navigate('/admin/approvetimesheet/modifytimesheet/' + id,{state:{startDate,endDate}})
+      console.log(startDate)
+      console.log(endDate)
+      navigate('/admin/approvetimesheet/modifyemployeetimesheet/' + id,{state:{startDate,endDate}})
     } else {
       setErrorMessage("Please select the timesheet you wish to edit!!!")
     }

@@ -39,9 +39,7 @@ function AdminApproveLeaveRequest() {
     }
   }
   
-  useEffect(() => {
-
-    
+  useEffect(() => {    
     getLeaveData();
   }, [])
 
@@ -81,9 +79,6 @@ function AdminApproveLeaveRequest() {
     } else {
       setErrorMessage("Please select at least one Leave Request!!")
     }
-
-
-
   }
   // ask confirmation or trigger alert
   function rejectLeaveFun() {
@@ -92,9 +87,6 @@ function AdminApproveLeaveRequest() {
     } else {
       setErrorMessage("Please select at least one Leave Request!!")
     }
-
-
-
   }
 
   // reset the timesheet
@@ -127,20 +119,21 @@ function AdminApproveLeaveRequest() {
         const updatePromises = approvedLeavesRequest.map(async (data) => {
             // Perform the PUT request
             const response = await axios.put(`http://localhost:8086/supervisor/leave-requests/${data.id}/approve?adminId=${adminId}`);
-            return response.data; // Return the response data if needed
+           
         });
 
         // Wait for all the promises to complete
-        const updatedLeaves = await Promise.all(updatePromises);
-        if(updatedLeaves.data){
-          getLeaveData();
-        // Show success modal
         setSuccessModalForApprove(true);
-        }
+        console.log("abc")
     } catch (error) {
         console.error('Error updating leave status:', error);
     }
 }
+function closeSuccessModal()  {
+  setSuccessModalForApprove(false)
+  getLeaveData();
+}
+
 
 
   // cancel the approvel
@@ -171,20 +164,20 @@ function AdminApproveLeaveRequest() {
         // Make a PUT request to update the status of the leave in the API
         const response = await axios.put(`http://localhost:8086/supervisor/leave-requests/${data.id}/reject?adminId=${adminId}&reasonForRejection=${rejectReason}`);       
 
-        return response.data;
+       
       });
 
-      // Wait for all updates to finish
-      const updatedLeaves = await Promise.all(updates);
-      if(updatedLeaves.data){
-      getLeaveData();
-        setRejectReason("");
-      // Show success modal
-      setSuccessModalForReject(true);
-      }
+      
+      setSuccessModalForReject(true)
+      
     } catch (error) {
       console.log('API error', error);
     }
+}
+
+function closeRejectModal() {
+  setSuccessModalForReject(false)
+  getLeaveData();
 }
 
   // reject cancel
@@ -306,7 +299,7 @@ function AdminApproveLeaveRequest() {
             <div className="d-flex flex-column modal-success p-4 align-items-center ">
               <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
               <p className="mb-4 text-center">The leave request has been approved.</p>
-              <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForApprove(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+              <button className="btn  w-100 text-white" onClick={closeSuccessModal} style={{ backgroundColor: '#5EAC24' }}>Close</button>
             </div>
           </Modal>
 
@@ -349,7 +342,7 @@ function AdminApproveLeaveRequest() {
             <div className="d-flex flex-column modal-success p-4 align-items-center ">
               <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
               <p className="mb-4 text-center">The leave request has been rejected.</p>
-              <button className="btn  w-100 text-white" onClick={() => { setSuccessModalForReject(false) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+              <button className="btn  w-100 text-white" onClick={closeRejectModal} style={{ backgroundColor: '#5EAC24' }}>Close</button>
             </div>
           </Modal>
 

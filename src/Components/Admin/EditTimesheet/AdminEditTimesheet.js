@@ -17,7 +17,7 @@ function AdminEditTimesheet(){
     const [inputs, setInputs] = useState({
         startDate: "",
         endDate: "",
-        employeeId: ""
+        adminId: ""
     });
     let [totalWorkHours, setTotalWorkHours] = useState(0)
     const [isTimesheetAvailable, setIsTimesheetAvailable] = useState(false)

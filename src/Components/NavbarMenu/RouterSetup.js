@@ -104,7 +104,7 @@ function RouterSetup() {
           <Route path='/admin/approvalpage' element={ isAuthenticated ? <Layout><Approvalpage /></Layout>:<TimesheetLogin/>} />
           {/* <Route path='/admin/approvalList' element={isAuthenticated ? <Layout><ApprovelBody /></Layout>:<TimesheetLogin/>} /> */}
 
-          <Route path='/admin/modifyemployeetimesheet/:id' element={ isAuthenticated ? <Layout><ModifyEmployeeTimesheet /></Layout>:<TimesheetLogin/>} />
+          <Route path='/admin/approvetimesheet/modifyemployeetimesheet/:id' element={ isAuthenticated ? <Layout><ModifyEmployeeTimesheet /></Layout>:<TimesheetLogin/>} />
           <Route path='/admin/createemployee' element={ isAuthenticated ? <Layout><CreateEmployee /></Layout>:<TimesheetLogin/>} />
           <Route path='/admin/uploademployees' element={isAuthenticated ? <Layout><UploadEmployees /></Layout>:<TimesheetLogin/>} />
           <Route path='/admin/searchemployee' element={isAuthenticated ? <Layout><SearchEmployee /></Layout>:<TimesheetLogin/>} />
@@ -119,7 +119,7 @@ function RouterSetup() {
           <Route path='/admin/adminaddleaverequest' element={ isAuthenticated ? <Layout><AdminAddLeaveRequest /></Layout>:<TimesheetLogin/>} />
                  
           <Route path='/admin/adminapproveleaverequest' element={ isAuthenticated ? <Layout><AdminApproveLeaveRequest /></Layout>:<TimesheetLogin/>} />        
-          <Route path='/admin/adminapprovedetails/:id' element={ isAuthenticated ? <Layout><AdminApproveDetails /></Layout>:<TimesheetLogin/>} />
+          {/* <Route path='/admin/adminapprovedetails/:id' element={ isAuthenticated ? <Layout><AdminApproveDetails /></Layout>:<TimesheetLogin/>} /> */}
           <Route path='/admin/adminviewrejectedleaverequests' element={ isAuthenticated ? <Layout><AdminViewRejectedLeaveRequests/></Layout>:<TimesheetLogin/>} />        
 
         </Routes>
