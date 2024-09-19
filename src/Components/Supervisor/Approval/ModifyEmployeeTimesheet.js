@@ -44,29 +44,27 @@ function ModifyEmployeeTimesheet() {
         setEditApproveConfirmationModal(false);
     }
 
-    async function updateTimesheet(){
+    
 
-        try{
 
-            editableData.map(async(data)=>{
-
-               let response= await axios.put(`http://localhost:8090/workinghours/${data.id}`,data)
-
-               
-
-            })
-
-        }catch(error){
-
+     async function updateTimesheet() {
+        try {
+            // Use Promise.all to ensure all asynchronous requests complete before proceeding
+            await Promise.all(
+                editableData.map(async (data) => {
+                    let response = await axios.put(`http://localhost:8090/workinghours/${data.id}`, data);
+                })
+            );
+        } catch (error) {
             console.log("error");
-
         }
-     }
+    }
+
 
     async function editTimesheetApproveSave() {
         setEditApproveConfirmationModal(false);
 
-        updateTimesheet();
+      
         // Fetch the keys and store them in an array
        const keysArray = Object.keys(projectDatas);
 
@@ -76,6 +74,8 @@ function ModifyEmployeeTimesheet() {
         
 
         try {
+
+            await  updateTimesheet();
 
             keysArray.map( async(projectId)=>{
 
@@ -111,12 +111,14 @@ function ModifyEmployeeTimesheet() {
         setEditRejectConfirmationModal(false);
 
         
-        updateTimesheet();
+      
         // Fetch the keys and store them in an array
        const keysArray = Object.keys(projectDatas);
 
 
         try {
+
+            await  updateTimesheet();
 
             keysArray.map( async(projectId)=>{
 

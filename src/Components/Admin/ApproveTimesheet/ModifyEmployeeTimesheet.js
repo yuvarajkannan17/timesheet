@@ -1,17 +1,16 @@
 import axios from "axios";
-import employeeSheetUrl from "../../Api/employeeEdit";
+
 import Select from 'react-select';
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 import { Modal, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import '../ApproveTimesheet/approvalPage.css'
+import successCheck from '../../Image/checked.png'
+import './approvalPage.css'
 import { editTimesheetSuccessModal, editTimesheetRejectModal } from '../../features/modal';
 import { useLocation } from 'react-router-dom';
-import successCheck from '../../Image/checked.png'
-
-function EmployeeModifyTimesheet() {
+function ModifySupervisorTimesheet() {
     const [timesheetData, setTimesheetData] = useState([]);
     const { id } = useParams();
     const location = useLocation();
@@ -29,47 +28,46 @@ function EmployeeModifyTimesheet() {
 
     const [editApproveConfirmationModal, setEditApproveConfirmationModal] = useState(false);
     const [editRejectConfirmationModal, setEditRejectConfirmationModal] = useState(false);
-    const [rejectReason, setRejectReason] = useState('Please reach out supervisor regarding your timesheet.');
-    const adminValue = useSelector(state=>state.adminLogin.value);
-  const adminId=adminValue.adminId;
- 
+    const [rejectReason, setRejectReason] = useState('Please reach out superadmin  regarding your timesheet.');
+
     const editTimesheetSuccessModalValue = useSelector(state => state.modal.value.editTimesheetSuccessModalValue);
     const editTimesheetRejectModalValue = useSelector(state => state.modal.value.editTimesheetRejectModalValue);
 
+    const adminValue = useSelector(state=>state.adminLogin.value);
+    const adminId=adminValue.adminId;
+
     function editTimesheetApproveConfirmation() {
         setEditApproveConfirmationModal(true);
-        
     }
 
     function editTimesheetApproveCancel() {
         setEditApproveConfirmationModal(false);
-        
     }
 
-    async function updateTimesheet(){
-        try{
-            editableData.map(async(data)=>{
-
-               let response= await axios.put("http://localhost:8081/admin/working-hours/update",data)              
-
-            })
-
-        }catch(error){
-
+    async function updateTimesheet() {
+        try {
+            // Use Promise.all to ensure all asynchronous requests complete before proceeding
+            await Promise.all(
+                editableData.map(async (data) => {
+                    let response = await axios.put("http://localhost:8081/admin/working-hours/update", data);
+                })
+            );
+        } catch (error) {
             console.log("error");
-
         }
-        console.log(editableData)
-     }
-
+    }
    
 
     async function editTimesheetApproveSave() {
         setEditApproveConfirmationModal(false);
         
-        updateTimesheet();
+        
 
         try {
+
+            await updateTimesheet();
+
+
             await axios.put(`http://localhost:8086/sup/api/working-hours/${id}/approve-range?startDate=${startDate}&endDate=${endDate}&adminId=${adminId}`);
             
             dispatch(editTimesheetSuccessModal(true));
@@ -80,11 +78,14 @@ function EmployeeModifyTimesheet() {
         
     }
 
-    
+    function closeSuccessModal(){
+        dispatch(editTimesheetSuccessModal(false));
+         navigate('/admin')
+
+    }
 
     function editTimesheetRejectConfirmation() {
         setEditRejectConfirmationModal(true);
-        
     }
 
     function editTimesheetRejectCancel() {
@@ -96,14 +97,14 @@ function EmployeeModifyTimesheet() {
     async function editTimesheetRejectSave() {
         setEditRejectConfirmationModal(false);
 
-        updateTimesheet();
-
         try {
+            
+            await updateTimesheet();
 
             await axios.put(`http://localhost:8086/sup/api/working-hours/${id}/reject-range?startDate=${startDate}&endDate=${endDate}&reason=${rejectReason}&adminId=${adminId}`);
             
             dispatch(editTimesheetRejectModal(true));
-
+           
         } catch (error) {
             console.log(error)
         }
@@ -158,9 +159,12 @@ function EmployeeModifyTimesheet() {
     async function getEditTimesheet() {
         const response = await axios.get(`http://localhost:8081/admin/working-hours/${id}/range?startDate=${startDate}&endDate=${endDate}`);
         const datas = response.data;
-        console.log("data",datas);
+        console.log(datas);
         setTimesheetData(datas);
         setEditableData(datas)
+
+
+
     }
 
     useEffect(() => {
@@ -284,11 +288,12 @@ function EmployeeModifyTimesheet() {
       },[editableData])
 
 
-      function closeSuccessModal(){
-        dispatch(editTimesheetSuccessModal(false));
-        getEditTimesheet();
-        console.log("abc")
-    }
+
+
+
+
+
+
 
     function goToHomePage() {
         navigate('/admin/approvalpage')
@@ -297,7 +302,7 @@ function EmployeeModifyTimesheet() {
 
     function closeRejectModal(){
         dispatch(editTimesheetRejectModal(false));
-        getEditTimesheet();
+        navigate('/admin');
 
     }
 
@@ -472,11 +477,10 @@ function EmployeeModifyTimesheet() {
 
                 </div>
             </div>)}
-          
         </>
+      
 
     );
 }
 
-
-export default EmployeeModifyTimesheet;
+export default ModifySupervisorTimesheet;

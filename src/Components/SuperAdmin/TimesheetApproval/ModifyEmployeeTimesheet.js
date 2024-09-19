@@ -41,33 +41,29 @@ function ModifyAdminTimesheet() {
         setEditApproveConfirmationModal(false);
     }
 
-    async function updateTimesheet(){
-
-        try{
-
-            editableData.map(async(data)=>{
-
-               let response= await axios.put("http://localhost:8080/admins/working-hours/update",data)
-
-               
-
-            })
-
-        }catch(error){
-
+    async function updateTimesheet() {
+        try {
+            // Use Promise.all to ensure all asynchronous requests complete before proceeding
+            await Promise.all(
+                editableData.map(async (data) => {
+                    let response = await axios.put("http://localhost:8080/admins/working-hours/update", data);
+                })
+            );
+        } catch (error) {
             console.log("error");
-
         }
-     }
+    }
 
    
 
     async function editTimesheetApproveSave() {
         setEditApproveConfirmationModal(false);
         
-        updateTimesheet();
-
+       
         try {
+
+            await  updateTimesheet();
+
             await axios.put(`http://localhost:8080/admins/working-hours/${id}/approve-range?startDate=${startDate}&endDate=${endDate}`);
             
             dispatch(editTimesheetSuccessModal(true));
@@ -97,14 +93,19 @@ function ModifyAdminTimesheet() {
     async function editTimesheetRejectSave() {
         setEditRejectConfirmationModal(false);
 
-        updateTimesheet();
+       
+
+       
+
 
         try {
+
+            await  updateTimesheet();
 
             await axios.put(`http://localhost:8080/admins/working-hours/${id}/reject-range?startDate=${startDate}&endDate=${endDate}&reason=${rejectReason}`);
             
             dispatch(editTimesheetRejectModal(true));
-
+           
         } catch (error) {
             console.log(error)
         }
