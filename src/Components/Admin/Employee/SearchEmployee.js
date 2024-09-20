@@ -16,14 +16,17 @@ export default function SearchEmployee() {
       if (searchText.trim() === '') {
         setItems([]);
         setResult(false);
-        return;
-      }
+        return;
+      }
+
       const allEmployees = await getEmployeeData();
+      console.log('All Employees:', allEmployees);
+      console.log('Search Text:', searchText);
+
       const filteredEmployees = allEmployees.filter(
         (employee) =>
           employee.firstName.toLowerCase().includes(searchText.toLowerCase()) ||
-          employee.employeeId.toLowerCase().includes(searchText)
-        // Add other fields as needed
+          employee.employeeId.toLowerCase().includes(searchText.toLowerCase())
       );
 
       if (filteredEmployees.length > 0) {
@@ -37,33 +40,21 @@ export default function SearchEmployee() {
       console.error('Error filtering employee data:', error);
       setResult(true);
     }
-  }, [searchText]); // Use searchText as dependency
+  }, [searchText]);
 
-  // useEffect(() => {
-  //   handleFilter();
-  // }, [handleFilter]); // Include handleFilter in the dependency array
-
-  
+  const handleRowClick = (employeeId) => {
+    console.log('Navigating to employee details:', employeeId); // Debugging employeeId
+    navigate(`/admin/employeedetails/${employeeId}`);
+  };
 
   const handleCancel = () => {
     navigate('/admin');
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Backspace') {
-      // Trigger filtering when backspace key is pressed
-      handleFilter();
-      setItems([]);
-    }
-  };
-
-  const handleRowClick = (employeeId) => {
-    navigate(`/admin/employeedetails/${employeeId}`);
-  };
   const handleSearchChange = (e) => {
-    setSearchText(e.target.value);
-    handleFilter();
-  };
+    setSearchText(e.target.value); // Update search text state
+    handleFilter(); // Trigger filter on each keystroke
+  };
 
   return (
     <div className='background-clr'>
@@ -71,7 +62,6 @@ export default function SearchEmployee() {
       <h3> Search Employee </h3>
       <div className='container employee-form'>
         <div className='d-flex justify-content-end py-2' style={{ backgroundColor: 'rgb(251, 250, 250)' }}>
-          {/* <span className='me-2'>EMPLOYEE</span> */}
           <div>
             <form className='no-focus-outline'>
               <input
@@ -79,11 +69,8 @@ export default function SearchEmployee() {
                 type='search'
                 value={searchText}
                 placeholder='Search employee'
-                // onChange={(e) => setSearchText(e.target.value)}
-                onChange={handleSearchChange} // Handle input change here
-                onKeyDown={handleKeyDown}
+                onChange={handleSearchChange} // Handle input change here
               />
-              
               <button className='border-0 bg-white' type='button' onClick={handleFilter}>
                 <i className='bi bi-search'></i>
               </button>
