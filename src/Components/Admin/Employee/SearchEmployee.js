@@ -22,7 +22,7 @@ export default function SearchEmployee() {
       const filteredEmployees = allEmployees.filter(
         (employee) =>
           employee.firstName.toLowerCase().includes(searchText.toLowerCase()) ||
-          employee.lastName.toLowerCase().includes(searchText.toLowerCase())
+          employee.employeeId.toLowerCase().includes(searchText)
         // Add other fields as needed
       );
 

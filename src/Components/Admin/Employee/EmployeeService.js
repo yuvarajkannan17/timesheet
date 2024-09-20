@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 //Get employee data
 export const getEmployeeData = async () => {
   try {
-    const response = await axios.get('http://localhost:8002/employee/getemployees');
+    const response = await axios.get('http://localhost:8081/admin/projects/employees');
     return response.data; // Assuming the response.data contains the array of employee data
   } catch (error) {
     console.error('Error fetching employee data:', error);
@@ -14,7 +14,7 @@ export const getEmployeeData = async () => {
 // Get Employee Detail
 export const getEmployeeDetails = async (employeeId) => {
   try {
-    const response = await axios.get(`http://localhost:8002/employee/${employeeId}`);
+    const response = await axios.get(`http://localhost:8081/admin/projects/employees/${employeeId}`);
     return response.data; // Assuming the response.data contains the array of employee data
   } catch (error) {
     console.error('Error fetching employee data:', error);
@@ -41,7 +41,7 @@ export const addEmployeeData = async (formValues, adminId) => {
 // Check for duplicate employee details
 export const checkEmployeeDuplicates = async (employeeData) => {
   try {
-    const response = await axios.get('http://localhost:8002/employee/getemployees');
+    const response = await axios.get('http://localhost:8081/admin/projects/employees');
     const allEmployees = response.data;
 
     const duplicates = {
@@ -82,7 +82,7 @@ export const checkEmployeeDuplicates = async (employeeData) => {
 ///last entered  employee
 export const getLastEnteredEmployee = async () => {
   try {
-    const response = await axios.get('http://localhost:8002/employee/getemployees');
+    const response = await axios.get('http://localhost:8081/admin/projects/employees');
     const allEmployees = response.data;
     if (allEmployees.length === 0) {
       return null;
