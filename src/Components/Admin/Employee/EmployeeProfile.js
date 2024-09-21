@@ -1,5 +1,3 @@
-// employeeprofile.js
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
@@ -15,8 +13,9 @@ export default function EmployeeProfile() {
   const [successConfirmation, setSuccessConfirmation] = useState(false);
   const [error, setError] = useState(null);
   const [isEditConfirmationOpen, setEditConfirmationOpen] = useState(false);
-  const adminValue = useSelector(state=>state.adminLogin.value);
-  const adminId=adminValue.adminId;
+  const [createdEmployeeId, setCreatedEmployeeId] = useState(null); // New state to hold the created employee ID
+  const adminValue = useSelector(state => state.adminLogin.value);
+  const adminId = adminValue.adminId;
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -44,12 +43,15 @@ export default function EmployeeProfile() {
 
   const handleSubmitClick = async () => {
     try {
-      await addEmployeeData(employeeData, adminId);
+      const response = await addEmployeeData(employeeData, adminId); // Await the backend response      
+      setCreatedEmployeeId(response.employeeId); // Set the created employee ID from the response
+      console.log(response)
       setSuccessConfirmation(true);
     } catch (error) {
       setError('Error submitting employee data. Please try again.');
     }
   };
+  console.log(employeeData)
 
   const handleSuccessClick = () => {
     setSuccessModalOpen(true);
@@ -99,10 +101,10 @@ export default function EmployeeProfile() {
               <label className='label col-md-8'>{employeeData.emailId}</label>
             </div>
 
-            <div className='col-md-6 form-group'>
+            {/* <div className='col-md-6 form-group'>
               <label className='label col-md-4'>Employee Id:</label>
               <label className='label col-md-8'>{employeeData.employeeId}</label>
-            </div>
+            </div> */}
 
             <div className='col-md-6 form-group'>
               <label className='label col-md-4'>Project Id:</label>
@@ -160,6 +162,9 @@ export default function EmployeeProfile() {
           <div className='d-flex flex-column modal-success p-4 align-items-center'>
             <img src={successCheck} className='img-fluid mb-4' alt='successCheck' />
             <p className='mb-4 text-center'>Employee Profile Created Successfully</p>
+            {createdEmployeeId && ( // Conditionally render employee ID
+              <p className='mb-4 text-center'>Employee ID: {createdEmployeeId}</p>
+            )}
             <button className='btn w-100 text-white' onClick={handleConfirmClose} style={{ backgroundColor: '#5EAC24' }}>
               Close
             </button>

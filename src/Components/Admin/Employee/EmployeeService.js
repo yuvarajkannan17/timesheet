@@ -15,7 +15,8 @@ export const getEmployeeData = async () => {
 export const getEmployeeDetails = async (employeeId) => {
   try {
     const response = await axios.get(`http://localhost:8081/admin/projects/employees/${employeeId}`);
-    return response.data; // Assuming the response.data contains the array of employee data
+    const createdProject = response.data; // Assuming the response.data contains the array of employee data
+    return createdProject
   } catch (error) {
     console.error('Error fetching employee data:', error);
     return []; // Return an empty array in case of error
@@ -30,7 +31,8 @@ export const addEmployeeData = async (formValues, adminId) => {
       // Assuming the response contains the newly created employee data
       const createdEmployee = response.data;
       // You can handle the response as needed
-      console.log('Created employee:', createdEmployee);
+      // console.log('Created employee:', createdEmployee);
+      return createdEmployee;
     } catch (error) {
       console.error('Error adding employee data:', error);
       // Handle error as needed

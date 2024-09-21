@@ -14,17 +14,17 @@ export default function EmployeeDetails() {
   const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [successConfirmation, setSuccessConfirmation] = useState(false);
-  const adminValue = useSelector(state=>state.adminLogin.value);
+  const adminValue = useSelector(state => state.adminLogin.value);
   const adminId = adminValue.adminId;
 
   useEffect(() => {
     const fetchEmployeeData = async () => {
       try {
-        const data = await getEmployeeDetails(id);
-        setUserData(data);
+        const response = await getEmployeeDetails(id);
+        console.log('Employee details response:', response); // Ensure this logs the projects
+        setUserData(response);
       } catch (error) {
         console.error('Error fetching employee details:', error);
-        // Handle error (e.g., show error message)
       }
     };
 
@@ -49,7 +49,6 @@ export default function EmployeeDetails() {
       setSuccessConfirmation(true);
     } catch (error) {
       console.error('Error deleting employee:', error);
-      // Handle error (e.g., show error message)
     }
   };
 
@@ -101,8 +100,16 @@ export default function EmployeeDetails() {
               <label className="label col-md-8">{userData.emailId}</label>
             </div>
             <div className="col-md-6 form-group">
-              <label className="label col-md-4">Project Id :</label>
-              <label className="label col-md-8">{userData.projectId}</label>
+              <label className="label col-md-4">Project Id(s) :</label>
+              <label className="label col-md-8">
+                {userData.projects && userData.projects.length > 0 ? (
+                  userData.projects.map((project, index) => (
+                    <span key={index}>{project}{index < userData.projects.length - 1 ? ', ' : ''}</span>
+                  ))
+                ) : (
+                  "No projects assigned"
+                )}
+              </label>
             </div>
             <div className="col-md-6 form-group">
               <label className="label col-md-4">Aadhar Card :</label>
