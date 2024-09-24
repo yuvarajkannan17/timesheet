@@ -165,6 +165,7 @@ export default function EmployeeProfile() {
             {createdEmployeeId && ( // Conditionally render employee ID
               <p className='mb-4 text-center'>Employee ID: {createdEmployeeId}</p>
             )}
+            <p className='mb-4 text-center'>Employee Name: {employeeData.firstName}</p>
             <button className='btn w-100 text-white' onClick={handleConfirmClose} style={{ backgroundColor: '#5EAC24' }}>
               Close
             </button>

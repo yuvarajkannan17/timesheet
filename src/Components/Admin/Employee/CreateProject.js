@@ -29,7 +29,7 @@ const CreateProject = () => {
   const [employeeTeamMembersError, setEmployeeTeamMembersError] = useState([]);
   const [supervisorTeamMembersError, setSupervisorTeamMembersError] = useState([]);
   const [createdProjectId, setCreatedProjectId] = useState(null); // New state to hold the created employee ID
-
+  
   // State for confirmation page
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false); // Modal for confirmation
@@ -129,6 +129,7 @@ const CreateProject = () => {
       const createdProjectId = response.data.projectId;
       
       setCreatedProjectId(createdProjectId);
+      
       console.log('API Response:', response.data);
       setShowSuccessModal(true); // Show success modal when form is successfully submitted
       // navigate('/admin');
@@ -403,8 +404,10 @@ const CreateProject = () => {
             <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
             <p className="mb-4 text-center">Project created Successfully.</p>
             {createdProjectId && ( // Conditionally render project ID
-              <p className='mb-4 text-center'>Project ID: {createdProjectId}</p>
+              <p className='mb-4 text-center'>Project ID: {createdProjectId}</p>              
             )}
+            <p className='mb-4 text-center'>Project Title: {formData.projectTitle}</p>
+            
             <button className="btn  w-100 text-white" onClick={handleCloseSuccessModal} style={{ backgroundColor: '#5EAC24' }}>Close</button>
           </div>
         </Modal>
