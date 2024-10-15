@@ -25,8 +25,8 @@ export default function SearchEmployee() {
 
       const filteredEmployees = allEmployees.filter(
         (employee) =>
-          employee.firstName.toLowerCase().includes(searchText.toLowerCase()) ||
-          employee.employeeId.toLowerCase().includes(searchText.toLowerCase())
+          employee.firstName.toLowerCase().startsWith(searchText.toLowerCase()) ||
+          employee.employeeId.toLowerCase().startsWith(searchText.toLowerCase())
       );
 
       if (filteredEmployees.length > 0) {

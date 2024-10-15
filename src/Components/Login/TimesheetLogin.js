@@ -5,10 +5,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { authenticate } from "../features/adminDetails";
-import { setEmployeeId } from "../features/employeeLogin";
-import { setAdminId } from "../features/adminLogin";
-import { setSuperadminId } from "../features/superadminLogin";
-import { setSupervisorId } from "../features/supervisorLogin";
+import { loginEmployee } from '../features/employeeLogin';
+import { loginAdmin } from '../features/adminLogin';
+import { loginSupervisor } from '../features/supervisorLogin';
+import { loginSuperadmin } from '../features/superadminLogin';
+
 
 function TimesheetLogin() {
     const navigate = useNavigate();
@@ -31,67 +32,40 @@ function TimesheetLogin() {
             // API call based on role
             let response = await axios.post(`http://localhost:8088/api/login/${values.role}?emailId=${values.email}&password=${values.password}`);
             let credentials = response.data;
-
-            console.log(response);
-
-            if(credentials){
+    
+            if(credentials) {
                 dispatch(authenticate(true));
-                for (let key in credentials){
-                    if(key==="employeeId"){
-                      let id=credentials[key]
-                        dispatch(setEmployeeId(id))
-                       navigate("/employee")
-                       
-                    }else if(key==="adminId"){
-                        let id=credentials[key]
-                        dispatch(setAdminId(id))
-                        navigate("/admin")
-                        
-                    }else if(key==="superAdminId"){
-                        let id=credentials[key]
-                        dispatch(setSuperadminId(id))
-                        navigate("/superadmin/createadmin")
-                    
-                        
+                for (let key in credentials) {
+                    if (key === "employeeId") {
+                        let id = credentials[key];
+                        dispatch(loginEmployee({ employeeId: id })); // Updated dispatch
+                        navigate("/employee");
+                    } else if (key === "adminId") {
+                        let id = credentials[key];
+                        dispatch(loginAdmin({ adminId: id })); // Updated dispatch
+                        navigate("/admin");
+                    } else if (key === "superAdminId") {
+                        let id = credentials[key];
+                        dispatch(loginSuperadmin({ superadminId: id })); // Updated dispatch
+                        navigate("/superadmin/createadmin");
+                    } else if (key === "supervisorId") {
+                        let id = credentials[key];
+                        dispatch(loginSupervisor({ supervisorId: id })); // Updated dispatch
+                        navigate("/supervisor");
                     }
-                    else if(key==="supervisorId"){
-                        let id=credentials[key]
-                        dispatch(setSupervisorId(id))
-                        navigate("/supervisor")
-                    
-                        
-                    }
-                   
-                   
                 }
-
-
             }
-
-           
         } catch (error) {
-            // Handle specific error cases
-        if (error.response) {
-            if (error.response.status === 401) {
-                // Unauthorized error
+            if (error.response && error.response.status === 401) {
                 setUserError('Incorrect Username or Password');
+            } else if (error.request) {
+                setUserError('No response from server. Please try again later.');
             } else {
-                // Handle other response errors
-                setUserError(`Error: ${error.response.status} - ${error.response.statusText}`);
-                console.log(error.message)
+                setUserError('An error occurred. Please try again.');
             }
-        } else if (error.request) {
-            // The request was made but no response was received
-            setUserError('No response from server. Please try again later.');
-        } else {
-            // Something happened in setting up the request that triggered an Error
-            setUserError('An error occurred. Please try again.');
-        }
-            
-            
-            
         }
     }
+    
 
     const togglePasswordVisibility = () => setShowPassword(!showPassword);
 

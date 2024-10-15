@@ -1,21 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
+// adminLoginSlice.js (example)
+import { createSlice } from '@reduxjs/toolkit';
 
-export const adminLoginSlice=createSlice({
-     name:"adminLogin",
-    initialState:{
-        value:{
-            adminId:""
-        }
+const adminLoginSlice = createSlice({
+  name: 'adminLogin',
+  initialState: { value: {} },
+  reducers: {
+    loginAdmin: (state, action) => {
+      state.value = action.payload;
     },
-    reducers:{
-        setAdminId:(state,action)=>{
-            state.value.adminId=action.payload;
-            
-
-        }
-       
-    }
-
+    logoutAdmin: (state) => {
+      state.value = {}; // Clear admin data on logout
+    },
+  },
 });
-export const {setAdminId}=adminLoginSlice.actions;
+
+export const { loginAdmin, logoutAdmin } = adminLoginSlice.actions;
 export default adminLoginSlice.reducer;

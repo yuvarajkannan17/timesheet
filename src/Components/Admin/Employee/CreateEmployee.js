@@ -63,11 +63,11 @@ const AddEmployeeData = () => {
     if (!values.firstName) errors.firstName = "Firstname is required!";
     if (!values.lastName) errors.lastName = "Lastname is required!";
     if (!values.address) errors.address = "Address is required!";
-    if (!values.mobileNumber || values.mobileNumber.length !== 10) errors.mobileNumber = "Valid Mobile Number is required!";
-    if (!values.emailId || !isValidEmail(values.emailId)) errors.emailId = "Valid Email Id is required!";
-    if (!values.aadharNumber || values.aadharNumber.length !== 12) errors.aadharNumber = "Valid Aadhar Number is required!";
-    if (!values.panNumber || !isValidPan(values.panNumber)) errors.panNumber = "Valid Pan Number is required!";
-    if (!values.password || !isValidPassword(values.password)) errors.password = "Valid Paaaword is required!";
+    if (!values.mobileNumber || values.mobileNumber.length !== 10) errors.mobileNumber = "Mobile Number is required!";
+    if (!values.emailId || !isValidEmail(values.emailId)) errors.emailId = "Email Id is required!";
+    if (!values.aadharNumber || values.aadharNumber.length !== 12) errors.aadharNumber = "Aadhar Number is required!";
+    if (!values.panNumber || !isValidPan(values.panNumber)) errors.panNumber = "Pan Number is required!";
+    if (!values.password || !isValidPassword(values.password)) errors.password = "Password is required!";
 
     return errors;
   };

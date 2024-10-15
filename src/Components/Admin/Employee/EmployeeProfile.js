@@ -106,10 +106,10 @@ export default function EmployeeProfile() {
               <label className='label col-md-8'>{employeeData.employeeId}</label>
             </div> */}
 
-            <div className='col-md-6 form-group'>
+            {/* <div className='col-md-6 form-group'>
               <label className='label col-md-4'>Project Id:</label>
               <label className='label col-md-8'>{employeeData.projectId}</label>
-            </div>
+            </div> */}
 
             <div className='col-md-6 form-group'>
               <label className='label col-md-4'>Aadhar Card:</label>

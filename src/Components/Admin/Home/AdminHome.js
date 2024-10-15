@@ -149,10 +149,35 @@ timesheetState();
                     <Link to={"createemployee"}>Create Employee</Link>
                   </ul>
                   <ul>
-                    <Link to={"uploademployees"}>Upload Employees</Link>
+                    <Link to={"searchemployee"}>Search Employee</Link>
                   </ul>
                   <ul>
-                    <Link to={"searchemployee"}>Search Employee</Link>
+                    <Link to={"uploademployees"}>Upload Employees</Link>
+                  </ul>
+                  
+                </div>
+              )}
+            </div>
+            <div
+              className={`collapse-container mb-3 ${
+                isOpenProjectManagement ? "active" : ""
+              }`}
+            >
+              <button
+                onClick={() =>
+                  setIsOpenProjectManagement(!isOpenProjectManagement)
+                }
+                className="collapse-toggle btn fw-bold"
+              >
+                Project Management
+              </button>
+              {isOpenProjectManagement && (
+                <div className="collapse-content">
+                  <ul>
+                    <Link to={"createproject"}>Add Project</Link>
+                  </ul>
+                  <ul>
+                    <Link to={"updateprojectdetails"}>Update Project</Link>
                   </ul>
                 </div>
               )}
@@ -223,30 +248,7 @@ timesheetState();
                 </div>
               )}
             </div>
-            <div
-              className={`collapse-container mb-3 ${
-                isOpenProjectManagement ? "active" : ""
-              }`}
-            >
-              <button
-                onClick={() =>
-                  setIsOpenProjectManagement(!isOpenProjectManagement)
-                }
-                className="collapse-toggle btn fw-bold"
-              >
-                Project Management
-              </button>
-              {isOpenProjectManagement && (
-                <div className="collapse-content">
-                  <ul>
-                    <Link to={"createproject"}>Add Project</Link>
-                  </ul>
-                  <ul>
-                    <Link to={"updateprojectdetails"}>Update Project</Link>
-                  </ul>
-                </div>
-              )}
-            </div>
+            
           </div>
 
            <div className="right-details">
