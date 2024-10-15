@@ -22,7 +22,7 @@ import AdminEditTimesheet from '../Admin/EditTimesheet/AdminEditTimesheet.js';
 import AdminRejectTimesheet from '../Admin/ViewRejectedTimesheet/AdminRejectTimesheet.js';
 import AdminEditLeaveRequest from '../Admin/EditLeaveRequest/AdminEditLeaveRequest.js'
 import AdminAddLeaveRequest from '../Admin/AddLeaveRequest/AdminAddLeaveRequest.js'
-import AdminRejectLeaveRequest from '../Admin/RejectLeaveRequest/AdminRejectLeaveRequest.js'
+
 import AdminApproveLeaveRequest from '../Admin/ApproveLeaveRequest/AdminApproveLeaveRequest.js'
 import AdminApproveDetails from '../Admin/ApproveLeaveRequest/AdminApproveDetails.js'
 import EmployeeProfile from '../Admin/Employee/EmployeeProfile.js';
