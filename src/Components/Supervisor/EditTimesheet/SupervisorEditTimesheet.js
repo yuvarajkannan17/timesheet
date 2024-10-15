@@ -341,12 +341,7 @@ function SupervisorEditTimesheet() {
                                     <input type="text" id="fromDate" className="mx-1" value={inputs.endDate} readOnly />
                                 </div>
                             </div>
-                            <div className="d-flex justify-content-between">
-                                <div className="m-1">
-                                    <label htmlFor="emp_id"> EmployeeId :  </label>
-                                    <input type="text" id="emp_id" className="mx-1" value={inputs.employeeId} readOnly />
-                                </div>
-                            </div>
+                           
                             <div className="border table-responsive border-1 rounded p-4 border-black my-4" style={{ position: 'relative', zIndex: 1 }}>
                                 {error && <div style={{ color: "red", marginLeft: "20px", fontWeight: 900 }}>{error}</div>}
                                 <table className="table table-bordered border-dark text-center">
@@ -419,7 +414,7 @@ function SupervisorEditTimesheet() {
                             <div className="d-flex justify-content-center" >
                                 <button className="btn btn-primary m-3 w-5" onClick={updateTimesheetData} style={{ width: '100px' }}>Save</button>
                                 <button className="btn btn-success m-3 w-5" onClick={submitConfirmation} disabled={isSubmit} style={{ width: '100px' }}>Submit</button>
-                                <button className="btn btn-secondary m-3 w-5" onClick={() => navigate("/employee")} style={{ width: '100px' }}>Cancel</button>
+                                <button className="btn btn-secondary m-3 w-5" onClick={() => navigate("/supervisor")} style={{ width: '100px' }}>Cancel</button>
 
                             </div>
                         </div>

@@ -403,6 +403,51 @@ const AddTimesheet = () => {
     navigate("/supervisor")
 }
   console.log(projectRows)
+
+  
+  // Get the current month in YYYY-MM format
+const currentMonth = new Date().toISOString().slice(0, 7); // e.g., "2024-10"
+
+// Create a Date object from the current month
+const [year, month] = currentMonth.split('-').map(Number); // Split and convert to numbers
+const currentDate = new Date(year, month - 1); // month - 1 because month is 0-indexed
+
+// Add 6 months
+currentDate.setMonth(currentDate.getMonth() + 5);
+
+// Get the new year and month in the desired format
+const newYear = currentDate.getFullYear();
+const newMonth = currentDate.getMonth() + 1; // Adding 1 to make it 1-indexed
+
+// Format the result as YYYY-MM
+const endMonth = `${newYear}-${newMonth < 10 ? '0' : ''}${newMonth}`; // Add leading zero if needed
+
+
+  
+   
+ 
+
+
+  useEffect(() => {
+    // Get the current month and year
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Month is zero-indexed
+    setSelectedMonth(`${year}-${month}`);
+    
+
+  }, []);
+
+  
+  const getMaxDate = () => {
+    const currentDate = new Date();
+    currentDate.setMonth(currentDate.getMonth() + 5);
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    
+    return `${year}-${month}`;
+  };
+ 
   
   
 
@@ -421,6 +466,8 @@ const AddTimesheet = () => {
               id="fromMonth"
               className="mx-1"
               value={selectedMonth}
+              min={`${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`}
+              max={getMaxDate()}
               onChange={(e) => setSelectedMonth(e.target.value)}
 
             />
@@ -429,30 +476,22 @@ const AddTimesheet = () => {
             <button
               className="AddTimesheet btn btn-primary"
               onClick={handleBackward}
+              disabled={(selectedMonth===currentMonth)&&(showFirstHalf)}
             >
               <i className="bi bi-caret-left-fill"></i>Backward
             </button>
             <button
               className="AddTimesheet btn btn-primary ms-2"
               onClick={handleForward}
+              disabled={(selectedMonth===endMonth)&&(!showFirstHalf)}
+              
             >
               Forward <i className="bi bi-caret-right-fill"></i>
             </button>
           </div>}
         </div>
 
-        <div className='d-flex justify-content-between'>
-          {selectedMonth && <div className="m-1">
-            <label htmlFor="emp-id">EMPLOYEE ID : </label>
-            <input
-              type="text"
-              id="emp-id"
-              className="mx-1"
-              value={supervisorId}
-              readOnly
-            />
-          </div>}
-        </div>
+        
 
         
 
