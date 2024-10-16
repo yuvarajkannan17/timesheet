@@ -50,7 +50,7 @@ function TimesheetLogin() {
                     }else if(key==="superAdminId"){
                         let id=credentials[key]
                         dispatch(setSuperadminId(id))
-                        navigate("/superadmin/createadmin")
+                        navigate("/superadmin")
                     
                         
                     }

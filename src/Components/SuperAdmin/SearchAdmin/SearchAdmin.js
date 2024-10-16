@@ -57,24 +57,24 @@ function SearchAdmin() {
     }
 
 
-    //  search the admin details from admin list
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
     };
-
-    // searching admin based on name and id
-    const filteredAdminList = adminList.filter((admin) =>
-        admin.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        admin.adminId.toString().includes(searchQuery)
-            
+    
+    // Searching admin based on matching starting characters of the name or id
+    const filteredAdminList = adminList.filter((admin) => 
+        admin.firstName.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
+        admin.adminId.toString().startsWith(searchQuery)
     );
+    
+    
 
     
 
 
     return (
         <>
-         <SuperAdminNav/>
+         
             <div className='ti-background-clr'>
                 <div className='ti-data-field-container row py-4'>
                     {/* admin list view and search */}
@@ -114,12 +114,14 @@ function SearchAdmin() {
                             </table>
 
                         </div>
+                        <button className='btn btn-secondary' onClick={()=>{navigate("/superadmin")}}>Cancel</button>
                     </div>
+                    
 
                 </div>
 
 
-
+                 
             </div>
             <div>
                 <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={showModal}  >

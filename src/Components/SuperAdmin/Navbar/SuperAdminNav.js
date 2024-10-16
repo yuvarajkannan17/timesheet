@@ -9,7 +9,7 @@ function SuperAdminNav() {
             <div className="superadmin-navigation">
                 <Container >
                     <div>
-                        <ul className='nav d-flex justify-content-end'>
+                        <ul className='nav nav-control'>
                             <li className='nav-item'>
                                 <NavLink to={'/superadmin/createadmin'} className='nav-link superadmin-navigation-link' activeclassname='active'>Create Admin User</NavLink>
                             </li>
@@ -22,6 +22,7 @@ function SuperAdminNav() {
                             <li className='nav-item'>
                                 <NavLink to={'/superadmin/leaveapproval'} className='nav-link superadmin-navigation-link' activeclassname='active'>Approve Leave Request</NavLink>
                             </li>
+                            
                         </ul>
                     </div>
                 </Container>

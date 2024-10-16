@@ -101,7 +101,7 @@ function SuperadminLeaveApproval() {
 
   // reset the timesheet
   function cancelLeaveFun() {
-    navigate('/superadmin/createadmin')
+    navigate('/superadmin')
   }
 
 
@@ -221,7 +221,7 @@ console.log(rejectReason);
 
   return (
     <>
-       <SuperAdminNav/>
+       
       <div className="ti-background-clr">
          {leaveDatas.length > 0 ? (<Container>
           <div className="py-3 ">
@@ -281,6 +281,7 @@ console.log(rejectReason);
           </div>
         </Container>):(<div className="no-timesheet">
                     <h3>No Submitted Leave Request</h3>
+                    <button className="btn btn-secondary " onClick={()=>{navigate('/superadmin')}}>Cancel</button>
                     
                 </div>)}
 
