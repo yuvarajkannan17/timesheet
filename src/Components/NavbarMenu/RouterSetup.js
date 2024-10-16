@@ -66,7 +66,10 @@ function RouterSetup() {
              
         <Routes>
           <Route path='/' element={<TimesheetLogin/>} />
+
           <Route path='/superadmin' element={ isAuthenticated ?<Layout><SuperadminHome/></Layout> :<TimesheetLogin/>} />
+          
+
           <Route path='/superadmin/createadmin' element={ isAuthenticated ?<Layout><CreateAdmin/></Layout> :<TimesheetLogin/>} />
           <Route path='/superadmin/searchadmin/admindetailsview/editadmin/:id' element={isAuthenticated ?<Layout><AdminEdit/></Layout>:<TimesheetLogin/>} />
           <Route path='/superadmin/searchadmin' element={isAuthenticated ? <Layout><SearchAdmin /></Layout>:<TimesheetLogin/>} />

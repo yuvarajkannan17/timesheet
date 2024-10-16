@@ -25,12 +25,45 @@
 }
 
 .ti-sign-in{
-    border: 2px solid white;
+    border: 1.5px solid white;
     margin-top: 4px;
-    padding:0 5px;
+    padding:0 2px;
     border-radius: 30px;
-    
+    margin-right: 10px;
 }
+
+/* Style for the user ID and Logout button */
+.ti-sign-in .nav-item {
+    color: white;
+    background-color: transparent;
+    border: none;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .ti-sign-in .nav-item:hover {
+    color: #f5f4ef; /* Highlight color on hover */
+  }
+  
+  .ti-sign-in .btn {
+    border: 0px solid #eff0f4;  /* Outline style for the button */
+    color: white;
+    background-color: transparent;
+    font-size: 1rem;
+    padding: 0.5rem 1rem; 
+    
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+  }
+/*   
+  .ti-sign-in .btn:hover {
+    background-color: #f9f8f5; /* Button hover background */
+    /* color: black; Button hover text color */
+  /* } */
+   /* */ */
 
 /* super admin navigation */
 .superadmin-navigation{

@@ -1,3 +1,5 @@
+
+
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -98,20 +100,23 @@ const [updateProjectSuccessModal, setUpdateProjectSuccessModal] = useState(false
       employeeTeamMembers: updatedProject.employeeTeamMembers,
       supervisorTeamMembers: updatedProject.supervisorTeamMembers,
     };
-
+  
     try {
       const response = await axios.put(
-        `http://localhost:8081/admin/projects/${projectId}?adminId=${adminId}`, 
+        `http://localhost:8081/admin/projects/${projectId}?adminId=${adminId}`,
         transformedProject,
         { headers: { 'Content-Type': 'application/json' } }
       );
-setUpdateProjectSuccessModal(true);
+      
       if (response.status !== 200) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-
+  
+      // Fetch updated project details after saving
+      fetchProjectDetails(projectId);
+      setUpdateProjectSuccessModal(true);  // Show success modal
+  
       setEditing(false);
-      
     } catch (error) {
       if (error.response) {
         console.log(`Error: ${error.response.data.message}`);
@@ -120,9 +125,9 @@ setUpdateProjectSuccessModal(true);
       } else {
         console.log('Error updating project details. Please try again.');
       }
-      
     }
   };
+  
 
   const handleAddTeamMember = () => {
     setUpdatedProject({
@@ -282,6 +287,7 @@ setUpdateProjectSuccessModal(true);
                           <strong>Team Members</strong>
                           {searchResult.employeeTeamMembers.map((member, index) => (
                             <p key={index}>{member.employeeId}</p>
+                            
                           ))}
                         </div>
                       )}
@@ -331,13 +337,28 @@ setUpdateProjectSuccessModal(true);
           <button className="btn btn-success" onClick={handleSave}>Save</button>
         </Modal.Footer>
       </Modal>
-      <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={updateProjectSuccessModal}  >
-                        <div className="d-flex flex-column modal-success p-4 align-items-center ">
-                            <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
-                            <p className="mb-4 text-center"> Your Project Updated Successfully</p>
-                            <button className="btn  w-100 text-white" onClick={() => setUpdateProjectSuccessModal(false)} style={{ backgroundColor: '#5EAC24' }}>Close</button>
-                        </div>
-                    </Modal>
+      <Modal
+  className="custom-modal"
+  style={{ left: '50%', transform: 'translateX(-50%)' }}
+  dialogClassName="modal-dialog-centered"
+  show={updateProjectSuccessModal}
+>
+  <div className="d-flex flex-column modal-success p-4 align-items-center ">
+    <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+    <p className="mb-4 text-center">Your Project Updated Successfully</p>
+    <button
+      className="btn  w-100 text-white"
+      onClick={() => {
+        setUpdateProjectSuccessModal(false);
+        fetchProjectDetails(projectId);  // Fetch the latest project data after closing the modal
+      }}
+      style={{ backgroundColor: '#5EAC24' }}
+    >
+      Close
+    </button>
+  </div>
+</Modal>
+
     </>
   );
 };
