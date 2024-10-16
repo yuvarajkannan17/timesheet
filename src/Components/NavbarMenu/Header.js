@@ -54,19 +54,19 @@ function Header() {
   const handleLogout = () => {
     if (employeeId) {
       dispatch(logoutEmployee());
-      navigate('/login');
+      navigate('/');
       console.log('Navigating to login...')
     } else if (adminId) {
       dispatch(logoutAdmin());
-      navigate('/login');
+      navigate('/');
     } else if (supervisorId) {
       dispatch(logoutSupervisor());
-      navigate('/login');
+      navigate('/');
     } else if (superadminId) {
       dispatch(logoutSuperadmin());
-      navigate('/login');
+      navigate('/');
     }
-    navigate('/login'); // Redirect to login page after logout
+    navigate('/'); // Redirect to login page after logout
     handleClose(); // Close the modal
   };
 
