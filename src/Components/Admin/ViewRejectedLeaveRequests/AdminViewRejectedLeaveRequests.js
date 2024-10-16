@@ -67,8 +67,9 @@ function AdminViewRejectedLeaveRequests() {
                     <button className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
                 </div>
             </Container>):(<div className="no-timesheet">
-                    <h3>No Rejected Timesheet Available</h3>
-                    
+                    <h3>No Rejected Leave Request Available</h3>
+                    <button className="btn btn-secondary " onClick={()=>{navigate('/admin')}}>Cancel</button>
+
                 </div>)}
         </div>
     );

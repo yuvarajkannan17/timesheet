@@ -255,7 +255,9 @@ function AdminApprovalPage() {
             <button className="btn btn-secondary m-2" onClick={cancelsheetFun} >Cancel</button>
           </div>
         </Container>) :(<div className="no-timesheet">
-                    <h3>No Submitted Timesheet </h3>                    
+                    <h3>No Submitted Timesheet </h3>  
+                    <button className="btn btn-secondary " onClick={()=>{navigate('/admin')}}>Cancel</button>
+                  
                 </div>)}
 
 
