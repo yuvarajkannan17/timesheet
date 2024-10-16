@@ -300,6 +300,7 @@ function SupervisorLeaveApproval() {
           </div>
         </Container>) : (<div className="no-timesheet">
           <h3>No Submitted Leave Request</h3>
+          <button className="btn btn-secondary" onClick={()=>{navigate("/supervisor")}}>Cancel</button>
 
         </div>)}
 

@@ -54,12 +54,17 @@ function Header() {
   const handleLogout = () => {
     if (employeeId) {
       dispatch(logoutEmployee());
+      navigate('/login');
+      console.log('Navigating to login...')
     } else if (adminId) {
       dispatch(logoutAdmin());
+      navigate('/login');
     } else if (supervisorId) {
       dispatch(logoutSupervisor());
+      navigate('/login');
     } else if (superadminId) {
       dispatch(logoutSuperadmin());
+      navigate('/login');
     }
     navigate('/login'); // Redirect to login page after logout
     handleClose(); // Close the modal
@@ -85,11 +90,20 @@ function Header() {
             {supervisorId && <span className='nav-item'>{supervisorId}</span>}
             {superadminId && <span className='nav-item'>{superadminId}</span>}
 
-            {/* Logout button */}
-          </div>
-          <div className='ti-sign-in d-flex align-items-center'>
-          <button className="nav-item btn ms-3" onClick={handleOpen}>Logout</button>
-          </div>
+  {/* Logout button */}
+  {/* {(employeeId || adminId || supervisorId || superadminId) && (
+    
+  )} */}
+  
+</div>
+<div className='ti-sign-in d-flex align-items-center'>
+<button
+      className="nav-item btn ms-3"
+      onClick={handleLogout}
+    >
+      Logout
+    </button>
+    </div>
 
           {/* Logout Confirmation Modal */}
           <Modal show={isLogoutModalOpen} onHide={handleClose} centered>

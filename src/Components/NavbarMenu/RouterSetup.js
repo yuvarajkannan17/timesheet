@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import CreateAdmin from '../SuperAdmin/CreateAdmin/CreateAdmin.js'
 import SearchAdmin from '../SuperAdmin/SearchAdmin/SearchAdmin.js'
 import AdminEdit from '../SuperAdmin/EditAdmin/AdminEdit.js';
+import SuperadminHome from "../SuperAdmin/Navbar/SuperAdminNav.js"
 import AdminDetailsView from '../SuperAdmin/SearchAdmin/AdminDetailsView.js';
 import EditTimesheet from '../Supervisor/Approval/ModifyEmployeeTimesheet.js';
 import SupervisorEmployeeApproveTimesheet from '../Supervisor/Approval/ApproveTimesheet.js';
@@ -65,7 +66,10 @@ function RouterSetup() {
              
         <Routes>
           <Route path='/' element={<TimesheetLogin/>} />
-          <Route path='/login' element={<TimesheetLogin/>} />
+
+          <Route path='/superadmin' element={ isAuthenticated ?<Layout><SuperadminHome/></Layout> :<TimesheetLogin/>} />
+          
+
           <Route path='/superadmin/createadmin' element={ isAuthenticated ?<Layout><CreateAdmin/></Layout> :<TimesheetLogin/>} />
           <Route path='/superadmin/searchadmin/admindetailsview/editadmin/:id' element={isAuthenticated ?<Layout><AdminEdit/></Layout>:<TimesheetLogin/>} />
           <Route path='/superadmin/searchadmin' element={isAuthenticated ? <Layout><SearchAdmin /></Layout>:<TimesheetLogin/>} />

@@ -422,6 +422,7 @@ function SupervisorEditTimesheet() {
                 </div>) : (<div className="no-timesheet">
                     <h3>No Timesheet Available</h3>
                     <p>Please create a new one.</p>
+                    <button className="btn btn-secondary" onClick={()=>{navigate("/supervisor")}}>Cancel</button>
                 </div>)}
                 <Modal show={editDataSubmitConfirmation}>
                     <Modal.Body >Do you want to Submit?</Modal.Body>

@@ -47,7 +47,7 @@ function TimesheetLogin() {
                     } else if (key === "superAdminId") {
                         let id = credentials[key];
                         dispatch(loginSuperadmin({ superadminId: id })); // Updated dispatch
-                        navigate("/superadmin/createadmin");
+                        navigate("/superadmin");
                     } else if (key === "supervisorId") {
                         let id = credentials[key];
                         dispatch(loginSupervisor({ supervisorId: id })); // Updated dispatch

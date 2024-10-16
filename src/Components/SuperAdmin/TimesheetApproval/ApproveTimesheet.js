@@ -97,7 +97,7 @@ function ApproveTimesheet() {
 
   // reset the timesheet
   function cancelsheetFun() {
-    navigate('/superadmin/createadmin')
+    navigate('/superadmin')
   }
 
 
@@ -238,7 +238,7 @@ function ApproveTimesheet() {
 
   return (
     <>
-       <SuperadminNav/>
+       
       <div className="ti-background-clr">
        {timesheetDatas.length>0 ?  (<Container>
           <div className="py-3 ">
@@ -294,6 +294,7 @@ function ApproveTimesheet() {
           </div>
         </Container>) :(<div className="no-timesheet">
                     <h3>No Submitted Timesheet </h3>
+                    <button className="btn btn-secondary " onClick={()=>{navigate('/superadmin')}}>Cancel</button>
                     
                 </div>)}
 

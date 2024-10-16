@@ -71,8 +71,20 @@
 /* super admin navigation */
 .superadmin-navigation{
     background-color:#F5FFD7;
+    min-height: 100vh;
+    height: 100%;
+    width: 100%;
 }
-
+.nav-control{
+    display: flex; /* Enable Flexbox */
+    flex-direction: column; /* Arrange items vertically */
+    justify-content: center; /* Center vertically */
+    align-content: center; /* Center horizontally */
+    height: 100vh; /* Full height of the viewport */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    list-style: none; /* Remove bullet points from list */
+}
 .superadmin-navigation-link{
     background-color: #fff;
     color: black !important;
@@ -83,6 +95,8 @@
 
 .superadmin-navigation-link:hover{
     box-shadow: 5px 5px 0 gray;
+    background-color: #1C2FBA;
+    color:#fff !important;
 }
 
 .superadmin-navigation .active{

@@ -174,7 +174,8 @@ function CreateAdmin() {
 
     //    reset function for form field
     const handleCancel = () => {
-        resetForm();
+        
+        navigate("/superadmin");
     };
 
     const togglePasswordVisibility = () => setShowPassword(!showPassword);
@@ -183,7 +184,7 @@ function CreateAdmin() {
 
     return (
         <>
-            <SuperAdminNav />
+            
             <div className="ti-background-clr">
                 <div className="sprAdmin-createAdmin">
                     <p className="sprAdmin-createAdmin-title ">Create Profile</p>
