@@ -22,7 +22,7 @@
 }
 .ti-time{
     margin-right: 50px;
-    margin-left: 50px;
+    margin-left: 160px;
 }
 
 .ti-sign-in{
@@ -104,4 +104,43 @@
     color:#fff !important;
 
 }
+
+.dropdown-container {
+    position: absolute;
+  }
+  
+  .dropdown-menu {
+    background-color: white;
+    border: 1px solid #090909;
+    position: relative;
+    top: 100%;
+    right: 0;
+    min-width: 100px; /* Adjust width as needed */
+    z-index: 1000;
+    padding: 5px;
+    border-radius: 15px;
+    display: flex; /* Set display to flex */
+    justify-content: space-between; /* Add space between the buttons */
+  }
+  
+  .dropdown-item {
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    flex: 1; /* Equal space for both buttons */
+    margin-right: 10px; /* Add space between buttons */
+    text-align: center;
+    border-radius: 10px;
+  }
+  
+  .dropdown-item:last-child {
+    margin-right: 0; /* Remove margin from the last button */
+  }
+  
+  .dropdown-item:hover {
+    background-color: #f1f1f1;
+  }
+  
+  
 
