@@ -35,39 +35,26 @@ function TimesheetLogin() {
     
             if(credentials) {
                 dispatch(authenticate(true));
-                for (let key in credentials){
-                    if(key==="employeeId"){
-                      let id=credentials[key]
-                        dispatch(setEmployeeId(id))
-                       navigate("/employee")
-                       
-                    }else if(key==="adminId"){
-                        let id=credentials[key]
-                        dispatch(setAdminId(id))
-                        navigate("/admin")
-                        
-                    }else if(key==="superAdminId"){
-                        let id=credentials[key]
-                        dispatch(setSuperadminId(id))
-                        navigate("/superadmin")
-                    
-                        
+                for (let key in credentials) {
+                    if (key === "employeeId") {
+                        let id = credentials[key];
+                        dispatch(loginEmployee({ employeeId: id })); // Updated dispatch
+                        navigate("/employee");
+                    } else if (key === "adminId") {
+                        let id = credentials[key];
+                        dispatch(loginAdmin({ adminId: id })); // Updated dispatch
+                        navigate("/admin");
+                    } else if (key === "superAdminId") {
+                        let id = credentials[key];
+                        dispatch(loginSuperadmin({ superadminId: id })); // Updated dispatch
+                        navigate("/superadmin");
+                    } else if (key === "supervisorId") {
+                        let id = credentials[key];
+                        dispatch(loginSupervisor({ supervisorId: id })); // Updated dispatch
+                        navigate("/supervisor");
                     }
-                    else if(key==="supervisorId"){
-                        let id=credentials[key]
-                        dispatch(setSupervisorId(id))
-                        navigate("/supervisor")
-                    
-                        
-                    }
-                   
-                   
                 }
-
-
             }
-
-           
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 setUserError('Incorrect Username or Password');
