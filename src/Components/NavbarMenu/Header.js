@@ -48,17 +48,17 @@ function Header() {
   const handleLogout = () => {
     if (employeeId) {
       dispatch(logoutEmployee());
-      navigate('/login');
+      navigate('/');
       console.log('Navigating to login...')
     } else if (adminId) {
       dispatch(logoutAdmin());
-      navigate('/login');
+      navigate('/');
     } else if (supervisorId) {
       dispatch(logoutSupervisor());
-      navigate('/login');
+      navigate('/');
     } else if (superadminId) {
       dispatch(logoutSuperadmin());
-      navigate('/login');
+      navigate('/');
     }
   };
 
@@ -93,7 +93,7 @@ function Header() {
       className="nav-item btn ms-3"
       onClick={handleLogout}
     >
-      Logout
+      Logou
     </button>
     </div>
 
