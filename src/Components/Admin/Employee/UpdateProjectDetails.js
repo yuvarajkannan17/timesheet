@@ -308,7 +308,7 @@ const [updateProjectSuccessModal, setUpdateProjectSuccessModal] = useState(false
                   <div className="mb-3">
                     <button type="button" className="btn btn-success mx-2" onClick={handleShowSaveModal}>Save</button>
                     <button type="button" className="btn btn-danger" onClick={handleArchive}>Delete</button>
-                    <button type="button" className="btn btn-secondary mx-2" onClick={handleCancel}>Cancel</button>
+                    {/* <button type="button" className="btn btn-secondary mx-2" onClick={handleCancel}>Cancel</button> */}
                   </div>
                 )}
               </form>

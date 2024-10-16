@@ -22,6 +22,7 @@
 }
 .ti-time{
     margin-right: 50px;
+    margin-left: 50px;
 }
 
 .ti-sign-in{
@@ -29,7 +30,8 @@
     margin-top: 4px;
     padding:0 2px;
     border-radius: 30px;
-    margin-right: 10px;
+    margin-right: 80px;
+   
 }
 
 /* Style for the user ID and Logout button */
@@ -41,6 +43,7 @@
     padding: 0.5rem 1rem;
     text-decoration: none;
     cursor: pointer;
+    
   }
   
   .ti-sign-in .nav-item:hover {
@@ -87,3 +90,4 @@
     color:#fff !important;
 
 }
+
