@@ -4,7 +4,7 @@ import axios from 'axios';
 import Select from 'react-select';
 import './AddTimesheet.css';
 import { Modal, Button } from "react-bootstrap";
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { submitAdminON, submitAdminOFF } from '../../features/submitAdminButton';
 
 import { useNavigate } from "react-router-dom";
@@ -12,13 +12,13 @@ import successCheck from '../../Image/checked.png'
 import checkedImage from '../../Image/checked.png';
 
 const AdminAddTimesheet = () => {
-  const adminValue = useSelector(state=>state.adminLogin.value);
-  const adminId=adminValue.adminId;
+  const adminValue = useSelector(state => state.adminLogin.value);
+  const adminId = adminValue.adminId;
   // console.log(adminId)
   const [total, setTotal] = useState(0);
-  const [startSubmitDate,setStartSubmitDate]=useState("");
-  const [endSubmitDate,setEndSubmitDate]=useState("");
-  const [submitAdminId,setSubmitAdminId]=useState("")
+  const [startSubmitDate, setStartSubmitDate] = useState("");
+  const [endSubmitDate, setEndSubmitDate] = useState("");
+  const [submitAdminId, setSubmitAdminId] = useState("")
   const [hoursError, setHoursError] = useState("");
   const [selectedMonth, setSelectedMonth] = useState('');
   const [employeeIdError, setEmployeeIdError] = useState("");
@@ -28,32 +28,32 @@ const AdminAddTimesheet = () => {
   const [projectRows, setProjectRows] = useState([{}]);
   const [showFirstHalf, setShowFirstHalf] = useState(true);
   // const [employeeId, setEmployeeId] = useState("");
-  const [addDataSubmitConfirmation,setAddDataSubmitConfirmation]=useState(false);
-  const [successModalForTimesheet,setSuccessModalForTimesheet]=useState(false);
-  const [saveModalForTimesheet,setSaveModalForTimesheet]=useState(false)
+  const [addDataSubmitConfirmation, setAddDataSubmitConfirmation] = useState(false);
+  const [successModalForTimesheet, setSuccessModalForTimesheet] = useState(false);
+  const [saveModalForTimesheet, setSaveModalForTimesheet] = useState(false)
 
   let navigate = useNavigate();
 
-  let {isSubmit} = useSelector((state)=>state.submitAdminButton.value);
- const dispatch= useDispatch();
-  
-  
- 
+  let { isSubmit } = useSelector((state) => state.submitAdminButton.value);
+  const dispatch = useDispatch();
+
+
+
 
   useEffect(() => {
     generateTimesheetData(selectedMonth);
   }, [selectedMonth, showFirstHalf]);
 
- 
 
-  
+
+
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
         const response = await axios.get('http://localhost:8081/admin/projects');
-        let projectDatas=response.data;
-        let projectIds= projectDatas.map((project)=>project.projectId);
+        let projectDatas = response.data;
+        let projectIds = projectDatas.map((project) => project.projectId);
         setAvailableProjects(projectIds);
       } catch (error) {
         console.error('Error fetching projects:', error);
@@ -63,7 +63,7 @@ const AdminAddTimesheet = () => {
     fetchProjects();
   }, []);
 
-  
+
 
   const handleForward = () => {
     if (selectedMonth) {
@@ -117,26 +117,26 @@ const AdminAddTimesheet = () => {
 
     setTimesheetData(newTimesheetData);
   };
-   console.log(timesheetData)
+  console.log(timesheetData)
   const handleProjectChange = (rowIndex, selectedOption) => {
     if (selectedOption && selectedOption.value) {
       setProjectIdError(""); // Clear the error when a valid projectId is selected
-        let result=projectRows.some(project=>project.projectId===selectedOption.value);
-        if(result){
-           setProjectIdError("Project Already In Use")
-        }else{
-          const updatedProjectRows = [...projectRows];
-          updatedProjectRows[rowIndex] = {
-            ...updatedProjectRows[rowIndex],
-            projectId: selectedOption.value
-          };
-          setProjectRows(updatedProjectRows);
-        }
+      let result = projectRows.some(project => project.projectId === selectedOption.value);
+      if (result) {
+        setProjectIdError("Project Already In Use")
+      } else {
+        const updatedProjectRows = [...projectRows];
+        updatedProjectRows[rowIndex] = {
+          ...updatedProjectRows[rowIndex],
+          projectId: selectedOption.value
+        };
+        setProjectRows(updatedProjectRows);
+      }
     } else {
       setProjectIdError("Please select a valid project");
     }
   };
-  console.log("project",projectRows);
+  console.log("project", projectRows);
   const isSunday = (date) => date.getDay() === 0;
 
   const handleWorkHoursChange = (rowIndex, columnIndex, value) => {
@@ -192,7 +192,7 @@ const AdminAddTimesheet = () => {
     calculateTotalWorkHours();
   }, [projectRows]);
 
-  
+
   const handleAddRow = () => {
     setProjectRows((prev) => [...prev, {}]);
   };
@@ -206,7 +206,7 @@ const AdminAddTimesheet = () => {
   const validateTimesheetData = () => {
     let isValid = true;
 
-    
+
 
     const invalidRows = projectRows.filter(row => !row.projectId || !Object.values(row.workHours || {}).some(hours => hours > 0));
     if (invalidRows.length > 0) {
@@ -222,27 +222,27 @@ const AdminAddTimesheet = () => {
   const saveTimesheetData = () => {
     if (validateTimesheetData()) {
       // Array to hold the formatted timesheet entries
-      
+
       const formattedData = [];
-    
+
       // Create a date formatter for 'en-GB' locale
       const dateFormatter = new Intl.DateTimeFormat('en-GB', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
       });
-    
+
       // Initialize formattedData with zero hours for all dates
       timesheetData.forEach((entry) => {
         const formattedDate = dateFormatter.format(entry.date);
         const [day, month, year] = formattedDate.split('/');
         const dateStr = `${year}-${month}-${day}`; // Convert to YYYY-MM-DD
-    
+
         projectRows.forEach((row) => {
           if (row.projectId) {
             // Ensure that each date for each project has an entry
             formattedData.push({
-              employeeId:adminId,
+              employeeId: adminId,
               projectId: row.projectId,
               date: dateStr,
               hours: 0, // Default to zero hours
@@ -251,8 +251,8 @@ const AdminAddTimesheet = () => {
         });
       });
 
-      
-    
+
+
       // // Update formattedData with entered work hours
       projectRows.forEach((row) => {
         if (row.projectId && row.workHours) {
@@ -261,20 +261,20 @@ const AdminAddTimesheet = () => {
               const formattedDate = dateFormatter.format(timesheetData[columnIndex].date);
               const [day, month, year] = formattedDate.split('/');
               const dateStr = `${year}-${month}-${day}`; // Convert to YYYY-MM-DD
-    
+
               // Find and update existing entry or add new one if not present
               const existingEntry = formattedData.find(
                 (entry) =>
-                  entry.employeeId=== adminId &&
+                  entry.employeeId === adminId &&
                   entry.projectId === row.projectId &&
                   entry.date === dateStr
               );
-    
+
               if (existingEntry) {
                 existingEntry.hours = parseFloat(hours);
               } else {
                 formattedData.push({
-                  employeeId:adminId,
+                  employeeId: adminId,
                   projectId: row.projectId,
                   date: dateStr,
                   hours: parseFloat(hours),
@@ -287,46 +287,46 @@ const AdminAddTimesheet = () => {
       console.log(formattedData);
       // Retrieve existing data from local storage
       const existingData = JSON.parse(localStorage.getItem(adminId)) || [];
-    
+
       // Append new data to the existing data
       existingData.push(formattedData);
-    
+
       // Save updated data back to local storage
       localStorage.setItem(adminId, JSON.stringify(existingData));
-        setSaveModalForTimesheet(true);
+      setSaveModalForTimesheet(true);
       // Log the data for debugging
-      
+
     }
-    
-  }; 
-  
- 
+
+  };
+
+
   const submitTimesheetData = async () => {
     if (!validateTimesheetData()) {
       return;
     }
-     setAddDataSubmitConfirmation(false);
+    setAddDataSubmitConfirmation(false);
     // Array to hold the formatted timesheet entries
     const formattedData = [];
-  
+
     // Create a date formatter for 'en-GB' locale
     const dateFormatter = new Intl.DateTimeFormat('en-GB', {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
     });
-  
+
     // Initialize formattedData with zero hours for all dates
     timesheetData.forEach((entry) => {
       const formattedDate = dateFormatter.format(entry.date);
       const [day, month, year] = formattedDate.split('/');
       const dateStr = `${year}-${month}-${day}`; // Convert to YYYY-MM-DD
-  
+
       projectRows.forEach((row) => {
         if (row.projectId) {
           // Ensure that each date for each project has an entry
           formattedData.push({
-            employeeId:adminId,
+            employeeId: adminId,
             projectId: row.projectId,
             date: dateStr,
             hours: 0, // Default to zero hours
@@ -334,7 +334,7 @@ const AdminAddTimesheet = () => {
         }
       });
     });
-  
+
     // Update formattedData with entered work hours
     projectRows.forEach((row) => {
       if (row.projectId && row.workHours) {
@@ -343,7 +343,7 @@ const AdminAddTimesheet = () => {
             const formattedDate = dateFormatter.format(timesheetData[columnIndex].date);
             const [day, month, year] = formattedDate.split('/');
             const dateStr = `${year}-${month}-${day}`; // Convert to YYYY-MM-DD
-  
+
             // Find and update existing entry or add new one if not present
             const existingEntry = formattedData.find(
               (entry) =>
@@ -351,12 +351,12 @@ const AdminAddTimesheet = () => {
                 entry.projectId === row.projectId &&
                 entry.date === dateStr
             );
-  
+
             if (existingEntry) {
               existingEntry.hours = parseFloat(hours);
             } else {
               formattedData.push({
-                employeeId:adminId,
+                employeeId: adminId,
                 projectId: row.projectId,
                 date: dateStr,
                 hours: parseFloat(hours),
@@ -366,47 +366,47 @@ const AdminAddTimesheet = () => {
         });
       }
     });
-    
+
     console.log(formattedData);
-    
+
     // Check if there is any data to send
     if (formattedData.length > 0) {
       console.log(formattedData)
       try {
         // Send the data to the backend
         const response = await axios.post("http://localhost:8081/api/working-hours", formattedData);
-        
-          if(response.data){
-            let data=response.data;
-           let statusValue= data[0].status;
-          
-             dispatch(submitAdminON(true));
-            
-            localStorage.setItem(`isSubmitOn${adminId}`, 'true');
+
+        if (response.data) {
+          let data = response.data;
+          let statusValue = data[0].status;
+
+          dispatch(submitAdminON(true));
+
+          localStorage.setItem(`isSubmitOn${adminId}`, 'true');
 
 
-              let receviedData=response.data;
-             let lengthOfData=receviedData.length;
-             console.log(lengthOfData)
-            let last=receviedData[lengthOfData-1];
-            console.log(last)
-            let lastDate=last.date;
-           let first= receviedData[0];
-          let adminID=  first.employeeId;
+          let receviedData = response.data;
+          let lengthOfData = receviedData.length;
+          console.log(lengthOfData)
+          let last = receviedData[lengthOfData - 1];
+          console.log(last)
+          let lastDate = last.date;
+          let first = receviedData[0];
+          let adminID = first.employeeId;
           console.log(adminID)
           console.log(first)
-           let firstDate=first.date;
-            setSubmitAdminId(adminID);
-            setStartSubmitDate(firstDate);
-            setEndSubmitDate(lastDate);
-            localStorage.setItem(`startSubmitDate${adminId}`, firstDate);
-            localStorage.setItem(`endSubmitDate${adminId}`, lastDate);
-            localStorage.setItem(`submitAdminId${adminId}`, adminID);
-            localStorage.setItem(`statusValue${adminId}`, statusValue);
-           setSuccessModalForTimesheet(true);
-           
-          }
-        
+          let firstDate = first.date;
+          setSubmitAdminId(adminID);
+          setStartSubmitDate(firstDate);
+          setEndSubmitDate(lastDate);
+          localStorage.setItem(`startSubmitDate${adminId}`, firstDate);
+          localStorage.setItem(`endSubmitDate${adminId}`, lastDate);
+          localStorage.setItem(`submitAdminId${adminId}`, adminID);
+          localStorage.setItem(`statusValue${adminId}`, statusValue);
+          setSuccessModalForTimesheet(true);
+
+        }
+
       } catch (error) {
         // Handle errors in the request
         console.error("Error saving timesheet data:", error);
@@ -416,58 +416,58 @@ const AdminAddTimesheet = () => {
     }
   };
 
-  function closeSuccessModal(){
-      setSuccessModalForTimesheet(false);
-      navigate("/admin")
+  function closeSuccessModal() {
+    setSuccessModalForTimesheet(false);
+    navigate("/admin")
   }
-  function closeSaveModal(){
+  function closeSaveModal() {
     setSaveModalForTimesheet(false)
     navigate("/admin")
-}
-  
+  }
+
   // Get the current month in YYYY-MM format
   const currentMonth = new Date().toISOString().slice(0, 7); // e.g., "2024-10"
 
   // Create a Date object from the current month
   const [year, month] = currentMonth.split('-').map(Number); // Split and convert to numbers
   const currentDate = new Date(year, month - 1); // month - 1 because month is 0-indexed
-  
+
   // Add 6 months
   currentDate.setMonth(currentDate.getMonth() + 5);
-  
+
   // Get the new year and month in the desired format
   const newYear = currentDate.getFullYear();
   const newMonth = currentDate.getMonth() + 1; // Adding 1 to make it 1-indexed
-  
+
   // Format the result as YYYY-MM
   const endMonth = `${newYear}-${newMonth < 10 ? '0' : ''}${newMonth}`; // Add leading zero if needed
-  
-  
-    
-     
-   
-  
-  
-    useEffect(() => {
-      // Get the current month and year
-      const currentDate = new Date();
-      const year = currentDate.getFullYear();
-      const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Month is zero-indexed
-      setSelectedMonth(`${year}-${month}`);
-      
-  
-    }, []);
-  
-    
-    const getMaxDate = () => {
-      const currentDate = new Date();
-      currentDate.setMonth(currentDate.getMonth() + 5);
-      const year = currentDate.getFullYear();
-      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-      
-      return `${year}-${month}`;
-    };
-  
+
+
+
+
+
+
+
+  useEffect(() => {
+    // Get the current month and year
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Month is zero-indexed
+    setSelectedMonth(`${year}-${month}`);
+
+
+  }, []);
+
+
+  const getMaxDate = () => {
+    const currentDate = new Date();
+    currentDate.setMonth(currentDate.getMonth() + 5);
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+
+    return `${year}-${month}`;
+  };
+
 
   return (
     <div className="AddTimesheet background-clr">
@@ -484,6 +484,8 @@ const AdminAddTimesheet = () => {
               id="fromMonth"
               className="mx-1"
               value={selectedMonth}
+              min={`${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`}
+              max={getMaxDate()}
               onChange={(e) => setSelectedMonth(e.target.value)}
             />
           </div>
@@ -491,12 +493,14 @@ const AdminAddTimesheet = () => {
             <button
               className="AddTimesheet btn btn-primary"
               onClick={handleBackward}
+              disabled={(selectedMonth===currentMonth)&&(showFirstHalf)}
             >
               <i className="bi bi-caret-left-fill"></i>Backward
             </button>
             <button
               className="AddTimesheet btn btn-primary ms-2"
               onClick={handleForward}
+              disabled={(selectedMonth===endMonth)&&(!showFirstHalf)}
             >
               Forward <i className="bi bi-caret-right-fill"></i>
             </button>
@@ -599,37 +603,37 @@ const AdminAddTimesheet = () => {
           </div>
           <div className="d-flex justify-content-center">
             <button className="AddTimesheet btn btn-primary m-3 w-5" onClick={saveTimesheetData} style={{ width: '100px' }}>Save</button>
-            <button className="AddTimesheet btn btn-success m-3 w-5" onClick={()=> setAddDataSubmitConfirmation(true)} disabled={isSubmit} style={{ width: '100px' }}>Submit</button>
+            <button className="AddTimesheet btn btn-success m-3 w-5" onClick={() => setAddDataSubmitConfirmation(true)} disabled={isSubmit} style={{ width: '100px' }}>Submit</button>
             <button className="AddTimesheet btn btn-secondary m-3 w-5" style={{ width: '100px' }} onClick={() => { navigate('/admin') }}>Cancel</button>
           </div>
         </div>}
       </div>
       <Modal show={addDataSubmitConfirmation}>
-                <Modal.Body >Do you want to Submit?</Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={()=>setAddDataSubmitConfirmation(false)}>
-                        Cancel
-                    </Button>
-                    <Button variant="success" onClick={submitTimesheetData}>
-                        Submit
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-            <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForTimesheet}  >
-                <div className="d-flex flex-column modal-success p-4 align-items-center ">
-                    <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
-                    <p className="mb-4 text-center"> You Have Submitted Timesheet For Approval .</p>
-                    <p className="mb-4 text-center"><b>  {startSubmitDate} To {endSubmitDate} </b></p>
-                    <button className="btn  w-100 text-white" onClick={closeSuccessModal} style={{ backgroundColor: '#5EAC24' }}>Close</button>
-                </div>
-            </Modal>   
-            <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={saveModalForTimesheet}  >
-                <div className="d-flex flex-column modal-success p-4 align-items-center ">
-                    <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
-                    <p className="mb-4 text-center"> Your Timesheet Saved Successfully.</p>
-                    <button className="btn  w-100 text-white" onClick={closeSaveModal} style={{ backgroundColor: '#5EAC24' }}>Close</button>
-                </div>
-            </Modal> 
+        <Modal.Body >Do you want to Submit?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setAddDataSubmitConfirmation(false)}>
+            Cancel
+          </Button>
+          <Button variant="success" onClick={submitTimesheetData}>
+            Submit
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={successModalForTimesheet}  >
+        <div className="d-flex flex-column modal-success p-4 align-items-center ">
+          <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+          <p className="mb-4 text-center"> You Have Submitted Timesheet For Approval .</p>
+          <p className="mb-4 text-center"><b>  {startSubmitDate} To {endSubmitDate} </b></p>
+          <button className="btn  w-100 text-white" onClick={closeSuccessModal} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+        </div>
+      </Modal>
+      <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={saveModalForTimesheet}  >
+        <div className="d-flex flex-column modal-success p-4 align-items-center ">
+          <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+          <p className="mb-4 text-center"> Your Timesheet Saved Successfully.</p>
+          <button className="btn  w-100 text-white" onClick={closeSaveModal} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+        </div>
+      </Modal>
     </div>
   );
 };
