@@ -19,8 +19,8 @@ const UpdateProjectDetails = () => {
   const [updatedProject, setUpdatedProject] = useState({
     projectTitle: '',
     projectDescription: '',
-    employeeTeamMembers: [""],
-    supervisorTeamMembers: [""],
+    employeeTeamMembers: [{ employeeId: '', firstName: '' }],
+    supervisorTeamMembers: [{ supervisorId: '', firstName: '' }],
   });
 
   const [showSaveModal, setShowSaveModal] = useState(false); // Modal state for save confirmation
@@ -79,9 +79,9 @@ const [updateProjectSuccessModal, setUpdateProjectSuccessModal] = useState(false
     setEditing(true);
   };
 
-  const handleCancel = () => {
-    navigate('/admin');
-  };
+  // const handleCancel = () => {
+  //   navigate('/admin');
+  // };
 
   const handleShowSaveModal = () => {
     setShowSaveModal(true); // Show save confirmation modal
@@ -286,7 +286,7 @@ const [updateProjectSuccessModal, setUpdateProjectSuccessModal] = useState(false
                         <div>
                           <strong>Team Members</strong>
                           {searchResult.employeeTeamMembers.map((member, index) => (
-                            <p key={index}>{member.employeeId}</p>
+                            <p key={index}>{member.employeeId} - {member.firstName}</p>
                             
                           ))}
                         </div>
@@ -296,7 +296,7 @@ const [updateProjectSuccessModal, setUpdateProjectSuccessModal] = useState(false
                         <div>
                           <strong>Supervisors</strong>
                           {searchResult.supervisorTeamMembers.map((supervisor, index) => (
-                            <p key={index}>{supervisor.supervisorId}</p>
+                            <p key={index}>{supervisor.supervisorId} - {supervisor.firstName}</p>
                           ))}
                         </div>
                       )}
@@ -308,7 +308,7 @@ const [updateProjectSuccessModal, setUpdateProjectSuccessModal] = useState(false
                   <div className="mb-3">
                     <button type="button" className="btn btn-success mx-2" onClick={handleShowSaveModal}>Save</button>
                     <button type="button" className="btn btn-danger" onClick={handleArchive}>Delete</button>
-                    <button type="button" className="btn btn-secondary mx-2" onClick={handleCancel}>Cancel</button>
+                    {/* <button type="button" className="btn btn-secondary mx-2" onClick={handleCancel}>Cancel</button> */}
                   </div>
                 )}
               </form>

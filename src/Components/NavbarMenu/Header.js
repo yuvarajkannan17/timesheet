@@ -13,18 +13,19 @@ function Header() {
   const navigate = useNavigate();
 
   const employeeValue = useSelector(state => state.employeeLogin.value);
-  const employeeId = employeeValue.employeeId;
+  const employeeId = employeeValue?.employeeId;
 
   const adminValue = useSelector(state => state.adminLogin.value);
-  const adminId = adminValue.adminId;
+  const adminId = adminValue?.adminId;
 
   const supervisorValue = useSelector(state => state.supervisorLogin.value);
-  const supervisorId = supervisorValue.supervisorId;
+  const supervisorId = supervisorValue?.supervisorId;
 
   const superadminValue = useSelector(state => state.superadminLogin.value);
-  const superadminId = superadminValue.superadminId;
+  const superadminId = superadminValue?.superadminId;
 
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -48,19 +49,35 @@ function Header() {
   const handleLogout = () => {
     if (employeeId) {
       dispatch(logoutEmployee());
-      navigate('/');
-      console.log('Navigating to login...')
     } else if (adminId) {
       dispatch(logoutAdmin());
-      navigate('/');
     } else if (supervisorId) {
       dispatch(logoutSupervisor());
-      navigate('/');
     } else if (superadminId) {
       dispatch(logoutSuperadmin());
-      navigate('/');
     }
+    navigate('/'); // Redirect to login page after logout
+    setIsDropdownOpen(false); // Close the dropdown
   };
+
+  // Toggle dropdown visibility
+  const toggleDropdown = () => {
+    setIsDropdownOpen(prev => !prev);
+  };
+
+  // Close the dropdown if clicked outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.dropdown-container')) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className='ti-navbar-bg'>
@@ -71,32 +88,26 @@ function Header() {
           </div>
           <div className='h2'>Timesheet</div>
         </div>
-        <div className='seconds-half d-flex justify-content-end align-items-center'>
+        <div className='second-half d-flex justify-content-end align-items-center'>
           <div className='ti-time text-warning'>
             {formattedDateTime}
           </div>
-          <div className='ti-sign-in d-flex align-items-center'>
-  {/* Displaying the user ID */}
-  {employeeId && <span className='nav-item'>{employeeId}</span>}
-  {adminId && <span className='nav-item'>{adminId}</span>}
-  {supervisorId && <span className='nav-item'>{supervisorId}</span>}
-  {superadminId && <span className='nav-item'>{superadminId}</span>}
+          <div className='ti-sign-in d-flex align-items-center position-relative dropdown-container'>
+            {/* Displaying the user ID with dropdown toggle */}
+            {(employeeId || adminId || supervisorId || superadminId) && (
+              <div className='nav-item' onClick={toggleDropdown} style={{ cursor: 'pointer' }}>
+                {employeeId || adminId || supervisorId || superadminId}
+              </div>
+            )}
 
-  {/* Logout button */}
-  {/* {(employeeId || adminId || supervisorId || superadminId) && (
-    
-  )} */}
-  
-</div>
-<div className='ti-sign-in d-flex align-items-center'>
-<button
-      className="nav-item btn ms-3"
-      onClick={handleLogout}
-    >
-      Logout
-    </button>
-    </div>
-
+            {/* Dropdown menu */}
+            {isDropdownOpen && (
+              <div className='dropdown-menu position-absolute mt-2'>
+                <button className="dropdown-item" onClick={handleLogout}>Logout</button>
+                <button className="dropdown-item" onClick={() => setIsDropdownOpen(false)}>Cancel</button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

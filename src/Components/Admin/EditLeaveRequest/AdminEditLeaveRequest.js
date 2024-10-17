@@ -201,6 +201,8 @@ function AdminEditLeaveRequest() {
                 </div> ): (<div className="no-timesheet">
                     <h3>No Leave Request Available</h3>
                     <p>Please create a new one.</p>
+                    <button className="btn btn-secondary " onClick={()=>{navigate('/admin')}}>Cancel</button>
+
                 </div>)}
                 <div>
                     {/* <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={leaveSuccessModal}  >

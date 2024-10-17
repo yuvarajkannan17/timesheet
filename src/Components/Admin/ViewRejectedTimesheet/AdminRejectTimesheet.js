@@ -419,7 +419,8 @@ console.log(timesheetData)
 
                 </div> ): (<div className="no-timesheet">
                     <h3>No Rejected Timesheet Available</h3>
-                    
+                    <button className="btn btn-secondary " onClick={()=>{navigate('/admin')}}>Cancel</button>
+
                 </div>)}
                 
 

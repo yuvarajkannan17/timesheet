@@ -177,7 +177,7 @@ timesheetState();
                     <Link to={"createproject"}>Add Project</Link>
                   </ul>
                   <ul>
-                    <Link to={"updateprojectdetails"}>Update Project</Link>
+                    <Link to={"updateprojectdetails"}>Search Project</Link>
                   </ul>
                 </div>
               )}

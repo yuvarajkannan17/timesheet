@@ -237,8 +237,7 @@ const AddTimesheet = () => {
       setProjectIdError("Please select a valid project and enter work hours.");
       isValid = false;
     } else {
-      setProjectIdError("");
-    }
+      setProjectIdError(""); }
 
     return isValid;
   };
@@ -507,8 +506,6 @@ const endMonth = `${newYear}-${newMonth < 10 ? '0' : ''}${newMonth}`; // Add lea
               id="fromMonth"
               className="mx-1"
               value={selectedMonth}
-              min={`${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`}
-              max={getMaxDate()}
               onChange={(e) => setSelectedMonth(e.target.value)}
             />
           </div>
@@ -516,17 +513,12 @@ const endMonth = `${newYear}-${newMonth < 10 ? '0' : ''}${newMonth}`; // Add lea
             <button
               className="AddTimesheet btn btn-primary"
               onClick={handleBackward}
-              disabled={(selectedMonth===currentMonth)&&(showFirstHalf)}
-              
             >
               <i className="bi bi-caret-left-fill"></i>Backward
             </button>
             <button
               className="AddTimesheet btn btn-primary ms-2"
               onClick={handleForward}
-              disabled={(selectedMonth===endMonth)&&(!showFirstHalf)}
-              
-              
             >
               Forward <i className="bi bi-caret-right-fill"></i>
             </button>

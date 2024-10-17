@@ -425,6 +425,48 @@ const AdminAddTimesheet = () => {
     navigate("/admin")
 }
   
+  // Get the current month in YYYY-MM format
+  const currentMonth = new Date().toISOString().slice(0, 7); // e.g., "2024-10"
+
+  // Create a Date object from the current month
+  const [year, month] = currentMonth.split('-').map(Number); // Split and convert to numbers
+  const currentDate = new Date(year, month - 1); // month - 1 because month is 0-indexed
+  
+  // Add 6 months
+  currentDate.setMonth(currentDate.getMonth() + 5);
+  
+  // Get the new year and month in the desired format
+  const newYear = currentDate.getFullYear();
+  const newMonth = currentDate.getMonth() + 1; // Adding 1 to make it 1-indexed
+  
+  // Format the result as YYYY-MM
+  const endMonth = `${newYear}-${newMonth < 10 ? '0' : ''}${newMonth}`; // Add leading zero if needed
+  
+  
+    
+     
+   
+  
+  
+    useEffect(() => {
+      // Get the current month and year
+      const currentDate = new Date();
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Month is zero-indexed
+      setSelectedMonth(`${year}-${month}`);
+      
+  
+    }, []);
+  
+    
+    const getMaxDate = () => {
+      const currentDate = new Date();
+      currentDate.setMonth(currentDate.getMonth() + 5);
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+      
+      return `${year}-${month}`;
+    };
   
 
   return (
