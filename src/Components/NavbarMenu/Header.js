@@ -93,7 +93,7 @@ function Header() {
       className="nav-item btn ms-3"
       onClick={handleLogout}
     >
-      Logou
+      Logout
     </button>
     </div>
 
