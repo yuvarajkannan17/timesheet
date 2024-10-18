@@ -66,10 +66,10 @@ export const checkEmployeeDuplicates = async (employeeData) => {
       if (employee.panNumber === employeeData.panNumber) {
         duplicates.panNumber = true;
       }
-      if (employee.Mobile === inputMobile) {
+      if (employee.mobileNumber === employeeData.mobileNumber) {
         duplicates.mobileNumber = true;
       }
-      if (employee.Aadhar === inputAadhar) {
+      if (employee.aadharNumber === employeeData.aadharNumber) {
         duplicates.aadharNumber = true;
       }
     });

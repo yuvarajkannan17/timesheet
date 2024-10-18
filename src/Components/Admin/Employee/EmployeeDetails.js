@@ -31,6 +31,9 @@ export default function EmployeeDetails() {
     fetchEmployeeData();
   }, [id]);
 
+  // Also log userData before rendering it
+console.log('User Data in render:', userData);
+
   const handleEdit = () => {
     navigate(`/admin/editemployee/${id}`);
   };
