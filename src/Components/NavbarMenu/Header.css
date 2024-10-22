@@ -1,141 +1,174 @@
-/* for navbar  */
-
-
-
-/* for header */
-.ti-navbar-bg{
-    background-color: #1C2FBA;
+/* for navbar */
+.ti-navbar-bg {
+  background-color: #1C2FBA;
 }
 
-.ti-navbar-header{
-    width: 90%;
-    margin: 0 auto;
-    padding: 5px;
+.ti-navbar-header {
+  width: 90%;
+  margin: 0 auto;
+  padding: 5px;
 }
 
-.ti-navbar-header .first-half{
-    width: 50%;
+.ti-navbar-header .first-half {
+  width: 50%;
 }
 
-.ti-navbar-header .seconds-half{
-    width: 50%;
-}
-.ti-time{
-    margin-right: 50px;
-    margin-left: 160px;
+.ti-navbar-header .seconds-half {
+  width: 50%;
 }
 
-.ti-sign-in{
-    border: 1.5px solid white;
-    margin-top: 4px;
-    padding:0 2px;
-    border-radius: 30px;
-    margin-right: 80px;
-   
+.ti-time {
+  margin-right: 50px;
+  margin-left: 160px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ti-navbar-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+  }
+  
+  .ti-navbar-header .first-half,
+  .ti-navbar-header .seconds-half {
+      width: 100%;
+  }
+
+  .ti-time {
+      margin: 10px 0;
+      font-size: 0.9rem; /* Adjust font size for smaller screens */
+  }
+  
+  .ti-sign-in {
+      margin-right: 0;
+      width: 100%; /* Full width on smaller screens */
+      justify-content: center;
+  }
+}
+
+/* Hide the time when screen width is 400px or less */
+@media (max-width: 400px) {
+  .ti-time {
+      display: none;
+  }
+}
+
+.ti-sign-in {
+  border: 1.5px solid white;
+  margin-top: 4px;
+  padding: 0 10px;
+  border-radius: 30px;
+  margin-right: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Style for the user ID and Logout button */
 .ti-sign-in .nav-item {
-    color: white;
-    background-color: transparent;
-    border: none;
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
-    text-decoration: none;
-    cursor: pointer;
-    
-  }
-  
-  .ti-sign-in .nav-item:hover {
-    color: #f5f4ef; /* Highlight color on hover */
-  }
-  
-  .ti-sign-in .btn {
-    border: 0px solid #eff0f4;  /* Outline style for the button */
-    color: white;
-    background-color: transparent;
-    font-size: 1rem;
-    padding: 0.5rem 1rem; 
-    
-    cursor: pointer;
-    text-decoration: none;
-    text-align: center;
-  }
+  color: white;
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  cursor: pointer;
+}
 
+.ti-sign-in .nav-item:hover {
+  color: #f5f4ef; /* Highlight color on hover */
+}
 
 /* super admin navigation */
-.superadmin-navigation{
-    background-color:#F5FFD7;
-    min-height: 100vh;
-    height: 100%;
-    width: 100%;
-}
-.nav-control{
-    display: flex; /* Enable Flexbox */
-    flex-direction: column; /* Arrange items vertically */
-    justify-content: center; /* Center vertically */
-    align-content: center; /* Center horizontally */
-    height: 100vh; /* Full height of the viewport */
-    margin: 0; /* Remove default margin */
-    padding: 0; /* Remove default padding */
-    list-style: none; /* Remove bullet points from list */
-}
-.superadmin-navigation-link{
-    background-color: #fff;
-    color: black !important;
-    border:2px solid black;
-    margin:5px 10px;
-    border-radius: 5px;
+.superadmin-navigation {
+  background-color: #F5FFD7;
+  min-height: 100vh;
+  width: 100%;
 }
 
-.superadmin-navigation-link:hover{
-    box-shadow: 5px 5px 0 gray;
-    background-color: #1C2FBA;
-    color:#fff !important;
+.nav-control {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.superadmin-navigation .active{
-    background-color: #1C2FBA;
-    color:#fff !important;
-
+.superadmin-navigation-link {
+  background-color: #fff;
+  color: black !important;
+  border: 2px solid black;
+  margin: 5px 10px;
+  border-radius: 5px;
 }
 
+.superadmin-navigation-link:hover {
+  box-shadow: 5px 5px 0 gray;
+  background-color: #1C2FBA;
+  color: #fff !important;
+}
+
+.superadmin-navigation .active {
+  background-color: #1C2FBA;
+  color: #fff !important;
+}
+
+/* Dropdown menu styles */
 .dropdown-container {
-    position: absolute;
-  }
-  
+  position: absolute;
+}
+
+.dropdown-menu {
+  background-color: white;
+  border: 1px solid #090909;
+  position: relative;
+  top: 100%;
+  right: 0;
+  min-width: 100px;
+  z-index: 1000;
+  padding: 5px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.dropdown-item {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  flex: 1;
+  margin-right: 10px;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.dropdown-item:last-child {
+  margin-right: 0;
+}
+
+.dropdown-item:hover {
+  background-color: #f1f1f1;
+}
+
+/* Responsive dropdown */
+@media (max-width: 768px) {
   .dropdown-menu {
-    background-color: white;
-    border: 1px solid #090909;
-    position: relative;
-    top: 100%;
-    right: 0;
-    min-width: 100px; /* Adjust width as needed */
-    z-index: 1000;
-    padding: 5px;
-    border-radius: 15px;
-    display: flex; /* Set display to flex */
-    justify-content: space-between; /* Add space between the buttons */
+      flex-direction: column;
+      width: 100%;
   }
   
   .dropdown-item {
-    background: none;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    flex: 1; /* Equal space for both buttons */
-    margin-right: 10px; /* Add space between buttons */
-    text-align: center;
-    border-radius: 10px;
+      margin-right: 0;
+      margin-bottom: 10px;
   }
   
   .dropdown-item:last-child {
-    margin-right: 0; /* Remove margin from the last button */
+      margin-bottom: 0;
   }
-  
-  .dropdown-item:hover {
-    background-color: #f1f1f1;
-  }
-  
-  
-
+}
