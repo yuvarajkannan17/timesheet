@@ -93,7 +93,7 @@ function ModifyEmployeeTimesheet() {
 
     function closeSuccessModal(){
         dispatch(editTimesheetSuccessModal(false));
-         navigate('/supervisor')
+         navigate('/supervisor/approvetimesheet')
 
     }
 
@@ -319,13 +319,13 @@ function ModifyEmployeeTimesheet() {
 
 
     function goToHomePage() {
-        navigate('/supervisor')
+        navigate('/supervisor/approvetimesheet')
     }
 
 
     function closeRejectModal(){
         dispatch(editTimesheetRejectModal(false));
-        navigate('/supervisor');
+        navigate('/supervisor/approvetimesheet');
 
     }
 

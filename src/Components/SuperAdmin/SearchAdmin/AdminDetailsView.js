@@ -5,18 +5,18 @@ import url from '../../Api/data'
 import { useEffect, useState } from "react";
 import { changeAdminDetails } from '../../features/adminDetails';
 import user from '../../Image/user-profile.png'
-import { Modal,Button } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 import archiveUrl from '../../Api/archive'
 import successCheck from '../../Image/checked.png'
-import { editSuccessModal,deleteSuccessModal } from '../../features/modal';
+import { editSuccessModal, deleteSuccessModal } from '../../features/modal';
 import SuperAdminNav from "../Navbar/SuperAdminNav";
 
 function AdminDetailsView() {
     // admin details state
     const adminDetails = useSelector(state => state.adminDetails.value.adminDetails);
-     // edit success modal
-     const editSuccessModalValue=useSelector(state=>state.modal.value.editSuccessModalValue);
-    
+    // edit success modal
+    const editSuccessModalValue = useSelector(state => state.modal.value.editSuccessModalValue);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
     // admin id for view details
@@ -32,10 +32,10 @@ function AdminDetailsView() {
         try {
 
             const response = await axios.get(`http://localhost:8080/admins/${id}`)  //to view admin details backend url
-            
-            
+
+
             dispatch(changeAdminDetails(response.data))
-       
+
 
         } catch (error) {
             console.log(error)
@@ -51,7 +51,7 @@ function AdminDetailsView() {
     //  navigate to edit page
     function updateAdmin(id) {
         navigate('/superadmin/searchadmin/admindetailsview/editadmin/' + id);
-      
+
     }
 
     // cancel the confirmation modal for delete
@@ -77,9 +77,9 @@ function AdminDetailsView() {
             // const deletedAdmin = response.data;
             // archiveData(deletedAdmin);
             await axios.delete(`http://localhost:8080/admins/${removeAdminId}`);  //delete admin backend url
-             dispatch(deleteSuccessModal(true));
+            dispatch(deleteSuccessModal(true));
             navigate('/superadmin/searchadmin')
-           
+
         } catch (error) {
             console.error('Error deleting admin:', error);
         }
@@ -94,126 +94,137 @@ function AdminDetailsView() {
 
     return (
         <>
-       <SuperAdminNav/>
+
             <div className='ti-background-clr pt-5'>
-                {adminDetails &&
-                    <div className='sprAdmin-admin-details '>
-                        <div className='d-flex justify-content-between flex-wrap '>
-                            <p className=''>Admin User</p>
-                            <div>
-                                <div className='admin-edit d-inline-block me-5'>
-                                    <i className="bi bi-pencil-square text-primary h3" onClick={() => { updateAdmin(adminDetails.adminId) }}></i>
-                                </div>
-                                <div className='admin-delete d-inline-block'>
-                                    <i className="bi bi-trash3 text-danger h3  " onClick={() => { removeAdmin(adminDetails.adminId) }}></i>
-                                </div>
-                            </div>
-                        </div>
-                        <hr />
-                        <div className='text-center'>
-                            <img src={user} alt={adminDetails.firstName} />
-                            <p className='text-primary'>{adminDetails.firstName}</p>
-                        </div>
-                        <div className="row " >
-                            <div className="col-md-6">
-
-                                <div className='row mb-2'>
-                                    <div className='col-md-6'>Admin Id</div>
-                                    <div className='col-md-6 text-secondary'>{adminDetails.adminId}</div>
-                                </div>
-                                <div className='row mb-2'>
-                                    <div className='col-md-6'>First Name</div>
-                                    <div className='col-md-6 text-secondary'>{adminDetails.firstName}</div>
-                                </div>
-                                <div className='row mb-2'>
-                                    <div className='col-md-6'>Last Name</div>
-                                    <div className='col-md-6 text-secondary'>{adminDetails.lastName}</div>
-                                </div>
-                                <div className='row mb-2'>
-                                    <div className='col-md-6'>Email </div>
-                                    <div className='col-md-6   text-secondary'>{adminDetails.emailId}</div>
-                                </div>
-                                <div className='row mb-2'>
-                                    <div className='col-md-6'>Phone</div>
-                                    <div className='col-md-6 text-secondary'>{adminDetails.mobileNumber}</div>
-                                </div>
-                                <div className='row mb-2 '>
-                                    <div className='col-md-6'>Address </div>
-                                    <div className='col-md-6  text-secondary address'>{adminDetails.address}</div>
-                                </div>
-                                <div className='row mb-2'>
-                                    <div className='col-md-6'>Aadhar Number</div>
-                                    <div className='col-md-6 text-secondary'>{adminDetails.aadharNumber}</div>
-                                </div>
-                                <div className='row mb-2'>
-                                    <div className='col-md-6'>Pan Number</div>
-                                    <div className='col-md-6 text-secondary'>{adminDetails.panNumber}</div>
-                                </div>
-                                <div className='row mb-2'>
-                                    <div className='col-md-6'>Password</div>
-                                    <div className='col-md-6 text-secondary'>{adminDetails.password}</div>
-                                </div>
-                            </div>
-
-                            <div className="col-md-6   ">
-                                <div className='row mb-2'>
-                                    <div className='col-sm-12 text-decoration-underline'>Access Permission For Employee Details</div>
-                                </div>
-                                <div className='row mb-2'>
-                                    <div className='col-md-6'>
-                                        Create
+                
+                    {adminDetails &&
+                        <div className='sprAdmin-admin-details '>
+                            <div className='d-flex justify-content-between flex-wrap '>
+                                <p className=''>Admin User</p>
+                                <div>
+                                    <div className='admin-edit d-inline-block me-5'>
+                                        <i className="bi bi-pencil-square text-primary h3" onClick={() => { updateAdmin(adminDetails.adminId) }}></i>
                                     </div>
-                                    <div className='col-md-6 text-secondary'>
-                                    {adminDetails.employeeAccess && JSON.parse(adminDetails.employeeAccess).create.toString()}
-                                    </div>
-                                </div>
-                                <div className='row mb-2'>
-                                    <div className='col-md-6'>
-                                        Edit
-                                    </div>
-                                    <div className='col-md-6 text-secondary'>
-                                    {adminDetails.employeeAccess && JSON.parse(adminDetails.employeeAccess).edit.toString()}
-                                    </div>
-                                </div>
-                                <div className='row mb-2'>
-                                    <div className='col-md-6'>
-                                        Delete
-                                    </div>
-                                    <div className='col-md-6 text-secondary'>
-                                    {adminDetails.employeeAccess && JSON.parse(adminDetails.employeeAccess).delete.toString()}
-                                    </div>
-                                </div>
-                                <div className='row mb-2'>
-                                    <div className='col-sm-12 text-decoration-underline'>Access Permission For Project Details</div>
-                                </div>
-                                <div className='row mb-2'>
-                                    <div className='col-md-6'>
-                                        Create
-                                    </div>
-                                    <div className='col-md-6 text-secondary'>
-                                    {adminDetails.projectAccess && JSON.parse(adminDetails.projectAccess).create.toString()}
-                                    </div>
-                                </div>
-                                <div className='row mb-2'>
-                                    <div className='col-md-6'>
-                                        Edit
-                                    </div>
-                                    <div className='col-md-6 text-secondary'>
-                                    {adminDetails.projectAccess && JSON.parse(adminDetails.projectAccess).edit.toString()}
-                                    </div>
-                                </div>
-                                <div className='row mb-2'>
-                                    <div className='col-md-6'>
-                                        Delete
-                                    </div>
-                                    <div className='col-md-6 text-secondary'>
-                                    {adminDetails.projectAccess && JSON.parse(adminDetails.projectAccess).delete.toString()}
+                                    <div className='admin-delete d-inline-block'>
+                                        <i className="bi bi-trash3 text-danger h3  " onClick={() => { removeAdmin(adminDetails.adminId) }}></i>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            <hr />
+                            <div className='text-center'>
+                                <img src={user} alt={adminDetails.firstName} />
+                                <p className='text-primary'>{adminDetails.firstName}</p>
+                            </div>
+                            <div className="row " >
+                                <div className="col-md-6">
 
-                    </div>}
+                                    <div className='row mb-2'>
+                                        <div className='col-md-6'>Admin Id</div>
+                                        <div className='col-md-6 text-secondary'>{adminDetails.adminId}</div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-md-6'>First Name</div>
+                                        <div className='col-md-6 text-secondary'>{adminDetails.firstName}</div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-md-6'>Last Name</div>
+                                        <div className='col-md-6 text-secondary'>{adminDetails.lastName}</div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-md-6'>Email </div>
+                                        <div className='col-md-6   text-secondary'>{adminDetails.emailId}</div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-md-6'>Phone</div>
+                                        <div className='col-md-6 text-secondary'>{adminDetails.mobileNumber}</div>
+                                    </div>
+                                    <div className='row mb-2 '>
+                                        <div className='col-md-6'>Address </div>
+                                        <div className='col-md-6  text-secondary address'>{adminDetails.address}</div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-md-6'>Aadhar Number</div>
+                                        <div className='col-md-6 text-secondary'>{adminDetails.aadharNumber}</div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-md-6'>Pan Number</div>
+                                        <div className='col-md-6 text-secondary'>{adminDetails.panNumber}</div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-md-6'>Password</div>
+                                        <div className='col-md-6 text-secondary'>{adminDetails.password}</div>
+                                    </div>
+                                </div>
+
+                                <div className="col-md-6   ">
+                                    <div className='row mb-2'>
+                                        <div className='col-sm-12 text-decoration-underline'>Access Permission For Employee Details</div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-md-6'>
+                                            Create
+                                        </div>
+                                        <div className='col-md-6 text-secondary'>
+                                            {adminDetails.employeeAccess && JSON.parse(adminDetails.employeeAccess).create.toString()}
+                                        </div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-md-6'>
+                                            Edit
+                                        </div>
+                                        <div className='col-md-6 text-secondary'>
+                                            {adminDetails.employeeAccess && JSON.parse(adminDetails.employeeAccess).edit.toString()}
+                                        </div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-md-6'>
+                                            Delete
+                                        </div>
+                                        <div className='col-md-6 text-secondary'>
+                                            {adminDetails.employeeAccess && JSON.parse(adminDetails.employeeAccess).delete.toString()}
+                                        </div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-sm-12 text-decoration-underline'>Access Permission For Project Details</div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-md-6'>
+                                            Create
+                                        </div>
+                                        <div className='col-md-6 text-secondary'>
+                                            {adminDetails.projectAccess && JSON.parse(adminDetails.projectAccess).create.toString()}
+                                        </div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-md-6'>
+                                            Edit
+                                        </div>
+                                        <div className='col-md-6 text-secondary'>
+                                            {adminDetails.projectAccess && JSON.parse(adminDetails.projectAccess).edit.toString()}
+                                        </div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-md-6'>
+                                            Delete
+                                        </div>
+                                        <div className='col-md-6 text-secondary'>
+                                            {adminDetails.projectAccess && JSON.parse(adminDetails.projectAccess).delete.toString()}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                             <div className="d-flex justify-content-end">
+                        <button className="btn btn-secondary" onClick={()=>{navigate("/superadmin/searchadmin")}}>Cancel</button>
+                    </div>
+
+                        </div>}
+                   
+                
+
+
+
             </div>
 
             <div >
@@ -232,14 +243,14 @@ function AdminDetailsView() {
                     </Modal.Footer>
                 </Modal>
 
-                     {/*modal for admin edit sucess  */}
-                 <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={editSuccessModalValue}  >
-                     <div className="d-flex flex-column modal-success p-4 align-items-center ">
-                         <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
-                         <p className="mb-4 text-center">Admin User Profile Edited Successfully</p>
-                         <button className="btn  w-100 text-white" onClick={() => {dispatch(editSuccessModal(false))}} style={{ backgroundColor: '#5EAC24' }}>Close</button>
-                     </div>
-              </Modal>
+                {/*modal for admin edit sucess  */}
+                <Modal className="custom-modal" style={{ left: '50%', transform: 'translateX(-50%)' }} dialogClassName="modal-dialog-centered" show={editSuccessModalValue}  >
+                    <div className="d-flex flex-column modal-success p-4 align-items-center ">
+                        <img src={successCheck} className="img-fluid mb-4" alt="successCheck" />
+                        <p className="mb-4 text-center">Admin User Profile Edited Successfully</p>
+                        <button className="btn  w-100 text-white" onClick={() => { dispatch(editSuccessModal(false)) }} style={{ backgroundColor: '#5EAC24' }}>Close</button>
+                    </div>
+                </Modal>
             </div>
 
 

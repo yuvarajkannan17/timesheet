@@ -91,8 +91,8 @@ function TimesheetLogin() {
                                 >
                                     <option value="">Select Role</option>
                                     <option value="employee">Employee</option>
-                                    <option value="admin">Admin</option>
                                     <option value="supervisor">Supervisor</option>
+                                    <option value="admin">Admin</option>
                                     <option value="superadmin">Superadmin</option>
                                 </select>
                             </div>

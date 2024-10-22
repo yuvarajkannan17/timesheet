@@ -101,14 +101,28 @@ function SearchAdmin() {
                                 </thead>
                                 <tbody>
 
-                                    {filteredAdminList&&searchQuery&&filteredAdminList.map((d) => (
-                                        <tr key={d.adminId} className={`text-center adminList-column ${activeRow === d.adminId ? 'table-active' : ''} `} onClick={() => handleAdminClick(d)}>
-                                            <td>{d.adminId}</td>
-                                            <td>{d.firstName}</td>
-                                            <td>{d.emailId}</td>
-
-                                        </tr>
-                                    ))}
+                                {filteredAdminList.length > 0  &&  searchQuery  ? (
+                                        filteredAdminList.map((d) => (
+                                            <tr
+                                                key={d.adminId}
+                                                className={`text-center adminList-column ${activeRow === d.adminId ? 'table-active' : ''}`}
+                                                onClick={() => handleAdminClick(d)}
+                                            >
+                                                <td>{d.adminId}</td>
+                                                <td>{d.firstName}</td>
+                                                <td>{d.emailId}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        searchQuery &&
+                                       (
+                                            <tr>
+                                                <td colSpan="3" className="text-center">
+                                                    No records found
+                                                </td>
+                                            </tr>
+                                        )
+                                    )}
 
                                 </tbody>
                             </table>

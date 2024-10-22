@@ -114,16 +114,10 @@ function ApproveTimesheet() {
     setAskConfirmationForApprove(false);
     const approvedSheets = timesheetDatas.filter((sheet) => sheet.checked === true);
        
-
-
-
     try {
       // Update the status of approved sheets and track their IDs
       const updates = approvedSheets.map(async (sheet) => {
        
-       
-
-
         // Make a PUT request to update the status of the sheet in the API
         const response = await axios.put(`http://localhost:8090/workinghours/employee/${sheet.employeeId}/range/approval?startDate=${sheet.startDate}&endDate=${sheet.endDate}&status=APPROVED&rejectionReason=heavr &projectId=PRO002`);
         const responseData = response.data;
@@ -132,12 +126,8 @@ function ApproveTimesheet() {
           setSuccessModalForApprove(true);
         }
 
-        
       });
 
-
-
-      
     } catch (error) {
       console.log('API error', error);
     }

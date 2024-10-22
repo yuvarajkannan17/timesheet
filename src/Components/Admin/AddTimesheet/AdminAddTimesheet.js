@@ -380,7 +380,7 @@ const AdminAddTimesheet = () => {
           let data = response.data;
           let statusValue = data[0].status;
 
-          dispatch(submitAdminON(true));
+          // dispatch(submitAdminON(true));
 
           localStorage.setItem(`isSubmitOn${adminId}`, 'true');
 
