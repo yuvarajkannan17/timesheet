@@ -507,7 +507,7 @@ const AdminAddTimesheet = () => {
           </div>}
         </div>
 
-        <div className='d-flex justify-content-between'>
+        {/* <div className='d-flex justify-content-between'>
           {selectedMonth && <div className="m-1">
             <label htmlFor="ad-id">Admin ID : </label>
             <input
@@ -518,7 +518,7 @@ const AdminAddTimesheet = () => {
               readOnly
             />
           </div>}
-        </div>
+        </div> */}
 
         {/* {employeeIdError && <small style={{ color: 'red', fontWeight: "bold" }}>{employeeIdError}</small>} */}
 
