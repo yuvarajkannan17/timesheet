@@ -173,7 +173,7 @@ const [updateProjectSuccessModal, setUpdateProjectSuccessModal] = useState(false
             <form onSubmit={handleSearch} className="w-100">
               <h2>Search Project</h2>
               <div className="mb-3 d-flex align-items-center">
-                <label className="form-label me-2">Enter Project ID or Title:</label>
+                <label className="form-label me-2">Enter Project ID:</label>
                 <input
                   type="text"
                   className="form-control me-2"

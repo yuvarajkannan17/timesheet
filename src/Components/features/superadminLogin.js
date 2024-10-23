@@ -8,7 +8,7 @@ const superadminLoginSlice = createSlice({
     loginSuperadmin: (state, action) => {
       state.value = action.payload;
     },
-    logoutsuperadmin: (state) => {
+    logoutSuperadmin: (state) => {
       state.value = {}; // Clear superadmin data on logout
     },
   },
