@@ -317,12 +317,7 @@ function RejectTimesheet() {
                     </div>
 
 
-                    <div className="d-flex justify-content-between">
-                        <div className="m-1">
-                            <label htmlFor="emp_id">Emp Id :  </label>
-                            <input type="text" id="emp_id" className="mx-1" value={supervisorId} readOnly />
-                        </div>
-                    </div>
+                    
                     <div className="d-flex justify-content-between">
                         <div className="m-1">
                             <label htmlFor="fromDate">Start Date: </label>
